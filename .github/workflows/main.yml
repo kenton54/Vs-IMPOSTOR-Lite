@@ -1,29 +1,18 @@
-# This is a basic workflow to help you get started with Actions
-
 name: Build
 
-
-# Controls when the action will run.
 on:
-  # Triggers the workflow on push or pull request events but only for the master branch
   push:
     branches: [ main, experimental ]
   pull_request:
     branches: [ main, experimental ]
 
-  # Allows you to run this workflow manually from the Actions tab
   workflow_dispatch:
 
-# A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
-  # This workflow contains a single job called "build"
   buildLinux:
-    # The type of runner that the job will run on
     runs-on: ubuntu-latest
 
-    # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
-      # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
       - name: Pulling new Commit
         uses: actions/checkout@v5
 
@@ -31,7 +20,14 @@ jobs:
         uses: krdlab/setup-haxe@master
         with:
           haxe-version: 4.3.7
-      # Runs a set of commands using the runners shell
+      - name: Restore build cache
+        uses: actions/cache@v4.3.0
+        with:
+          key: cache-linux
+          path: |
+            .haxelib/
+            export/release/linux/haxe/
+            export/release/linux/obj/
       - name: Install Haxelib
         run: |
           sudo apt-get install libvlc-dev
@@ -41,21 +37,44 @@ jobs:
           haxe -cp ./setup -D analyzer-optimize -main Main --interp
       - name: Skip SScript setup mode
         run: echo 'oy9:showMacroty8:loopCosti25y10:includeAllfg' >> ~/settings.cocoa
-      - name: Create Version Tag
-        run: echo "${{github.run_id}}" > VERSION
       - name: Compile
         run: |
           haxelib run lime build linux
       - name: Publish Artifact
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v6
         with:
           name: linuxBuild
           path: 'export/release/linux/bin'
+      - name: Clearing existing cache
+        uses: actions/github-script@v8
+        with:
+          script: |
+            const caches = await github.rest.actions.getActionsCacheList({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+            })
+            for (const cache of caches.data.actions_caches) {
+              if (cache.key == "cache-linux") {
+                await github.rest.actions.deleteActionsCacheById({
+                  owner: context.repo.owner,
+                  repo: context.repo.repo,
+                  cache_id: cache.id,
+                })
+              }
+            }
+      - name: Upload new cache
+        uses: actions/cache@v4.3.0
+        with:
+          key: cache-linux
+          path: |
+            .haxelib/
+            export/release/linux/haxe/
+            export/release/linux/obj/
+
   buildWindows:
     runs-on: windows-latest
 
     steps:
-      # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
       - name: Pulling new Commit
         uses: actions/checkout@v5
 
@@ -63,7 +82,14 @@ jobs:
         uses: krdlab/setup-haxe@master
         with:
           haxe-version: 4.3.7
-      # Runs a set of commands using the runners shell
+      - name: Restore build cache
+        uses: actions/cache@v4.3.0
+        with:
+          key: cache-windows
+          path: |
+            .haxelib/
+            export/release/windows/haxe/
+            export/release/windows/obj/
       - name: Install Haxelib
         run: |
           haxelib setup C:/haxelib
@@ -73,20 +99,43 @@ jobs:
       - name: Skip SScript setup mode
         run: echo 'oy9:showMacroty8:loopCosti25y10:includeAllfg' >> %USERPROFILE%/settings.cocoa
         shell: cmd
-      - name: Create Version Tag
-        run: echo "${{github.run_id}}" > VERSION
       - name: Compile
         run: haxelib run lime build windows
       - name: Publish Artifact
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v6
         with:
           name: windowsBuild
           path: export/release/windows/bin
+      - name: Clear existing cache
+        uses: actions/github-script@v8
+        with:
+          script: |
+            const caches = await github.rest.actions.getActionsCacheList({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+            })
+            for (const cache of caches.data.actions_caches) {
+              if (cache.key == "cache-windows") {
+                await github.rest.actions.deleteActionsCacheById({
+                  owner: context.repo.owner,
+                  repo: context.repo.repo,
+                  cache_id: cache.id,
+                })
+              }
+            }
+      - name: Upload new cache
+        uses: actions/cache@v4.3.0
+        with:
+          key: cache-windows
+          path: |
+            .haxelib/
+            export/release/windows/haxe/
+            export/release/windows/obj/
+
   buildMac:
     runs-on: macos-latest
 
     steps:
-      # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
       - name: Pulling new Commit
         uses: actions/checkout@v5
 
@@ -94,7 +143,14 @@ jobs:
         uses: krdlab/setup-haxe@master
         with:
           haxe-version: 4.3.7
-      # Runs a set of commands using the runners shell
+      - name: Restore build cache
+        uses: actions/cache@v4.3.0
+        with:
+          key: cache-mac
+          path: |
+            .haxelib/
+            export/release/macos/haxe/
+            export/release/macos/obj/
       - name: Install Haxelib
         run: |
           haxelib setup ~/haxelib
@@ -102,12 +158,35 @@ jobs:
           haxe -cp ./setup -D analyzer-optimize -main Main --interp
       - name: Skip SScript setup mode
         run: echo 'oy9:showMacroty8:loopCosti25y10:includeAllfg' >> ~/settings.cocoa
-      - name: Create Version Tag
-        run: echo "${{github.run_id}}" > VERSION
       - name: Compile
         run: arch -x86_64 haxelib run lime build mac
       - name: Publish Artifact
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v6
         with:
           name: macBuild
           path: export/release/macos/bin
+      - name: Clear existing cache
+        uses: actions/github-script@v8
+        with:
+          script: |
+            const caches = await github.rest.actions.getActionsCacheList({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+            })
+            for (const cache of caches.data.actions_caches) {
+              if (cache.key == "cache-mac") {
+                await github.rest.actions.deleteActionsCacheById({
+                  owner: context.repo.owner,
+                  repo: context.repo.repo,
+                  cache_id: cache.id,
+                })
+              }
+            }
+      - name: Upload new cache
+        uses: actions/cache@v4.3.0
+        with:
+          key: cache-mac
+          path: |
+            .haxelib/
+            export/release/macos/haxe/
+            export/release/macos/obj/
