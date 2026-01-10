@@ -8,8 +8,41 @@ import shaders.RGBPalette;
 
 class DialogueLiteBox extends FlxSpriteGroup
 {
+	var curType:String = '';
+	var curCharacter:String = '';
+	var curCharacterNames:Array<String> = ['', '', ''];
+	var curAnim:String = '';
+
+	var dialogueMusic:FlxSound;
+
+	var dadAnimOffsets:Map<String, Array<Dynamic>> = [];
+	var gfAnimOffsets:Map<String, Array<Dynamic>> = [];
+	var bfAnimOffsets:Map<String, Array<Dynamic>> = [];
+
+	var iconSplitInfo:Array<Dynamic> = [];
+	var iconInfo:Array<Dynamic> = [];
+	var portraitInfo:Array<Dynamic> = [];
+	var dialogueList:Array<String> = [];
+
+	var swagDialogue:FlxText;
+	var dialogueName:FlxText;
+
+	public var finishThing:Void->Void;
+
+	var tabletGrp:FlxSpriteGroup;
 
 	var bgFade:FlxSprite;
+	var icon:FlxSprite;
+
+	var portraitLeft:FlxSprite;
+	var portraitMiddle:FlxSprite;
+	var portraitRight:FlxSprite;
+
+	var addedPortraitsB:Array<Bool> = [false, false, false];
+	var addedPortraitsT:Array<String> = ['', '', ''];
+	var defaultPortraitTypes:Array<String> = ['dad', 'gf', 'bf'];
+
+	var isEnding:Bool = false;
 
 	public function new(?dialogueList:Array<String>)
 	{

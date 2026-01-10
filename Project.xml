@@ -30,7 +30,7 @@
 	<!-- ____________________________ Window Settings ___________________________ -->
 
 	<!--These window settings apply to all targets-->
-	<window width="1200" height="900" fps="" background="#FFFFFF" hardware="true" vsync="false" />
+	<window width="1200" height="900" fps="60" background="#FFFFFF" hardware="true" vsync="false" />
 
 	<!--HTML5-specific-->
 	<window if="html5" resizable="true" />
@@ -74,8 +74,6 @@
 
 	<!-- _______________________________ Libraries ______________________________ -->
 
-	<haxelib name="openfl" />
-	<haxelib name="lime" />
 	<haxelib name="flixel" />
 	<haxelib name="flixel-ui" />
 	<haxelib name="flixel-addons" />

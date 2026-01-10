@@ -891,7 +891,7 @@ class PlayState extends MusicBeatState
 			startCountdown();
 	}
 
-	var liteDialg:DialogueLiteBox = null;
+	var liteDialg:DialogueLiteBox;
 	public function startLiteDialogue()
 	{
 		inCutscene = true;
