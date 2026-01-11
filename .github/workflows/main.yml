@@ -32,7 +32,7 @@ jobs:
           echo "HXCPP_COMPILE_CACHE=~/.hxcpp" >> $GITHUB_ENV
       - name: Install/Update Libraries
         run: |
-          haxelib setup ~/haxelib
+          haxelib install hxcpp > /dev/null --quiet
           haxe -cp ./setup -D analyzer-optimize -main Main --interp
       - name: Install LibVLC
         run: |
@@ -45,7 +45,7 @@ jobs:
       - name: Publish Artifact
         uses: actions/upload-artifact@v6
         with:
-          name: linuxBuild
+          name: Impostor Lite (Linux)
           path: 'export/release/linux/bin'
       - name: Clearing existing cache
         uses: actions/github-script@v8
@@ -96,7 +96,7 @@ jobs:
           echo "HXCPP_COMPILE_CACHE=~/.hxcpp" >> $GITHUB_ENV
       - name: Install/Update Libraries
         run: |
-          haxelib setup ~/haxelib
+          haxelib install hxcpp > /dev/null --quiet
           haxe -cp ./setup -D analyzer-optimize -main Main --interp
         shell: cmd
       - name: Skip SScript setup mode
@@ -107,7 +107,7 @@ jobs:
       - name: Publish Artifact
         uses: actions/upload-artifact@v6
         with:
-          name: windowsBuild
+          name: Impostor Lite (Windows)
           path: export/release/windows/bin
       - name: Clear existing cache
         uses: actions/github-script@v8
@@ -158,7 +158,7 @@ jobs:
           echo "HXCPP_COMPILE_CACHE=~/.hxcpp" >> $GITHUB_ENV
       - name: Install/Update Libraries
         run: |
-          haxelib setup ~/haxelib
+          haxelib install hxcpp > /dev/null --quiet
           haxe -cp ./setup -D analyzer-optimize -main Main --interp
       - name: Skip SScript setup mode
         run: echo 'oy9:showMacroty8:loopCosti25y10:includeAllfg' >> ~/settings.cocoa
@@ -167,7 +167,7 @@ jobs:
       - name: Publish Artifact
         uses: actions/upload-artifact@v6
         with:
-          name: macBuild
+          name: Impostor Lite (MacOS)
           path: export/release/macos/bin
       - name: Clear existing cache
         uses: actions/github-script@v8
