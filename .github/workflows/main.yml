@@ -29,6 +29,10 @@ jobs:
             export/release/linux/obj/
       - name: Install/Update Libraries
         run: |
+          sudo apt-get install libvlc-dev
+          sudo apt-get install libvlccore-dev
+          haxelib setup ~/haxelib
+          haxelib install hxcpp > /dev/null --quiet
           haxe -cp ./setup -D analyzer-optimize -main Main --interp
       - name: Install LibVLC
         run: |
@@ -89,6 +93,8 @@ jobs:
             export/release/windows/obj/
       - name: Install/Update Libraries
         run: |
+          haxelib setup ~/haxelib
+          haxelib install hxcpp > /dev/null --quiet
           haxe -cp ./setup -D analyzer-optimize -main Main --interp
       - name: Skip SScript setup mode
         run: echo 'oy9:showMacroty8:loopCosti25y10:includeAllfg' >> %USERPROFILE%/settings.cocoa
@@ -145,6 +151,7 @@ jobs:
             export/release/macos/obj/
       - name: Install/Update Libraries
         run: |
+          haxelib setup ~/haxelib
           haxelib install hxcpp > /dev/null --quiet
           haxe -cp ./setup -D analyzer-optimize -main Main --interp
       - name: Skip SScript setup mode
