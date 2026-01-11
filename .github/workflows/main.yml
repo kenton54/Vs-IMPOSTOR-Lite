@@ -10,8 +10,9 @@ on:
 
 jobs:
   buildLinux:
+    name: Linux Build
     runs-on: ubuntu-latest
-
+    permissions: write-all
     steps:
       - name: Pulling new Commit
         uses: actions/checkout@v5
@@ -19,18 +20,8 @@ jobs:
         uses: krdlab/setup-haxe@v2
         with:
           haxe-version: 4.3.7
-      - name: Restore build cache
-        uses: actions/cache@v4.3.0
-        with:
-          key: cache-linux
-          path: |
-            .haxelib/
-            export/release/linux/haxe/
-            export/release/linux/obj/
-      - name: Install/Update Libraries
+      - name: Install Haxelib and Libraries
         run: |
-          sudo apt-get install libvlc-dev
-          sudo apt-get install libvlccore-dev
           haxelib setup ~/haxelib
           haxelib install hxcpp > /dev/null --quiet
           haxe -cp ./setup -D analyzer-optimize -main Main --interp
@@ -39,7 +30,7 @@ jobs:
             sudo apt-get install libvlc-dev libvlccore-dev
       - name: Skip SScript setup mode
         run: echo 'oy9:showMacroty8:loopCosti25y10:includeAllfg' >> ~/settings.cocoa
-      - name: Compile
+      - name: Build Game
         run: |
           haxelib run lime build linux
       - name: Publish Artifact
@@ -47,35 +38,11 @@ jobs:
         with:
           name: Impostor Lite (Linux)
           path: 'export/release/linux/bin'
-      - name: Clearing existing cache
-        uses: actions/github-script@v8
-        with:
-          script: |
-            const caches = await github.rest.actions.getActionsCacheList({
-              owner: context.repo.owner,
-              repo: context.repo.repo,
-            })
-            for (const cache of caches.data.actions_caches) {
-              if (cache.key == "cache-linux") {
-                await github.rest.actions.deleteActionsCacheById({
-                  owner: context.repo.owner,
-                  repo: context.repo.repo,
-                  cache_id: cache.id,
-                })
-              }
-            }
-      - name: Upload new cache
-        uses: actions/cache@v4.3.0
-        with:
-          key: cache-linux
-          path: |
-            .haxelib/
-            export/release/linux/haxe/
-            export/release/linux/obj/
 
   buildWindows:
+    name: Windows Build
     runs-on: windows-latest
-
+    permissions: write-all
     steps:
       - name: Pulling new Commit
         uses: actions/checkout@v5
@@ -83,57 +50,25 @@ jobs:
         uses: krdlab/setup-haxe@v2
         with:
           haxe-version: 4.3.7
-      - name: Restore build cache
-        uses: actions/cache@v4.3.0
-        with:
-          key: cache-windows
-          path: |
-            .haxelib/
-            export/release/windows/haxe/
-            export/release/windows/obj/
-      - name: Install/Update Libraries
+      - name: Install Haxelib and Libraries
         run: |
-          haxelib setup ~/haxelib
+          haxelib setup C:/haxelib
           haxelib install hxcpp > /dev/null --quiet
           haxe -cp ./setup -D analyzer-optimize -main Main --interp
       - name: Skip SScript setup mode
         run: echo 'oy9:showMacroty8:loopCosti25y10:includeAllfg' >> %USERPROFILE%/settings.cocoa
-      - name: Compile
+      - name: Build Game
         run: haxelib run lime build windows
       - name: Publish Artifact
         uses: actions/upload-artifact@v6
         with:
           name: Impostor Lite (Windows)
           path: export/release/windows/bin
-      - name: Clear existing cache
-        uses: actions/github-script@v8
-        with:
-          script: |
-            const caches = await github.rest.actions.getActionsCacheList({
-              owner: context.repo.owner,
-              repo: context.repo.repo,
-            })
-            for (const cache of caches.data.actions_caches) {
-              if (cache.key == "cache-windows") {
-                await github.rest.actions.deleteActionsCacheById({
-                  owner: context.repo.owner,
-                  repo: context.repo.repo,
-                  cache_id: cache.id,
-                })
-              }
-            }
-      - name: Upload new cache
-        uses: actions/cache@v4.3.0
-        with:
-          key: cache-windows
-          path: |
-            .haxelib/
-            export/release/windows/haxe/
-            export/release/windows/obj/
 
   buildMac:
+    name: MacOS Build
     runs-on: macos-latest
-
+    permissions: write-all
     steps:
       - name: Pulling new Commit
         uses: actions/checkout@v5
@@ -141,14 +76,6 @@ jobs:
         uses: krdlab/setup-haxe@v2
         with:
           haxe-version: 4.3.7
-      - name: Restore build cache
-        uses: actions/cache@v4.3.0
-        with:
-          key: cache-mac
-          path: |
-            .haxelib/
-            export/release/macos/haxe/
-            export/release/macos/obj/
       - name: Install/Update Libraries
         run: |
           haxelib setup ~/haxelib
@@ -156,35 +83,10 @@ jobs:
           haxe -cp ./setup -D analyzer-optimize -main Main --interp
       - name: Skip SScript setup mode
         run: echo 'oy9:showMacroty8:loopCosti25y10:includeAllfg' >> ~/settings.cocoa
-      - name: Compile
+      - name: Build Game
         run: arch -x86_64 haxelib run lime build mac
       - name: Publish Artifact
         uses: actions/upload-artifact@v6
         with:
           name: Impostor Lite (MacOS)
           path: export/release/macos/bin
-      - name: Clear existing cache
-        uses: actions/github-script@v8
-        with:
-          script: |
-            const caches = await github.rest.actions.getActionsCacheList({
-              owner: context.repo.owner,
-              repo: context.repo.repo,
-            })
-            for (const cache of caches.data.actions_caches) {
-              if (cache.key == "cache-mac") {
-                await github.rest.actions.deleteActionsCacheById({
-                  owner: context.repo.owner,
-                  repo: context.repo.repo,
-                  cache_id: cache.id,
-                })
-              }
-            }
-      - name: Upload new cache
-        uses: actions/cache@v4.3.0
-        with:
-          key: cache-mac
-          path: |
-            .haxelib/
-            export/release/macos/haxe/
-            export/release/macos/obj/
