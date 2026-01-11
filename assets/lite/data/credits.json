@@ -14,30 +14,32 @@
         [
             "liteImp", [275, 0], [0.475, 0.475],
             [
-                ["upqgg",        "", "", "FFFFFF"],
-                ["Jio",          "", "", "FFFFFF"],
-                ["Lego",         "", "", "FFFFFF"],
-                ["gtm",          "Look out, here comes Tom!\n조심해! 톰온다!", "", "FFFFFF"],
-                ["Alphatic",     "i practically carried the mod music wise. you're welcome jio\n난 솔직히 말하자면 노래로 모드를 만들지. 천만해 Jio.", "", "FFFFFF"],
-                ["COrangatang",  "", "", "FFFFFF"],
-                ["Snuts",        "i was forced to use soundfonts very often my trance brain cant handle this shit\n난 사운드폰트를 맨날 써야해서 내 트랜스 뇌가 이걸 감당할 수 없어.", "", "FFFFFF"],
-                ["JustAGuy",     "Me when the when the me when the when me thwne when the among us\n내가 할때, 내가 할때, 내가 할때, 내가 할때, 내가 할때, '어몽어스' 할 때", "", "FFFFFF"],
-                ["Beariano",     "", "", "FFFFFF"],
-                ["Mrpolo",       "joined fnf around 4 years ago, been working on this mod for 20 percent of those years\n난 4년전에 FNF에 들어왔고, 이번년에 이곳에서 20%를 일했지", "", "FFFFFF"],
-                ["L1ghtlyVun",   "", "", "FFFFFF"],
-                ["SlideOfBread", "", "", "FFFFFF"],
-                ["Steginite",    "", "", "FFFFFF"],
-                ["SpecialThanks","_", "", "FFFFFF"]
+                ["gtm",          "Look out, here comes Tom!\n조심해! 톰온다!", "", "9C897A"],
+                ["upqgg",        "", "", "9DEC98"],
+                ["jio",          "", "", "D48EFF"],
+                ["lego",         "", "", "4388FF"],
+                ["alphatic",     "i practically carried the mod music wise. you're welcome jio\n난 솔직히 말하자면 노래로 모드를 만들지. 천만해 Jio.", "", "FF7E7E"],
+                ["corangatang",  "", "", "555D8B"],
+                ["snuts",        "i was forced to use soundfonts very often my trance brain cant handle this shit\n난 사운드폰트를 맨날 써야해서 내 트랜스 뇌가 이걸 감당할 수 없어.", "", "7E86B0"],
+                ["justaguy",     "Me when the when the me when the when me thwne when the among us\n내가 할때, 내가 할때, 내가 할때, 내가 할때, 내가 할때, '어몽어스' 할 때", "", "FFFFFF"],
+                ["Beariano",     "", "", "A1746A"],
+                ["mrpolo",       "joined fnf around 4 years ago, been working on this mod for 20 percent of those years\n난 4년전에 FNF에 들어왔고, 이번년에 이곳에서 20%를 일했지", "", "B4988B"],
+                ["kenton",       "thanks to this mod, im actually a voice actor now who wouldve thought lol, also play my impostor pixels.\n이 모드 덕분에 제가 성우가 됐어요. 누가 상상이나 했겠어요, 하하", "", "F5718B"],
+                ["l1ghtlyvun",   "", "", "FF647A"],
+                ["sliceoftoast", "", "", "ECD8AD"],
+                ["steginite",    "", "", "FFFFFF"]
             ]
         ]
     ],
     "specialthanks": [
         ["Kdead", "Letting us use his red icons as reference", ""],
         ["AWHNathan", "Charting Support", ""],
+        ["Sha_Mi0921", "Korean Translation Supporter", ""],
+        ["RedTheRod", "Animating Black's Sprites (Commission)", ""],
         ["Choma41", "Composing Meltdown Lite (Commission)", ""],
         ["Ra_TanG", "Giving us advice on Lite Funkin's artstyle", ""],
-        ["Impostorm", "Team behind the original Vs. Impostor V4", ""],
+        ["Impostorm", "Team behind the original Vs. Impostor", ""],
         ["Innersloth", "Creators of Among us", ""],
-        ["Moxt", "Moxt", ""]
+        ["Sparkly", "6 7 6 7 6 7 6 7 6 7 6 7 6 7 6 7 6 7 6 7 6 7 6 7 6 7 6 7 6 7 6 7 6 7 6 7 6 7 6 7 6 7 6 7 6 7 6 7 6 7 6 7 6 7 6 7 6 7 6 7 6 7 6 7 6 7 6 7 6 7 6 7 6 7 6 7 6 7 6 7 6 7 6 7 6 7 6 7 6 7 6 7 6 7 6 7 6 7 6 7 6 7 6 7 6 7 6 7 6 7 6 7 6 7 6 7 6 7 6 7 6 7 6 7 6 7 6 7 6 7 6 7 6 7 6 7 6 7 6 7 6 7 6 7 6 7 6 7 6 7 6 7 6 7 6 7 6 7 6 7 6 7 6 7 6 7 6 7 6 7 6 7 6 7 6 7 6 7 6 7 6 7 6 7 6 7 6 7 6 7 6 7 6 7 6 7 6 7 6 7 6 7 6 7 6 7 6 7 6 7 6 7 6 7 6 7 6 7 6 7 6 7 6 7 6 7 6 7 6 7 6 7 6 7 6 7 6 7 6 7 6 7 6 7 6 7 6 7 6 7 6 7 6 7 6 7 6 7 6 7 6 7 6 7 6 7 6 7 6 7 6 7 6 7 6 7 6 7 6 7 6 7 6 7 6 7 6 7 6 7 6 7 6 7 6 7 6 7 6 7 6 7 6 7 6 7 6 7 6 7 6 7 6 7 6 7 6 7 6 7 6 7 6 7 6 7 6 7 6 7 6 7 6 7 6 7 6 7 6 7 6 7 6 7 6 7 6 7 6 7 6 7 6 7 6 7 6 7 6 7 6 7 6 7 6 7 6 7 6 7 6 7 6 7 6 7 6 7 6 7 6 7 6 7 6 7 6 7 6 7 6 7 6 7 6 7 6 7 6 7 6 7 6 7 6 7 6 7 6 7 6 7 6 7 6 7 6 7 6 7 6 7 6 7 6 7 6 7 6 7 6 7 6 7 6 7 6 7 6 7 6 7 6 7 6 7 6 7 6 7 6 7 6 7 6 7 6 7 6 7 6 7 6 7 6 7 6 7 6 7 6 7 6 7 6 7 6 7 6 7 6 7 6 7 6 7 6 7 6 7 6 7 6 7 6 7 6 7 6 7 6 7 6 7 6 7 6 7 6 7 6 7 6 7 6 7 6 7 6 7 6 7 6 7 6 7 6 7 6 7 6 7 6 7 6 7 6 7 6 7 6 7 6 7 6 7 6 7 6 7 6 7 6 7 6 7 6 7 6 7 6 7 6 7 6 7 6 7 6 7 6 7 6 7 6 7 6 7 6 7 6 7 6 7 6 7 6 7 6 7 6 7 6 7 6 7 6 7 6 7 6 7 6 7 6 7 6 7 6 7 6 7 6 7 6 7 6 7 6 7 6 7 6 7 6 7 6 7 6 7 6 7 6 7 6 7 6 7 6 7 6 7 6 7 6 7 6 7 6 7 6 7 6 7 6 7 6 7 6 7 6 7 6 7 6 7 6 7 6 7 6 7 6 7 6 7 6 7 6 7 6 7 6 7 6 7 6 7 6 7 6 7 6 7 6 7 6 7 6 7 6 7 6 7 6 7 6 7 6 7 6 7 6 7 6 7 6 7 6 7 6 7 6 7 6 7 6 7 6 7 6 7 6 7 6 7 6 7 6 7 6 7 6 7 6 7 6 7 6 7 6 7 6 7 6 7 6 7 6 7 6 7 6 7 6 7 6 7 6 7 6 7 6 7 6 7 6 7 6 7 6 7 6 7 6 7 6 7 6 7 6 7 6 7 6 7 6 7 6 7 6 7 6 7 6 7 6 7 6 7 6 7 6 7 6 7 6 7 6 7 6 7 6 7 6 7 6 7 6 7 6 7 6 7 6 7 6 7 6 7 6 7 6 7 6 7 6 7 6 7 6 7 6 7 6 7 6 7 6 7 6 7 6 7 6 7 6 7 6 7 6 7 6 7 6 7 6 7 6 7 6 7 6 7 6 7 6 7 6 7 6 7 6 7 6 7 6 7 6 7 6 7 6 7 6 7 6 7 6 7 6 7 6 7 6 7 6 7 6 7 6 7 6 7 6 7 6 7 6 7 6 7 6 7 6 7 6 7 6 7 6 7 6 7 6 7 6 7 6 7 6 7 6 7 6 7 6 7 6 7 6 7 6 7 6 7 6 7 6 7 6 7 6 7 6 7 6 7 6 7 6 7 6 7 6 7 6 7 6 7 6 7 6 7 6 7 6 7 6 7 6 7 6 7 6 7 6 7 6 7 6 7 6 7 6 7 6 7 6 7 6 7 6 7 6 7 6 7 6 7 6 7 6 7 6 7 6 7 6 7", ""]
     ]
 }
