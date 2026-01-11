@@ -15,9 +15,8 @@ jobs:
     steps:
       - name: Pulling new Commit
         uses: actions/checkout@v5
-
       - name: Set up Haxe
-        uses: krdlab/setup-haxe@master
+        uses: krdlab/setup-haxe@v2
         with:
           haxe-version: 4.3.7
       - name: Restore build cache
@@ -28,11 +27,8 @@ jobs:
             .haxelib/
             export/release/linux/haxe/
             export/release/linux/obj/
-      - run: |
-          echo "HXCPP_COMPILE_CACHE=~/.hxcpp" >> $GITHUB_ENV
       - name: Install/Update Libraries
         run: |
-          haxelib install hxcpp > /dev/null --quiet
           haxe -cp ./setup -D analyzer-optimize -main Main --interp
       - name: Install LibVLC
         run: |
@@ -79,9 +75,8 @@ jobs:
     steps:
       - name: Pulling new Commit
         uses: actions/checkout@v5
-
       - name: Set up Haxe
-        uses: krdlab/setup-haxe@master
+        uses: krdlab/setup-haxe@v2
         with:
           haxe-version: 4.3.7
       - name: Restore build cache
@@ -92,16 +87,11 @@ jobs:
             .haxelib/
             export/release/windows/haxe/
             export/release/windows/obj/
-      - run: |
-          echo "HXCPP_COMPILE_CACHE=~/.hxcpp" >> $GITHUB_ENV
       - name: Install/Update Libraries
         run: |
-          haxelib install hxcpp > /dev/null --quiet
           haxe -cp ./setup -D analyzer-optimize -main Main --interp
-        shell: cmd
       - name: Skip SScript setup mode
         run: echo 'oy9:showMacroty8:loopCosti25y10:includeAllfg' >> %USERPROFILE%/settings.cocoa
-        shell: cmd
       - name: Compile
         run: haxelib run lime build windows
       - name: Publish Artifact
@@ -141,9 +131,8 @@ jobs:
     steps:
       - name: Pulling new Commit
         uses: actions/checkout@v5
-
       - name: Set up Haxe
-        uses: krdlab/setup-haxe@master
+        uses: krdlab/setup-haxe@v2
         with:
           haxe-version: 4.3.7
       - name: Restore build cache
@@ -154,8 +143,6 @@ jobs:
             .haxelib/
             export/release/macos/haxe/
             export/release/macos/obj/
-      - run: |
-          echo "HXCPP_COMPILE_CACHE=~/.hxcpp" >> $GITHUB_ENV
       - name: Install/Update Libraries
         run: |
           haxelib install hxcpp > /dev/null --quiet
