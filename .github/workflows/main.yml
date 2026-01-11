@@ -28,13 +28,14 @@ jobs:
             .haxelib/
             export/release/linux/haxe/
             export/release/linux/obj/
-      - name: Install Haxelib
+      - run: |
+          echo "HXCPP_COMPILE_CACHE=~/.hxcpp" >> $GITHUB_ENV
+      - name: Install/Update Libraries
         run: |
-          sudo apt-get install libvlc-dev
-          sudo apt-get install libvlccore-dev
-          haxelib setup ~/haxelib
-          haxelib install hxcpp > /dev/null --quiet
           haxe -cp ./setup -D analyzer-optimize -main Main --interp
+      - name: Install LibVLC
+        run: |
+            sudo apt-get install libvlc-dev libvlccore-dev
       - name: Skip SScript setup mode
         run: echo 'oy9:showMacroty8:loopCosti25y10:includeAllfg' >> ~/settings.cocoa
       - name: Compile
@@ -90,10 +91,10 @@ jobs:
             .haxelib/
             export/release/windows/haxe/
             export/release/windows/obj/
-      - name: Install Haxelib
+      - run: |
+          echo "HXCPP_COMPILE_CACHE=~/.hxcpp" >> $GITHUB_ENV
+      - name: Install/Update Libraries
         run: |
-          haxelib setup C:/haxelib
-          haxelib install hxcpp > /dev/null --quiet
           haxe -cp ./setup -D analyzer-optimize -main Main --interp
         shell: cmd
       - name: Skip SScript setup mode
@@ -151,10 +152,10 @@ jobs:
             .haxelib/
             export/release/macos/haxe/
             export/release/macos/obj/
-      - name: Install Haxelib
+      - run: |
+          echo "HXCPP_COMPILE_CACHE=~/.hxcpp" >> $GITHUB_ENV
+      - name: Install/Update Libraries
         run: |
-          haxelib setup ~/haxelib
-          haxelib install hxcpp > /dev/null --quiet
           haxe -cp ./setup -D analyzer-optimize -main Main --interp
       - name: Skip SScript setup mode
         run: echo 'oy9:showMacroty8:loopCosti25y10:includeAllfg' >> ~/settings.cocoa
