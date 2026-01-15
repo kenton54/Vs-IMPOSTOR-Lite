@@ -590,6 +590,7 @@ class PlayState extends MusicBeatState
 		for (event in eventsPushed)
 			startHScriptsNamed('events/' + event + '.hx');
 		#end
+
 		noteTypes = null;
 		eventsPushed = null;
 
@@ -601,19 +602,21 @@ class PlayState extends MusicBeatState
 
 		// SONG SPECIFIC SCRIPTS
 		#if (LUA_ALLOWED || HSCRIPT_ALLOWED)
-		for (folder in Mods.directoriesWithFile(Paths.getLitePath(), 'data/$songName/'))
+		for (folder in Mods.directoriesWithFile(Paths.getLitePath(), 'data/songs/$songName/'))
+		{
 			for (file in FileSystem.readDirectory(folder))
 			{
 				#if LUA_ALLOWED
-				if(file.toLowerCase().endsWith('.lua'))
+				if (file.toLowerCase().endsWith('.lua'))
 					new FunkinLua(folder + file);
 				#end
 
 				#if HSCRIPT_ALLOWED
-				if(file.toLowerCase().endsWith('.hx'))
+				if (file.toLowerCase().endsWith('.hx'))
 					initHScript(folder + file);
 				#end
 			}
+		}
 		#end
 
 		if(isStoryMode && !seenCutscene && Paths.txt(songName + '/dialogue') != null) {
