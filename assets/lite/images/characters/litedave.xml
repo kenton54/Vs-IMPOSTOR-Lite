@@ -2,10 +2,10 @@
 <TextureAtlas imagePath="davelite.png">
 	<!-- Created using the Spritesheet and XML generator -->
 	<!-- https://uncertainprod.github.io/FNF-Spritesheet-XML-generator-Web -->
-	<SubTexture name="idle0000" x="0" y="0" width="296" height="229" frameX="-167" frameY="-576" frameWidth="1920" frameHeight="1080"/>
-	<SubTexture name="idle0001" x="296" y="0" width="285" height="212" frameX="-169" frameY="-577" frameWidth="1920" frameHeight="1080"/>
-	<SubTexture name="idle0002" x="581" y="198" width="275" height="203" frameX="-169" frameY="-576" frameWidth="1920" frameHeight="1080"/>
-	<SubTexture name="idle0003" x="290" y="229" width="269" height="199" frameX="-170" frameY="-581" frameWidth="1920" frameHeight="1080"/>
+	<SubTexture name="idle0000" x="290" y="229" width="269" height="199" frameX="-170" frameY="-581" frameWidth="1920" frameHeight="1080"/>
+	<SubTexture name="idle0001" x="581" y="198" width="275" height="203" frameX="-169" frameY="-576" frameWidth="1920" frameHeight="1080"/>
+	<SubTexture name="idle0002" x="296" y="0" width="285" height="212" frameX="-169" frameY="-577" frameWidth="1920" frameHeight="1080"/>
+	<SubTexture name="idle0003" x="0" y="0" width="296" height="229" frameX="-167" frameY="-576" frameWidth="1920" frameHeight="1080"/>
 	<SubTexture name="left0000" x="0" y="429" width="300" height="192" frameX="-149" frameY="-571" frameWidth="1920" frameHeight="1080"/>
 	<SubTexture name="left0001" x="581" y="0" width="292" height="198" frameX="-164" frameY="-566" frameWidth="1920" frameHeight="1080"/>
 	<SubTexture name="down0000" x="579" y="429" width="211" height="176" frameX="-224" frameY="-589" frameWidth="1920" frameHeight="1080"/>

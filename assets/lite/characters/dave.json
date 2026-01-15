@@ -9,7 +9,7 @@
 			"fps": 12,
 			"anim": "singUP",
 			"indices": [],
-			"name": "daveup"
+			"name": "up"
 		},
 		{
 			"offsets": [
@@ -20,7 +20,7 @@
 			"fps": 12,
 			"anim": "singRIGHT",
 			"indices": [],
-			"name": "daveright"
+			"name": "right"
 		},
 		{
 			"loop": false,
@@ -30,7 +30,7 @@
 			],
 			"anim": "idle",
 			"fps": 12,
-			"name": "daveidle",
+			"name": "idle",
 			"indices": [
 				2,
 				3,
@@ -52,7 +52,7 @@
 			"fps": 12,
 			"anim": "singDOWN",
 			"loop": false,
-			"name": "davedown"
+			"name": "down"
 		},
 		{
 			"offsets": [
@@ -63,7 +63,7 @@
 			"fps": 12,
 			"anim": "singLEFT",
 			"loop": false,
-			"name": "daveleft"
+			"name": "left"
 		}
 	],
 	"vocals_file": "",
