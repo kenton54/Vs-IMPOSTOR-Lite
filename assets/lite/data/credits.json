@@ -14,7 +14,7 @@
         [
             "liteImp", [275, 0], [0.475, 0.475],
             [
-                ["gtm",          "Look out, here comes Tom!\n조심해! 톰온다!", "", "9C897A"],
+                ["gtm",          "Goodbye, Vs. Impostor Community", "", "9C897A"],
                 ["upqgg",        "", "", "9DEC98"],
                 ["jio",          "", "", "D48EFF"],
                 ["lego",         "", "", "4388FF"],
@@ -25,8 +25,10 @@
                 ["Beariano",     "", "", "A1746A"],
                 ["mrpolo",       "joined fnf around 4 years ago, been working on this mod for 20 percent of those years\n난 4년전에 FNF에 들어왔고, 이번년에 이곳에서 20%를 일했지", "", "B4988B"],
                 ["kenton",       "thanks to this mod, im actually a voice actor now who wouldve thought lol, also play my impostor pixels.\n이 모드 덕분에 제가 성우가 됐어요. 누가 상상이나 했겠어요, 하하", "", "F5718B"],
+                ["moxt",     "", "", "8EB2F2"],
                 ["l1ghtlyvun",   "", "", "FF647A"],
                 ["sliceoftoast", "", "", "ECD8AD"],
+                ["hal",     "", "", "21395F"],
                 ["steginite",    "", "", "FFFFFF"]
             ]
         ]

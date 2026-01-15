@@ -149,6 +149,8 @@ class Main extends Sprite
 			if (FlxG.game != null)
 			resetSpriteCache(FlxG.game);
 		});
+
+		FlxSprite.defaultAntialiasing = false;
 	}
 
 	static function resetSpriteCache(sprite:Sprite):Void {

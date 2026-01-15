@@ -1,8 +1,8 @@
 function onCreate()
-    	makeLuaSprite("backgroundOfficeBroken", "bg/office/officeBroken", -1250, -1050);
-    	scaleObject("backgroundOfficeBroken", 1.8, 1.8);
-    	setProperty("backgroundOfficeBroken.antialiasing", false);
-    	setProperty("backgroundOfficeBroken.alpha", 0.0001);
+	makeLuaSprite("backgroundOfficeBroken", "bg/office/officeBroken", -1250, -1050);
+	scaleObject("backgroundOfficeBroken", 1.8, 1.8);
+	setProperty("backgroundOfficeBroken.antialiasing", false);
+	setProperty("backgroundOfficeBroken.visible", false);
 	addLuaSprite("backgroundOfficeBroken");
 end
 
@@ -14,9 +14,9 @@ function onStepHit()
 	elseif curStep == 2080 then
 		cameraShake('camGame', 0.02, 1.6);
 		cameraShake('camHUD', 0.01, 1.6);
-		setProperty('dad.alpha', 0.0001);
-		setProperty('backgroundOffice.alpha', 0.0001);
-		setProperty('backgroundOfficeBroken.alpha', 1);
+		setProperty('dad.visible', false);
+		setProperty('backgroundOffice.visible', false);
+		setProperty('backgroundOfficeBroken.visible', true);
 		setProperty('defaultCamZoom', 0.75);
 		setProperty('cameraSpeed', 6);
 		setProperty('opponentCameraOffset[0]', -200);
