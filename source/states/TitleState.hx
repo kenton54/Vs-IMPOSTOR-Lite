@@ -9,10 +9,6 @@ import flixel.addons.transition.FlxTransitionableState;
 
 class TitleState extends MusicBeatState
 {
-	public static var muteKeys:Array<FlxKey> = [FlxKey.ZERO];
-	public static var volumeDownKeys:Array<FlxKey> = [FlxKey.NUMPADMINUS, FlxKey.MINUS];
-	public static var volumeUpKeys:Array<FlxKey> = [FlxKey.NUMPADPLUS, FlxKey.PLUS];
-
 	static var seenIntro:Bool = false;
 	static var passedWarning:Bool = false;
 	var curWacky:Array<String> = [];
@@ -49,6 +45,13 @@ class TitleState extends MusicBeatState
 		persistentUpdate = true;
 		persistentDraw = true;
 
+		if (FlxG.sound.music == null)
+		{
+			FlxG.sound.playMusic(Paths.music('freakyMenu'), 0);
+			FlxG.sound.music.fadeIn(2, 0, 1);
+		}
+		Conductor.bpm = 109;
+
 		if (FlxG.save.data.weekCompleted != null)
 			StoryMenuState.weekCompleted = FlxG.save.data.weekCompleted;
 
@@ -62,9 +65,38 @@ class TitleState extends MusicBeatState
 			allow = false;
             return;
         }
+
+		titleStuff = new FlxTypedGroup<FlxSprite>();
+		titleStuff.visible = false;
+		add(titleStuff);
+
+		var red:FlxSprite = new FlxSprite().loadGraphic(Paths.image('title/red'));
+		red.antialiasing = false;
+		red.x = 75;
+		red.y = FlxG.height - red.height - 125;
+		titleStuff.add(red);
+
+		var enter:FlxSprite = new FlxSprite().loadGraphic(Paths.image('title/press'));
+		enter.antialiasing = false;
+		enter.screenCenter();
+		enter.y += 325;
+		titleStuff.add(enter);
+
+		logo = new FlxSprite(0, 35).loadGraphic(Paths.image('title/logo'));
+		logo.x = FlxG.width - logo.width - 80;
+		logo.antialiasing = false;
+		titleStuff.add(logo);
+
+		whiteFront = new FlxSprite().makeGraphic(FlxG.width, FlxG.height, FlxColor.WHITE);
+		whiteFront.scrollFactor.set(0, 0);
+		whiteFront.visible = !seenIntro;
+		add(whiteFront);
+
+		textsGrp = new FlxTypedSpriteGroup();
+		add(textsGrp);
 		
 		allow = false;
-		new FlxTimer().start((seenIntro ? 1 : 0.01), function(_)
+		new FlxTimer().start((seenIntro ? 0.5 : 0.01), function(_)
 		{
 			allow = true;
 			if(passedWarning) {
@@ -73,53 +105,7 @@ class TitleState extends MusicBeatState
 				FlxTween.tween(FlxG.camera, {"scroll.y": 0}, 1.25, {ease: FlxEase.smootherStepOut});
 			}
 
-			if(FlxG.sound.music == null) {
-				FlxG.sound.playMusic(Paths.music('freakyMenu'), 0);
-				FlxG.sound.music.fadeIn(2, 0, 1);
-			}
-			Conductor.bpm = 109;
-
-			var bg:FlxSprite = new FlxSprite();
-			bg.antialiasing = false;
-			bg.makeGraphic(FlxG.width, FlxG.height, FlxColor.WHITE);
-			bg.scrollFactor.set(0, 0);
-			add(bg);
-
-			titleStuff = new FlxTypedGroup<FlxSprite>();
-			add(titleStuff);
-
-			var red:FlxSprite = new FlxSprite().loadGraphic(Paths.image('title/red'));
-			red.antialiasing = false;
-			red.x = 75;
-			red.y = FlxG.height - red.height - 125;
-			red.updateHitbox();
-			titleStuff.add(red);
-
-			var enter:FlxSprite = new FlxSprite().loadGraphic(Paths.image('title/press'));
-			enter.antialiasing = false;
-			enter.screenCenter();
-			enter.y += 325;
-			enter.updateHitbox();
-			titleStuff.add(enter);
-
-			logo = new FlxSprite(0, 35).loadGraphic(Paths.image('title/logo'));
-			logo.scale.set(0.6, 0.6);
-			logo.updateHitbox();
-			logo.x = FlxG.width - logo.width - 80;
-			logo.antialiasing = false;
-			titleStuff.add(logo);
-
-			// Intro
-
-			whiteFront = new FlxSprite();
-			whiteFront.antialiasing = false;
-			whiteFront.makeGraphic(FlxG.width, FlxG.height, FlxColor.WHITE);
-			whiteFront.scrollFactor.set(0, 0);
-			whiteFront.visible = !seenIntro;
-			add(whiteFront);
-
-			textsGrp = new FlxTypedSpriteGroup();
-			add(textsGrp);
+			titleStuff.visible = true;
 		
 			if(!seenIntro) seenIntro = true;
 			else finishIntro();
@@ -155,7 +141,7 @@ class TitleState extends MusicBeatState
 
 		if (FlxG.sound.music != null) Conductor.songPosition = FlxG.sound.music.time;
 
-		var mult:Float = FlxMath.lerp(0.6, logo.scale.x, Math.exp(-elapsed * 9 * 1));
+		var mult:Float = FlxMath.lerp(1, logo.scale.x, Math.exp(-elapsed * 9 * 1));
 		logo.scale.set(mult, mult);
 
 		if(!selected) {
@@ -185,7 +171,7 @@ class TitleState extends MusicBeatState
 		super.beatHit();
 		if(!allow) return;
 		
-		logo.scale.set(0.65, 0.65);
+		logo.scale.set(1.075, 1.075);
 
 		if(!selected)
 		{

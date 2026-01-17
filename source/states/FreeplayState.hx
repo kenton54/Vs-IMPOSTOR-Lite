@@ -102,8 +102,6 @@ class FreeplayState extends MusicBeatState
 		for (i in 0...songs.length) Paths.image('portraits/${songs[i].portrait}');
 
 		portrait = new FlxSprite().loadGraphic(Paths.image('portraits/${songs[curSelected].portrait}'));
-		portrait.scale.set(0.4, 0.4);
-		portrait.updateHitbox();
 		portrait.x = FlxG.width - portrait.width + 25;
 		portrait.y = FlxG.height - portrait.height;
 		portrait.antialiasing = false;
@@ -291,8 +289,6 @@ class FreeplayState extends MusicBeatState
 				isPortraitOn = true;
 				FlxTween.cancelTweensOf(portrait);
 				portrait.loadGraphic(Paths.image('portraits/${songs[curSelected].portrait}'));
-				portrait.scale.set(0.4, 0.4);
-				portrait.updateHitbox();
 				portrait.y = FlxG.height - portrait.height;
 				FlxTween.tween(portrait, {x: FlxG.width - portrait.width + 25, alpha: 1}, 0.55, {ease: FlxEase.quartOut});
 			}

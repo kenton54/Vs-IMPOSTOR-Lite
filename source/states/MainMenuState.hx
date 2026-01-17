@@ -85,7 +85,7 @@ class MainMenuState extends MusicBeatState
 
 		var logo:FlxSprite = new FlxSprite(0, 10).loadGraphic(Paths.image('title/logo'));
 		logo.antialiasing = false;
-		logo.scale.set(0.5, 0.5);
+		logo.scale.set(0.9, 0.9);
 		logo.updateHitbox();
 		logo.screenCenter(X);
 		add(logo);
