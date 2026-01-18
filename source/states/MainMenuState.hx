@@ -37,11 +37,6 @@ class MainMenuState extends MusicBeatState
 		transOut = FlxTransitionableState.defaultTransOut;
 		persistentUpdate = persistentDraw = true;
 
-		var bg:FlxSprite = new FlxSprite();
-		bg.antialiasing = ClientPrefs.data.antialiasing;
-		bg.makeGraphic(FlxG.width, FlxG.height, FlxColor.WHITE);
-		add(bg);
-
 		var red:FlxSprite = new FlxSprite();
 		red.frames = Paths.getSparrowAtlas('mainmenu/redmenu');
 		red.animation.addByPrefix('idlered', 'redmenu', 4);
@@ -183,21 +178,37 @@ class MainMenuState extends MusicBeatState
 
 	function changeItem(huh:Int = 0)
 	{
-		if(huh != 0) FlxG.sound.play(Paths.sound('scrollMenu'));
-		menuItems.members[curSelected].animation.play('idle');
-		menuItems.members[curSelected].alpha = 0.5;
-		menuItems.members[curSelected].updateHitbox();
-		menuItems.members[curSelected].screenCenter(X);
-
 		curSelected += huh;
 		if (curSelected >= menuItems.length)
 			curSelected = 0;
 		if (curSelected < 0)
 			curSelected = menuItems.length - 1;
 
-		menuItems.members[curSelected].animation.play('selected');
-		menuItems.members[curSelected].alpha = 1;
-		menuItems.members[curSelected].centerOffsets();
-		menuItems.members[curSelected].screenCenter(X);
+		if (huh != 0)
+		{
+			FlxG.sound.play(Paths.sound('scrollMenu'));
+			
+			if (optionShit[curSelected] == 'shop')
+			{
+				changeItem(huh);
+				return;
+			}
+		}
+
+		for (i => item in menuItems.members)
+		{
+			if (i == curSelected)
+			{
+				item.animation.play('selected');
+				item.alpha = 1;
+				item.screenCenter(X);
+			}
+			else
+			{
+				item.animation.play('idle');
+				item.alpha = 0.5;
+				item.screenCenter(X);
+			}
+		}
 	}
 }
