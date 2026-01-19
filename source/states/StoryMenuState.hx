@@ -74,20 +74,36 @@ class StoryMenuState extends MusicBeatState
 		#end
 
 		var num:Int = 0;
-		for (i in 0...WeekData.weeksList.length)
+		var weeksList:Array<WeekData> = [for (i in 0...WeekData.weeksList.length) WeekData.weeksLoaded.get(WeekData.weeksList[i])];
+		weeksList.push(new WeekData({
+			songs: [["", "", [255, 255, 255], ""]],
+			storyName: "coming soon...",
+			weekName: "Coming Soon",
+			weekBefore: "week1",
+			weekCharacters: [],
+			weekBackground: "",
+			freeplayColor: [255, 255, 255],
+			startUnlocked: false,
+			hiddenUntilUnlocked: false,
+			hideStoryMode: false,
+			hideFreeplay: true,
+			difficulties: ""
+		}, "soon"));
+
+		for (i in 0...weeksList.length)
 		{
-			var weekFile:WeekData = WeekData.weeksLoaded.get(WeekData.weeksList[i]);
-			var isLocked:Bool = weekIsLocked(WeekData.weeksList[i]);
-			if(!isLocked || !weekFile.hiddenUntilUnlocked)
+			var weekFile:WeekData = weeksList[i];
+			if(!weekFile.hiddenUntilUnlocked)
 			{
 				loadedWeeks.push(weekFile);
 				WeekData.setDirectoryFromWeek(weekFile);
 				var weekThing:MenuItem = new MenuItem(0, 0);
-				weekThing.loadGraphic(Paths.image('storymode/weeks/' + WeekData.weeksList[i]));
-				weekThing.x += ((weekThing.width) * num);
+				weekThing.loadGraphic(Paths.image('storymode/weeks/' + weekFile.fileName));
+				weekThing.x += weekThing.width * num;
 				weekThing.targetX = num;
 				grpWeekText.add(weekThing);
 
+				/*
 				// Needs an offset thingie
 				if (isLocked)
 				{
@@ -99,6 +115,7 @@ class StoryMenuState extends MusicBeatState
 					lock.ID = i;
 					grpLocks.add(lock);
 				}
+				*/
 				num++;
 			}
 		}
@@ -240,7 +257,7 @@ class StoryMenuState extends MusicBeatState
 	var stopspamming:Bool = false;
 	function selectWeek()
 	{
-		if (!weekIsLocked(loadedWeeks[curWeek].fileName))
+		if (loadedWeeks[curWeek].fileName != 'soon' && !weekIsLocked(loadedWeeks[curWeek].fileName))
 		{
 			// We can't use Dynamic Array .copy() because that crashes HTML5, here's a workaround.
 			var songArray:Array<String> = [];
@@ -316,6 +333,13 @@ class StoryMenuState extends MusicBeatState
 			bullShit++;
 		}
 		PlayState.storyWeek = curWeek;
+
+		if (loadedWeeks[curWeek].fileName == 'soon')
+		{
+			intendedScore = 0;
+			updateText();
+			return;
+		}
 
 		Difficulty.loadFromWeek();
 		if(Difficulty.list.contains(Difficulty.getDefault()))
