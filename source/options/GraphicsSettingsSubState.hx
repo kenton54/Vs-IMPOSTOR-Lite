@@ -26,7 +26,7 @@ class GraphicsSettingsSubState extends BaseOptionsMenu
 		addOption(option);
 
 		var option:Option = new Option('Anti-Aliasing',
-			'If unchecked, disables anti-aliasing, increases performance\nat the cost of ruining the aesthetic of the mod (/j lol).',
+			'If unchecked, disables anti-aliasing, increases performance.\nIf enabled, it will ruin the aesthetic of the mod and you\'ll be sent to jail for life.',
 			'antialiasing',
 			'bool');
 		option.onChange = onChangeAntiAliasing; //Changing onChange is only needed if you want to make a special interaction after it changes the value
