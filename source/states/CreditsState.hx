@@ -192,8 +192,19 @@ class CreditsState extends MusicBeatState
 				}
 			}
 
-			if (controls.ACCEPT && Std.isOfType(grpOptions.members[curSelected], MenuItem) && curCredits[3] == null && curCredits[3] != "")
-				CoolUtil.browserLoad(curCredits[3]);
+			if (controls.ACCEPT)
+			{
+				if (curCredits[1] == "sparkly")
+				{
+					var sixSeven:FlxSound = new FlxSound().loadEmbedded(Paths.sound("67"));
+					sixSeven.persist = true;
+					sixSeven.play();
+					sixSeven.onComplete = () -> sixSeven.destroy();
+				}
+
+				if (Std.isOfType(grpOptions.members[curSelected], MenuItem) && curCredits[3] == null && curCredits[3] != "")
+					CoolUtil.browserLoad(curCredits[3]);
+			}
 
 			if (controls.BACK)
 			{
