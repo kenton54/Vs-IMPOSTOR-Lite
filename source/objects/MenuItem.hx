@@ -4,12 +4,10 @@ class MenuItem extends FlxSprite
 {
 	public var targetX:Float = 0;
 
-	public function new(x:Float, y:Float, weekName:String = '')
+	public function new(x:Float = 0, y:Float = 0)
 	{
 		super(x, y);
 		antialiasing = ClientPrefs.data.antialiasing;
-		updateHitbox();
-		//trace('Test added: ' + WeekData.getWeekNumber(weekNum) + ' (' + weekNum + ')');
 	}
 
 	public var isFlashing(default, set):Bool = false;
@@ -29,7 +27,7 @@ class MenuItem extends FlxSprite
 	{
 		super.update(elapsed);
 
-		x = FlxMath.lerp((targetX * 1200), x, Math.exp(-elapsed * 10.2));
+		x = FlxMath.lerp(targetX * FlxG.width, x, Math.exp(-elapsed * 10.2));
 		if (isFlashing)
 		{
 			_flashingElapsed += elapsed;

@@ -1,18 +1,25 @@
 package states;
 
+import flixel.util.typeLimit.OneOfTwo;
 import objects.AttachedSprite;
 import objects.MenuItem;
 
 class CreditsState extends MusicBeatState
 {
-	var curSelected:Int = -1;
+	var curSelected:Int = 0;
 
-	private var grpOptions:FlxTypedGroup<MenuItem>;
-	private var creditsStuff:Array<Array<String>> = [];
+	public var description(default, set):String;
+
+	public var color(default, set):FlxColor;
+
+	var grpOptions:FlxTypedGroup<OneOfTwo<MenuItem, CreditsList>>;
+	var creditsList:Array<Array<Dynamic>> = [];
+
+	var curCredits(get, never):Array<Dynamic>;
 
 	var bg:FlxSprite;
 	var descText:FlxText;
-	var intendedColor:FlxColor;
+	var intendedColor:FlxColor = FlxColor.WHITE;
 	var colorTween:FlxTween;
 	var descBox:AttachedSprite;
 
@@ -21,12 +28,17 @@ class CreditsState extends MusicBeatState
 
 	var offsetThing:Float = -75;
 
-	public var onST:Bool = false;
-	public var specialSection:SpecialThanks;
+	var teamName:String = "";
 
-	public static var teamName:String = "";
+	public function new(teamName:String, list:Array<Array<Dynamic>>)
+	{
+		super();
 
-	public static var defaultList:Array<Array<String>> = [];
+		this.teamName = teamName;
+
+		for (i in list)
+			creditsList.push(i);
+	}
 
 	override function create()
 	{
@@ -40,47 +52,9 @@ class CreditsState extends MusicBeatState
 		bg.antialiasing = ClientPrefs.data.antialiasing;
 		add(bg);
 		bg.screenCenter();
-		
-		grpOptions = new FlxTypedGroup<MenuItem>();
+
+		grpOptions = new FlxTypedGroup<OneOfTwo<MenuItem, CreditsList>>();
 		add(grpOptions);
-
-		#if MODS_ALLOWED
-		for (mod in Mods.parseList().enabled) pushModCreditsToList(mod);
-		#end
-		
-		for(i in defaultList) {
-			creditsStuff.push(i);
-		}
-	
-		for (i in 0...creditsStuff.length)
-		{
-			var isSelectable:Bool = !unselectableCheck(i);
-			var optionText:MenuItem = new MenuItem(0, 0);
-			optionText.loadGraphic(Paths.image('credits/${teamName}/' + creditsStuff[i][0]));
-			optionText.x += ((optionText.width) * i);
-			optionText.targetX = i;
-			optionText.antialiasing = ClientPrefs.data.antialiasing;
-			grpOptions.add(optionText);
-			optionText.visible = (creditsStuff[i][0] != "SpecialThanks");
-
-			if(isSelectable) {
-				if(creditsStuff[i][4] != null)
-				{
-					Mods.currentModDirectory = creditsStuff[i][4];
-				}
-				Mods.currentModDirectory = '';
-
-				if(curSelected == -1) curSelected = i;
-			}
-		}
-
-		if(teamName == "liteImp")
-		{
-			specialSection = new SpecialThanks();
-			specialSection.sprAttacher = grpOptions.members[grpOptions.members.length-1];
-			specialSection.stateGet = this;
-			add(specialSection);
-		}
 
 		leftArrow = new FlxSprite(20, 0);
 		leftArrow.antialiasing = false;
@@ -97,7 +71,7 @@ class CreditsState extends MusicBeatState
 		rightArrow.flipX = true;
 		add(leftArrow);
 		add(rightArrow);
-		
+
 		descBox = new AttachedSprite();
 		descBox.makeGraphic(1, 1, FlxColor.BLACK);
 		descBox.xAdd = -10;
@@ -107,9 +81,9 @@ class CreditsState extends MusicBeatState
 		add(descBox);
 
 		descText = new FlxText(50, FlxG.height + offsetThing - 25, 1100, "", 32);
-		descText.setFormat(Paths.font("vcr.ttf"), 32, FlxColor.WHITE, CENTER/*, FlxTextBorderStyle.OUTLINE, FlxColor.BLACK*/);
+		descText.setFormat(Paths.font("vcr.ttf"), 32, FlxColor.WHITE, CENTER /*, FlxTextBorderStyle.OUTLINE, FlxColor.BLACK*/);
 		descText.scrollFactor.set();
-		//descText.borderSize = 2.4;
+		// descText.borderSize = 2.4;
 		descBox.sprTracker = descText;
 		add(descText);
 
@@ -118,21 +92,62 @@ class CreditsState extends MusicBeatState
 		socialCheck.screenCenter(X);
 		add(socialCheck);
 
-		bg.color = CoolUtil.colorFromString(creditsStuff[curSelected][0] == "SpecialThanks" ? "FFFFFF" : creditsStuff[curSelected][3]);
-		intendedColor = bg.color;
-		changeSelection();
+		/*
+		#if MODS_ALLOWED
+		for (mod in Mods.parseList().enabled) pushModCreditsToList(mod);
+		#end
+		*/
+	
+		for (i => credit in creditsList)
+		{
+			var isSelectable:Bool = false;
+
+			if (credit[0] == "portrait")
+			{
+				isSelectable = !unselectableCheck(i);
+
+				var creditPortrait:MenuItem = new MenuItem();
+				creditPortrait.loadGraphic(Paths.image('credits/${teamName}/' + credit[1]));
+				creditPortrait.x = creditPortrait.width * i;
+				creditPortrait.targetX = i;
+				creditPortrait.antialiasing = ClientPrefs.data.antialiasing;
+				grpOptions.add(creditPortrait);
+			}
+			else if (credit[0] == "list")
+			{
+				isSelectable = !unselectableCheck(i);
+
+				var optionList:CreditsList = new CreditsList();
+				optionList.parent = this;
+				optionList.targetX = i;
+
+				var omfg:Array<Array<String>> = credit[1];
+				for (person in omfg)
+				{
+					optionList.addCredit(person[0], person[1], person[2]);
+				}
+
+				grpOptions.add(optionList);
+			}
+
+			if (isSelectable)
+			{
+				if (credit[5] != null)
+					Mods.currentModDirectory = credit[5];
+
+				Mods.currentModDirectory = '';
+			}
+		}
+
 		super.create();
+
+		changeSelection();
 	}
 
 	var quitting:Bool = false;
 	var holdTime:Float = 0;
 	override function update(elapsed:Float)
 	{
-		if (FlxG.sound.music.volume < 0.7)
-		{
-			FlxG.sound.music.volume += 0.5 * FlxG.elapsed;
-		}
-
 		if (controls.UI_RIGHT)
 			rightArrow.color = FlxColor.GRAY;
 		else
@@ -145,7 +160,7 @@ class CreditsState extends MusicBeatState
 
 		if(!quitting)
 		{
-			if(creditsStuff.length > 1)
+			if(creditsList.length > 1)
 			{
 				var shiftMult:Int = 1;
 				if(FlxG.keys.pressed.SHIFT) shiftMult = 3;
@@ -177,69 +192,52 @@ class CreditsState extends MusicBeatState
 				}
 			}
 
-			if(creditsStuff[curSelected][0] != "SpecialThanks" && controls.ACCEPT && (creditsStuff[curSelected][2] == null || creditsStuff[curSelected][2].length > 4)) {
-				CoolUtil.browserLoad(creditsStuff[curSelected][2]);
-			}
+			if (controls.ACCEPT && Std.isOfType(grpOptions.members[curSelected], MenuItem) && curCredits[3] == null && curCredits[3] != "")
+				CoolUtil.browserLoad(curCredits[3]);
+
 			if (controls.BACK)
 			{
-				if(colorTween != null) {
-					colorTween.cancel();
-				}
+				if(colorTween != null) colorTween.cancel();
 				FlxG.sound.play(Paths.sound('cancelMenu'));
 				FlxG.switchState(() -> new SelectCreditsState());
 				quitting = true;
 			}
 		}
+
 		super.update(elapsed);
 	}
 
 	var moveTween:FlxTween = null;
 	public function changeSelection(change:Int = 0, manualText:String = "")
 	{
-		if(manualText == "") FlxG.sound.play(Paths.sound('scrollMenu'), 0.4);
-		do {
-			curSelected += change;
-			if (curSelected < 0)
-				curSelected = creditsStuff.length - 1;
-			if (curSelected >= creditsStuff.length)
-				curSelected = 0;
-		} while(unselectableCheck(curSelected));
+		curSelected = FlxMath.wrap(curSelected + change, 0, creditsList.length - 1);
 
-		var newColor:FlxColor = CoolUtil.colorFromString(creditsStuff[curSelected][0] == "SpecialThanks" ? "FFFFFF" : creditsStuff[curSelected][3]);
-		//trace('The BG color is: $newColor');
-		if(newColor != intendedColor) {
-			if(colorTween != null) {
-				colorTween.cancel();
-			}
-			intendedColor = newColor;
-			colorTween = FlxTween.color(bg, 1, bg.color, intendedColor, {
-				onComplete: function(twn:FlxTween) {
-					colorTween = null;
-				}
-			});
+		if (unselectableCheck(curSelected))
+		{
+			changeSelection(change, manualText);
+			return;
 		}
 
+		if (change != 0) FlxG.sound.play(Paths.sound('scrollMenu'), 0.4);
+
+		description = manualText != "" ? manualText : curCredits[2];
+		var newColor:FlxColor = CoolUtil.colorFromString(curCredits[4] ?? "FFFFFF");
+		color = newColor;
+
+		// can the haxe compiler stfu
 		for (i => item in grpOptions.members)
-			item.targetX = i - curSelected;
+		{
+			if (Std.isOfType(item, MenuItem))
+				cast(item, MenuItem).targetX = i - curSelected;
+			else if (Std.isOfType(item, CreditsList))
+			{
+				var list:CreditsList = cast(item, CreditsList);
+				list.targetX = i - curSelected;
 
-		onST = (creditsStuff[curSelected][0] == "SpecialThanks");
-
-		var isEmpty = (creditsStuff[curSelected][1] == "");
-		descText.visible = !isEmpty;
-		descBox.visible = !isEmpty;
-
-		descText.text = (manualText != "" ? manualText : creditsStuff[curSelected][1]);
-		if(change != 0 && onST) {
-			if(specialSection != null) descText.text = specialSection.groupList[specialSection.currentPerson][1];
+				list.allowSelection = i == curSelected;
+				list.changePerson();
+			}
 		}
-
-		descText.y = FlxG.height - descText.height + offsetThing - 60;
-
-		if(moveTween != null) moveTween.cancel();
-		moveTween = FlxTween.tween(descText, {y : descText.y + 75}, 0.25, {ease: FlxEase.sineOut});
-
-		descBox.setGraphicSize(Std.int(descText.width + 20), Std.int(descText.height + 25));
-		descBox.updateHitbox();
 	}
 
 	#if MODS_ALLOWED
@@ -256,29 +254,78 @@ class CreditsState extends MusicBeatState
 			{
 				var arr:Array<String> = i.replace('\\n', '\n').split("::");
 				if(arr.length >= 5) arr.push(folder);
-				creditsStuff.push(arr);
+				creditsList.push(arr);
 			}
-			creditsStuff.push(['']);
+			creditsList.push(['']);
 		}
 	}
 	#end
 
 	private function unselectableCheck(num:Int):Bool {
-		return creditsStuff[num].length <= 1;
+		return creditsList[num].length <= 1;
+	}
+
+	function set_description(value:String):String
+	{
+		description = value;
+
+		var isEmpty = value == "";
+		descText.visible = !isEmpty;
+		descBox.visible = !isEmpty;
+		descText.text = value;
+
+		descBox.setGraphicSize(Std.int(descText.width + 20), Std.int(descText.height + 25));
+		descBox.updateHitbox();
+
+		descText.y = FlxG.height - descText.height + offsetThing - 60;
+
+		if (moveTween != null) moveTween.cancel();
+		moveTween = FlxTween.tween(descText, {y: descText.y + 75}, 0.25, {ease: FlxEase.sineOut});
+
+		return value;
+	}
+
+	function set_color(color:FlxColor):FlxColor
+	{
+		if (color != intendedColor)
+		{
+			if (colorTween != null)
+			{
+				colorTween.cancel();
+			}
+			intendedColor = color;
+			colorTween = FlxTween.color(bg, 1, bg.color, intendedColor, {
+				onComplete: function(twn:FlxTween)
+				{
+					colorTween = null;
+				}
+			});
+		}
+
+		return color;
+	}
+
+	function get_curCredits():Array<Dynamic>
+	{
+		return creditsList[curSelected];
 	}
 }
 
-class SpecialThanks extends FlxTypedSpriteGroup<FlxSprite>
+class CreditsList extends FlxTypedSpriteGroup<FlxSprite>
 {
 	public var currentPerson:Int = 0;
 
-	public var sprAttacher:FlxSprite;
-	public var stateGet:CreditsState;
+	public var targetX:Float = 0;
+
+	public var parent:CreditsState;
+
 	public var blackBox:FlxSprite;
 
-	public var peopleGrp:FlxTypedSpriteGroup<Alphabet> = new FlxTypedSpriteGroup();
+	public var peopleGrp:FlxTypedSpriteGroup<Alphabet>;
 
-	public var groupList:Array<Dynamic> = tjson.TJSON.parse(File.getContent(Paths.getLitePath("data/credits.json"))).specialthanks;
+	public var groupList:Array<Array<String>> = [];
+
+	public var allowSelection:Bool = false;
 
 	public function new(x:Float = 0, y:Float = 0)
 	{
@@ -289,70 +336,78 @@ class SpecialThanks extends FlxTypedSpriteGroup<FlxSprite>
 		blackBox.alpha = 0.6;
 		add(blackBox);
 
+		peopleGrp = new FlxTypedSpriteGroup<Alphabet>();
 		add(peopleGrp);
 
-		for(i => person in groupList) {
-			var nameSpr:Alphabet = new Alphabet(0, 0, person[0], true);
-			nameSpr.distancePerItem.x = 0;
-			nameSpr.targetY = i;
-			nameSpr.ID = i;
-			nameSpr.setScale(0.75, 0.75);
-			nameSpr.screenCenter();
-			nameSpr.y += blackBox.y + (90 * (i - (groupList.length / 2)));
-			peopleGrp.add(nameSpr);
-		}
+		// peopleGrp.y += 25;
 
-		blackBox.scale.set(peopleGrp.width + 100, peopleGrp.height + 100);
+		updateBox();
+	}
+
+	public function addCredit(name:String, description:String, url:String)
+	{
+		var nameSpr:Alphabet = new Alphabet(0, 0, name, true);
+		nameSpr.distancePerItem.x = 0;
+		nameSpr.targetY = groupList.length;
+		nameSpr.ID = groupList.length;
+		nameSpr.setScale(0.75, 0.75);
+		nameSpr.screenCenter(X);
+		nameSpr.y = 90 * groupList.length;
+		peopleGrp.add(nameSpr);
+		groupList.push([name, description, url]);
+
+		/*
+		for (i => nameSpr in peopleGrp.members)
+		{
+			nameSpr.y = blackBox.y + (90 * (i - (groupList.length / 2))) - 55;
+		}
+		*/
+
+		updateBox();
+		changePerson();
+	}
+
+	function updateBox()
+	{
+		blackBox.setGraphicSize(peopleGrp.width + 100, peopleGrp.height + 100);
 		blackBox.updateHitbox();
 		blackBox.screenCenter();
 		blackBox.y -= 50;
-
-		for(i => nameSpr in peopleGrp.members) {
-			nameSpr.screenCenter();
-			nameSpr.y += blackBox.y + (90 * (i - (groupList.length / 2))) - 55;
-		}
-		// peopleGrp.y += 25;
-
-		changePerson();
+		peopleGrp.y = blackBox.y + 50;
 	}
 
 	override function update(elapsed:Float)
 	{
 		super.update(elapsed);
-	
-		this.x = sprAttacher.x + sprAttacher.width;
-		this.y = sprAttacher.y;
 
-		if(stateGet != null && stateGet.onST) {
-			if(FlxG.keys.justPressed.UP || FlxG.keys.justPressed.W) changePerson(-1);
-			if(FlxG.keys.justPressed.DOWN || FlxG.keys.justPressed.S) changePerson(1);
+		x = FlxMath.lerp(targetX * FlxG.width, x, Math.exp(-elapsed * 10.2));
 
-			if(FlxG.keys.justPressed.ENTER || FlxG.keys.justPressed.SPACE) {
-				if(groupList[currentPerson][2] != "" && groupList[currentPerson][2] != null) CoolUtil.browserLoad(groupList[currentPerson][2]);
-			}
+		if (allowSelection && groupList.length > 0)
+		{
+			if (Controls.instance.UI_UP_P) changePerson(-1);
+			if (Controls.instance.UI_DOWN_P) changePerson(1);
+
+			if (Controls.instance.ACCEPT)
+				if (groupList[currentPerson][2] != "" && groupList[currentPerson][2] != null) CoolUtil.browserLoad(groupList[currentPerson][2]);
 		}
 	}
 
-	function changePerson(change:Int = 0)
+	public function changePerson(change:Int = 0)
 	{
+		if (!allowSelection) return;
+
 		if(change != 0) FlxG.sound.play(Paths.sound('scrollMenu'), 0.4);
 
-		currentPerson += change;
-		if (currentPerson < 0)
-			currentPerson = peopleGrp.length - 1;
-		if (currentPerson >= peopleGrp.length)
-			currentPerson = 0;
+		currentPerson = FlxMath.wrap(currentPerson + change, 0, peopleGrp.length - 1);
 
 		for(i => person in peopleGrp.members) {
 			person.targetY = i - currentPerson;
 
-			if(person.ID == currentPerson) 
-				person.alpha = 1; 
+			if(person.ID == currentPerson) person.alpha = 1; 
 			else person.alpha = 0.5;
 		}
 
-		if(stateGet != null) {
-			stateGet.changeSelection(0, groupList[currentPerson][1]);
-		} 
+		if (parent != null)
+			parent.description = groupList[currentPerson][1];
 	}
 }

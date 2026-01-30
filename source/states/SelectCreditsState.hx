@@ -108,12 +108,7 @@ class SelectCreditsState extends MusicBeatState
         FlxG.sound.play(Paths.sound('confirmMenu'));
         selected = true;
         FlxG.mouse.visible = false;
-        FlxFlicker.flicker(logosGrp.members[curCredit], 1, 0.06, false, false, function(flick:FlxFlicker)
-        {
-            CreditsState.teamName = teamsList[curCredit][0];
-            CreditsState.defaultList = teamsList[curCredit][3];
-            FlxG.switchState(() -> new CreditsState());
-        });
+        FlxFlicker.flicker(logosGrp.members[curCredit], 1, 0.06, false, false, _ -> FlxG.switchState(() -> new CreditsState(teamsList[curCredit][0], teamsList[curCredit][3])));
     }
 
     function changeItem(huh:Int = 0)
