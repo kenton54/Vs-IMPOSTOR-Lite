@@ -12,7 +12,7 @@ class TitleState extends MusicBeatState
 	static var seenIntro:Bool = false;
 	static var passedWarning:Bool = false;
 	var curWacky:Array<String> = [];
-	
+
 	var whiteFront:FlxSprite;
 	var textsGrp:FlxTypedSpriteGroup<Alphabet>;
 
