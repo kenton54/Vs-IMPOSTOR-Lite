@@ -6,6 +6,7 @@
 	<SubTexture name="Idle0001" x="0" y="226" width="359" height="184" frameX="-160" frameY="-254" frameWidth="869" frameHeight="523"/>
 	<SubTexture name="Idle0002" x="359" y="226" width="360" height="180" frameX="-159" frameY="-253" frameWidth="869" frameHeight="523"/>
 	<SubTexture name="Idle0003" x="720" y="362" width="345" height="178" frameX="-163" frameY="-249" frameWidth="869" frameHeight="523"/>
+	<SubTexture name="Idle0004" x="0" y="753" width="344" height="177" frameX="-162" frameY="-249" frameWidth="869" frameHeight="523"/>
 	<SubTexture name="Up0000" x="0" y="0" width="364" height="226" frameX="-162" frameY="-210" frameWidth="869" frameHeight="523"/>
 	<SubTexture name="Up0001" x="364" y="0" width="356" height="199" frameX="-166" frameY="-234" frameWidth="869" frameHeight="523"/>
 	<SubTexture name="Down0000" x="720" y="182" width="345" height="180" frameX="-181" frameY="-231" frameWidth="869" frameHeight="523"/>

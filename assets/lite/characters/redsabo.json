@@ -3,45 +3,45 @@
 		{
 			"loop": false,
 			"offsets": [
-				0,
-				-10
+				-6,
+				-5
 			],
 			"anim": "singDOWN",
 			"fps": 12,
-			"name": "downred",
+			"name": "Down",
 			"indices": []
 		},
 		{
 			"loop": false,
 			"offsets": [
-				0,
-				0
+				-1,
+				-4
 			],
 			"anim": "singUP",
 			"fps": 12,
-			"name": "upred",
+			"name": "Up",
 			"indices": []
 		},
 		{
 			"loop": false,
 			"offsets": [
 				-14,
-				15
+				-3
 			],
 			"anim": "singRIGHT",
 			"fps": 12,
-			"name": "rightred",
+			"name": "Right",
 			"indices": []
 		},
 		{
 			"loop": false,
 			"offsets": [
-				35,
-				19
+				4,
+				-1
 			],
 			"anim": "singLEFT",
 			"fps": 12,
-			"name": "leftred",
+			"name": "Left",
 			"indices": [
 				2,
 				1,
@@ -50,28 +50,22 @@
 		},
 		{
 			"offsets": [
-				14,
+				0,
 				0
 			],
-			"indices": [
-				2,
-				3,
-				4,
-				1,
-				0
-			],
+			"loop": false,
 			"fps": 12,
 			"anim": "idle",
-			"loop": false,
-			"name": "idlered"
+			"indices": [],
+			"name": "Idle"
 		}
 	],
 	"vocals_file": "",
 	"no_antialiasing": true,
 	"image": "characters/literedsabo",
 	"position": [
-		710,
-		-250
+		-50,
+		200
 	],
 	"healthicon": "red",
 	"flip_x": false,
@@ -81,8 +75,8 @@
 		142
 	],
 	"camera_position": [
-		-2700,
-		-450
+		-720,
+		-200
 	],
 	"sing_duration": 4,
 	"scale": 2.3,
