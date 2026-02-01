@@ -17,6 +17,7 @@ class TitleState extends MusicBeatState
 	var textsGrp:FlxTypedSpriteGroup<Alphabet>;
 
 	var logo:FlxSprite;
+	var logoTTSpr:FlxSprite;
 	var titleStuff:FlxTypedGroup<FlxSprite>;
 
 	override function create():Void
@@ -94,6 +95,15 @@ class TitleState extends MusicBeatState
 
 		textsGrp = new FlxTypedSpriteGroup();
 		add(textsGrp);
+
+		logoTTSpr = new FlxSprite().loadGraphic(Paths.image('logo'));
+		logoTTSpr.antialiasing = false;
+		logoTTSpr.setGraphicSize(Std.int(500));
+		logoTTSpr.updateHitbox();
+		logoTTSpr.screenCenter(X);
+		logoTTSpr.y = FlxG.height - logoTTSpr.height - 80;
+		logoTTSpr.visible = false;
+		add(logoTTSpr);
 		
 		allow = false;
 		new FlxTimer().start((seenIntro ? 0.5 : 0.01), function(_)
@@ -189,14 +199,17 @@ class TitleState extends MusicBeatState
 					makeIntroText('And inspired by', -40);
 				case 7:
 					makeIntroText('This mod here', -40);
-					// ngSpr.visible = true;
+					logoTTSpr.visible = true;
 				case 8:
 					removeIntroTexts();
-					// ngSpr.visible = false;
+					logoTTSpr.visible = false;
 				case 9:
 					makeIntroArrText([curWacky[0]]);
 				case 11:
-					makeIntroText(curWacky[1]);
+					// kenton... hear me out...
+					if(curWacky[1] != null) makeIntroText(curWacky[1]);
+					if(curWacky[2] != null) makeIntroText(curWacky[2]);
+					if(curWacky[3] != null) makeIntroText(curWacky[3]);
 				case 12:
 					removeIntroTexts();
 				case 13:
