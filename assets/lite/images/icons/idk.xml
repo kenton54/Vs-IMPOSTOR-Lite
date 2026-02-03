@@ -1,9 +1,0 @@
-<?xml version='1.0' encoding='utf-8'?>
-<TextureAtlas imagePath="idk.png">
-<SubTexture name="lose0000" x="0" y="0" width="85" height="99" frameX="-15" frameY="0" frameWidth="124" frameHeight="99" />
-<SubTexture name="lose0001" x="85" y="0" width="85" height="99" frameX="-15" frameY="0" frameWidth="124" frameHeight="99" />
-<SubTexture name="normal0000" x="170" y="0" width="92" height="98" frameX="-10" frameY="0" frameWidth="124" frameHeight="99" />
-<SubTexture name="normal0001" x="0" y="99" width="91" height="98" frameX="-10" frameY="0" frameWidth="124" frameHeight="99" />
-<SubTexture name="win0000" x="91" y="99" width="123" height="98" frameX="0" frameY="0" frameWidth="124" frameHeight="99" />
-<SubTexture name="win0001" x="262" y="0" width="123" height="98" frameX="0" frameY="0" frameWidth="124" frameHeight="99" />
-</TextureAtlas>
