@@ -83,8 +83,8 @@ class TitleState extends MusicBeatState
 		enter.y += 325;
 		titleStuff.add(enter);
 
-		logo = new FlxSprite(0, 35).loadGraphic(Paths.image('title/logo'));
-		logo.x = FlxG.width - logo.width - 80;
+		logo = new FlxSprite(0, 50).loadGraphic(Paths.image('title/logo'));
+		logo.x = FlxG.width - logo.width - 40;
 		logo.antialiasing = false;
 		titleStuff.add(logo);
 
@@ -117,8 +117,7 @@ class TitleState extends MusicBeatState
 
 			titleStuff.visible = true;
 		
-			if(!seenIntro) seenIntro = true;
-			else finishIntro();
+			if(seenIntro) finishIntro();
 		});
 
 		super.create();
@@ -151,7 +150,7 @@ class TitleState extends MusicBeatState
 
 		if (FlxG.sound.music != null) Conductor.songPosition = FlxG.sound.music.time;
 
-		var mult:Float = FlxMath.lerp(1, logo.scale.x, Math.exp(-elapsed * 9 * 1));
+		var mult:Float = FlxMath.lerp(0.8, logo.scale.x, Math.exp(-elapsed * 9 * 1));
 		logo.scale.set(mult, mult);
 
 		if(!selected) {
@@ -181,9 +180,9 @@ class TitleState extends MusicBeatState
 		super.beatHit();
 		if(!allow) return;
 		
-		logo.scale.set(1.075, 1.075);
+		logo.scale.set(0.85, 0.85);
 
-		if(!selected)
+		if(!selected && !seenIntro)
 		{
 			correctBeat++;
 			switch(correctBeat)
@@ -266,6 +265,8 @@ class TitleState extends MusicBeatState
 	var skippedIntro:Bool = false;
 	function finishIntro()
 	{
+		if(!seenIntro) seenIntro = true;
+		
 		if(skippedIntro) return;
 		if(!skippedIntro) skippedIntro = true;
 
