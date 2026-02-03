@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<TextureAtlas imagePath="litedaveanim.png">
+	<!-- Created using the Spritesheet and XML generator -->
+	<!-- https://uncertainprod.github.io/FNF-Spritesheet-XML-generator-Web -->
+	<SubTexture name="idle0000" x="566" y="200" width="271" height="200" frameX="-172" frameY="-578" frameWidth="1920" frameHeight="1080"/>
+	<SubTexture name="fricku0000" x="294" y="204" width="268" height="204" frameX="-173" frameY="-575" frameWidth="1920" frameHeight="1080"/>
+	<SubTexture name="fricku0001" x="566" y="0" width="273" height="200" frameX="-172" frameY="-578" frameWidth="1920" frameHeight="1080"/>
+	<SubTexture name="fricku0002" x="294" y="0" width="272" height="204" frameX="-173" frameY="-575" frameWidth="1920" frameHeight="1080"/>
+	<SubTexture name="jumps0000" x="839" y="0" width="254" height="205" frameX="-167" frameY="-579" frameWidth="1920" frameHeight="1080"/>
+	<SubTexture name="jumps0001" x="0" y="522" width="259" height="203" frameX="-166" frameY="-584" frameWidth="1920" frameHeight="1080"/>
+	<SubTexture name="jumps0002" x="0" y="0" width="294" height="257" frameX="-75" frameY="-516" frameWidth="1920" frameHeight="1080"/>
+	<SubTexture name="jumps0003" x="0" y="257" width="268" height="265" frameX="-9" frameY="-435" frameWidth="1920" frameHeight="1080"/>
+</TextureAtlas>

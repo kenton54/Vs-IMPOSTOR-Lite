@@ -1,0 +1,46 @@
+{
+	"song": {
+		"events": [
+			[
+				170666.666666667,
+				[
+					[
+						"Change Character",
+						"dad",
+						"daveAngy"
+					]
+				]
+			],
+			[
+				172500,
+				[
+					[
+						"Play Animation",
+						"fu",
+						"dad"
+					]
+				]
+			],
+			[
+				173083.333333333,
+				[
+					[
+						"Play Animation",
+						"jump",
+						"dad"
+					]
+				]
+			],
+			[
+				173333.333333333,
+				[
+					[
+						"Add Camera Zoom",
+						"0.05",
+						"0.06"
+					]
+				]
+			]
+		]
+	}
+}

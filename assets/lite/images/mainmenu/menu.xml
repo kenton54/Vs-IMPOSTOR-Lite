@@ -1,0 +1,13 @@
+<?xml version='1.0' encoding='utf-8'?>
+<TextureAtlas imagePath="menu.png">
+<SubTexture name="sel_story_mode0000" x="363" y="236" width="724" height="220" frameX="-13" frameY="-12" frameWidth="749" frameHeight="250" />
+<SubTexture name="story_mode0000" x="0" y="864" width="614" height="178" frameX="-68" frameY="-33" frameWidth="749" frameHeight="250" />
+<SubTexture name="sel_freeplay0000" x="0" y="0" width="632" height="236" frameX="-55" frameY="-11" frameWidth="749" frameHeight="250" />
+<SubTexture name="freeplay0000" x="352" y="461" width="535" height="191" frameX="-104" frameY="-33" frameWidth="749" frameHeight="250" />
+<SubTexture name="sel_options0000" x="632" y="0" width="647" height="232" frameX="-40" frameY="-13" frameWidth="749" frameHeight="250" />
+<SubTexture name="options0000" x="0" y="675" width="548" height="189" frameX="-91" frameY="-34" frameWidth="749" frameHeight="250" />
+<SubTexture name="sel_credits0000" x="548" y="675" width="531" height="189" frameX="-101" frameY="-28" frameWidth="749" frameHeight="250" />
+<SubTexture name="credits0000" x="614" y="864" width="449" height="152" frameX="-143" frameY="-47" frameWidth="749" frameHeight="250" />
+<SubTexture name="sel_shop0000" x="0" y="236" width="363" height="225" frameX="-180" frameY="-15" frameWidth="749" frameHeight="250" />
+<SubTexture name="shop0000" x="0" y="461" width="352" height="214" frameX="-186" frameY="-21" frameWidth="749" frameHeight="250" />
+</TextureAtlas>

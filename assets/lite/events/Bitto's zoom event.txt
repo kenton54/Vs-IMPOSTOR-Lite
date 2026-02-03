@@ -1,0 +1,11 @@
+value 1 sets the zoom type: 
+	regular (sets the zoom like all other zoom events) 
+	custom (Bitto's Zoom Event)
+value 2 is the zoom amount, or 3 different values, depending on the zoom type:
+	1 - zoom amount: what value to zoom into (not relative)
+	2 - zoom duration: how long it takes to zoom (in seconds, CUSTOM ONLY)
+	3 - tween ease: which movement easing to use (CUSTOM ONLY)
+		regular ex. "2.1"
+		custom ex. "2.1,0.5,expoOut"
+for a list of eases, go to:
+https://api.haxeflixel.com/flixel/tweens/FlxEase.html

@@ -1,0 +1,9 @@
+<?xml version='1.0' encoding='utf-8'?>
+<TextureAtlas imagePath="redM.png">
+<SubTexture name="lose0000" x="0" y="0" width="111" height="105" frameX="-24" frameY="-23" frameWidth="150" frameHeight="150" />
+<SubTexture name="lose0001" x="111" y="0" width="111" height="105" frameX="-24" frameY="-23" frameWidth="150" frameHeight="150" />
+<SubTexture name="normal0000" x="0" y="105" width="97" height="97" frameX="-26" frameY="-27" frameWidth="150" frameHeight="150" />
+<SubTexture name="normal0001" x="97" y="105" width="97" height="97" frameX="-26" frameY="-27" frameWidth="150" frameHeight="150" />
+<SubTexture name="win0000" x="222" y="0" width="94" height="97" frameX="-28" frameY="-27" frameWidth="150" frameHeight="150" />
+<SubTexture name="win0001" x="222" y="97" width="94" height="97" frameX="-28" frameY="-27" frameWidth="150" frameHeight="150" />
+</TextureAtlas>

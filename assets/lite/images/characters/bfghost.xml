@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<TextureAtlas imagePath="bfghost.png">
+	<!-- Created using the Spritesheet and XML generator -->
+	<!-- https://uncertainprod.github.io/FNF-Spritesheet-XML-generator-Web -->
+	<SubTexture name="Idle0000" x="170" y="363" width="175" height="177" frameX="-171" frameY="-220" frameWidth="1207" frameHeight="490"/>
+	<SubTexture name="Idle0001" x="0" y="546" width="176" height="173" frameX="-167" frameY="-227" frameWidth="1207" frameHeight="490"/>
+	<SubTexture name="Idle0002" x="345" y="363" width="176" height="175" frameX="-168" frameY="-227" frameWidth="1207" frameHeight="490"/>
+	<SubTexture name="Idle0003" x="558" y="176" width="173" height="176" frameX="-172" frameY="-220" frameWidth="1207" frameHeight="490"/>
+	<SubTexture name="Idle0004" x="170" y="363" width="175" height="177" frameX="-171" frameY="-220" frameWidth="1207" frameHeight="490"/>
+	<SubTexture name="Right0000" x="190" y="180" width="183" height="180" frameX="-200" frameY="-221" frameWidth="1207" frameHeight="490"/>
+	<SubTexture name="Right0001" x="190" y="0" width="183" height="180" frameX="-195" frameY="-222" frameWidth="1207" frameHeight="490"/>
+	<SubTexture name="Up0000" x="558" y="352" width="161" height="187" frameX="-179" frameY="-202" frameWidth="1207" frameHeight="490"/>
+	<SubTexture name="Up0001" x="733" y="177" width="160" height="183" frameX="-179" frameY="-209" frameWidth="1207" frameHeight="490"/>
+	<SubTexture name="Down0000" x="0" y="719" width="171" height="174" frameX="-170" frameY="-228" frameWidth="1207" frameHeight="490"/>
+	<SubTexture name="Down0001" x="733" y="0" width="170" height="177" frameX="-174" frameY="-222" frameWidth="1207" frameHeight="490"/>
+	<SubTexture name="Left0000" x="0" y="0" width="190" height="178" frameX="-135" frameY="-224" frameWidth="1207" frameHeight="490"/>
+	<SubTexture name="Left0001" x="373" y="178" width="180" height="177" frameX="-144" frameY="-222" frameWidth="1207" frameHeight="490"/>
+	<SubTexture name="UpMiss0000" x="0" y="363" width="170" height="183" frameX="-180" frameY="-208" frameWidth="1207" frameHeight="490"/>
+	<SubTexture name="RightMiss0000" x="0" y="178" width="182" height="185" frameX="-194" frameY="-217" frameWidth="1207" frameHeight="490"/>
+	<SubTexture name="DownMiss0000" x="558" y="0" width="175" height="176" frameX="-172" frameY="-228" frameWidth="1207" frameHeight="490"/>
+	<SubTexture name="LeftMiss0000" x="373" y="0" width="185" height="178" frameX="-141" frameY="-223" frameWidth="1207" frameHeight="490"/>
+</TextureAtlas>

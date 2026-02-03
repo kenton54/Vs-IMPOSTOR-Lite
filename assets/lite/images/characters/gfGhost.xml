@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<TextureAtlas imagePath="gfGhost.png">
+	<!-- Created using the Spritesheet and XML generator -->
+	<!-- https://uncertainprod.github.io/FNF-Spritesheet-XML-generator-Web -->
+	<SubTexture name="LeftBop0000" x="205" y="208" width="191" height="202" frameX="-417" frameY="-241" frameWidth="1000" frameHeight="600"/>
+	<SubTexture name="LeftBop0001" x="205" y="208" width="191" height="202" frameX="-417" frameY="-241" frameWidth="1000" frameHeight="600"/>
+	<SubTexture name="LeftBop0002" x="397" y="0" width="188" height="205" frameX="-419" frameY="-238" frameWidth="1000" frameHeight="600"/>
+	<SubTexture name="LeftBop0003" x="397" y="0" width="188" height="205" frameX="-419" frameY="-238" frameWidth="1000" frameHeight="600"/>
+	<SubTexture name="LeftBop0004" x="397" y="205" width="184" height="207" frameX="-424" frameY="-236" frameWidth="1000" frameHeight="600"/>
+	<SubTexture name="LeftBop0005" x="397" y="205" width="184" height="207" frameX="-424" frameY="-236" frameWidth="1000" frameHeight="600"/>
+	<SubTexture name="LeftBop0006" x="585" y="0" width="179" height="207" frameX="-427" frameY="-237" frameWidth="1000" frameHeight="600"/>
+	<SubTexture name="LeftBop0007" x="585" y="0" width="179" height="207" frameX="-427" frameY="-237" frameWidth="1000" frameHeight="600"/>
+	<SubTexture name="RightBop0000" x="0" y="0" width="205" height="207" frameX="-416" frameY="-236" frameWidth="1000" frameHeight="600"/>
+	<SubTexture name="RightBop0001" x="0" y="0" width="205" height="207" frameX="-416" frameY="-236" frameWidth="1000" frameHeight="600"/>
+	<SubTexture name="RightBop0002" x="0" y="207" width="202" height="209" frameX="-418" frameY="-234" frameWidth="1000" frameHeight="600"/>
+	<SubTexture name="RightBop0003" x="0" y="207" width="202" height="209" frameX="-418" frameY="-234" frameWidth="1000" frameHeight="600"/>
+	<SubTexture name="RightBop0004" x="205" y="0" width="192" height="208" frameX="-422" frameY="-235" frameWidth="1000" frameHeight="600"/>
+	<SubTexture name="RightBop0005" x="205" y="0" width="192" height="208" frameX="-422" frameY="-235" frameWidth="1000" frameHeight="600"/>
+	<SubTexture name="RightBop0006" x="585" y="0" width="179" height="207" frameX="-427" frameY="-237" frameWidth="1000" frameHeight="600"/>
+	<SubTexture name="RightBop0007" x="585" y="0" width="179" height="207" frameX="-427" frameY="-237" frameWidth="1000" frameHeight="600"/>
+</TextureAtlas>

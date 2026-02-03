@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<TextureAtlas imagePath="RedLite.png">
+	<!-- Created using the Spritesheet and XML generator -->
+	<!-- https://uncertainprod.github.io/FNF-Spritesheet-XML-generator-Web -->
+	<SubTexture name="Idle0000" x="720" y="178" width="344" height="177" frameX="-162" frameY="-249" frameWidth="869" frameHeight="523"/>
+	<SubTexture name="Idle0001" x="0" y="226" width="359" height="184" frameX="-160" frameY="-254" frameWidth="869" frameHeight="523"/>
+	<SubTexture name="Idle0002" x="359" y="226" width="360" height="180" frameX="-159" frameY="-253" frameWidth="869" frameHeight="523"/>
+	<SubTexture name="Idle0003" x="720" y="0" width="345" height="178" frameX="-163" frameY="-249" frameWidth="869" frameHeight="523"/>
+	<SubTexture name="Idle0004" x="720" y="178" width="344" height="177" frameX="-162" frameY="-249" frameWidth="869" frameHeight="523"/>
+	<SubTexture name="Left0000" x="720" y="355" width="321" height="150" frameX="-192" frameY="-252" frameWidth="869" frameHeight="523"/>
+	<SubTexture name="Left0001" x="726" y="592" width="304" height="152" frameX="-212" frameY="-250" frameWidth="869" frameHeight="523"/>
+	<SubTexture name="Up0000" x="0" y="0" width="364" height="226" frameX="-162" frameY="-210" frameWidth="869" frameHeight="523"/>
+	<SubTexture name="Up0001" x="364" y="0" width="356" height="199" frameX="-166" frameY="-234" frameWidth="869" frameHeight="523"/>
+	<SubTexture name="Down0000" x="349" y="410" width="345" height="180" frameX="-181" frameY="-231" frameWidth="869" frameHeight="523"/>
+	<SubTexture name="Down0001" x="0" y="410" width="349" height="182" frameX="-179" frameY="-232" frameWidth="869" frameHeight="523"/>
+	<SubTexture name="Right0000" x="0" y="592" width="363" height="165" frameX="-161" frameY="-238" frameWidth="869" frameHeight="523"/>
+	<SubTexture name="Right0001" x="363" y="592" width="363" height="163" frameX="-154" frameY="-238" frameWidth="869" frameHeight="523"/>
+</TextureAtlas>

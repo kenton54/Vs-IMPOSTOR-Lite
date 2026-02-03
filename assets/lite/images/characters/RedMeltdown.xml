@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<TextureAtlas imagePath="RedMeltdown.png">
+	<!-- Created using the Spritesheet and XML generator -->
+	<!-- https://uncertainprod.github.io/FNF-Spritesheet-XML-generator-Web -->
+	<SubTexture name="RedMeltdownRight0000" x="339" y="0" width="346" height="176" frameX="-116" frameY="-593" frameWidth="1920" frameHeight="1080"/>
+	<SubTexture name="RedMeltdownRight0001" x="0" y="389" width="336" height="169" frameX="-131" frameY="-594" frameWidth="1920" frameHeight="1080"/>
+	<SubTexture name="RedMeltdownUp0000" x="685" y="0" width="329" height="172" frameX="-138" frameY="-605" frameWidth="1920" frameHeight="1080"/>
+	<SubTexture name="RedMeltdownUp0001" x="311" y="201" width="332" height="175" frameX="-139" frameY="-592" frameWidth="1920" frameHeight="1080"/>
+	<SubTexture name="RedMeltdownDown0000" x="232" y="558" width="249" height="149" frameX="-211" frameY="-613" frameWidth="1920" frameHeight="1080"/>
+	<SubTexture name="RedMeltdownDown0001" x="481" y="558" width="255" height="144" frameX="-211" frameY="-615" frameWidth="1920" frameHeight="1080"/>
+	<SubTexture name="RedMeltdownLeft0000" x="0" y="558" width="232" height="161" frameX="-217" frameY="-613" frameWidth="1920" frameHeight="1080"/>
+	<SubTexture name="RedMeltdownLeft0001" x="336" y="389" width="246" height="159" frameX="-209" frameY="-612" frameWidth="1920" frameHeight="1080"/>
+	<SubTexture name="RedMeltdownIdle0000" x="685" y="172" width="289" height="188" frameX="-164" frameY="-604" frameWidth="1920" frameHeight="1080"/>
+	<SubTexture name="RedMeltdownIdle0001" x="0" y="201" width="311" height="188" frameX="-148" frameY="-606" frameWidth="1920" frameHeight="1080"/>
+	<SubTexture name="RedMeltdownIdle0002" x="0" y="0" width="339" height="201" frameX="-130" frameY="-624" frameWidth="1920" frameHeight="1080"/>
+	<SubTexture name="RedMeltdownIdle0003" x="685" y="360" width="281" height="183" frameX="-166" frameY="-606" frameWidth="1920" frameHeight="1080"/>
+</TextureAtlas>

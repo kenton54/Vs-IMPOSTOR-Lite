@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<TextureAtlas imagePath="greenmenu.png" width="1260" height="553">
+	<SubTexture name="greenmenu0000" x="1" y="1" width="628" height="551" frameX="-8" frameY="-76" frameWidth="684" frameHeight="650"/>
+	<SubTexture name="greenmenu0001" x="632" y="1" width="627" height="550" frameX="-8" frameY="-77" frameWidth="684" frameHeight="650"/>
+</TextureAtlas>

@@ -1,0 +1,9 @@
+<?xml version='1.0' encoding='utf-8'?>
+<TextureAtlas imagePath="bf-idk.png">
+<SubTexture name="lose0000" x="0" y="113" width="123" height="103" frameX="0" frameY="-9" frameWidth="123" frameHeight="113" />
+<SubTexture name="lose0001" x="228" y="0" width="122" height="103" frameX="-1" frameY="-9" frameWidth="123" frameHeight="113" />
+<SubTexture name="normal0000" x="0" y="216" width="123" height="103" frameX="0" frameY="-9" frameWidth="123" frameHeight="113" />
+<SubTexture name="normal0001" x="228" y="103" width="122" height="103" frameX="-1" frameY="-9" frameWidth="123" frameHeight="113" />
+<SubTexture name="win0000" x="0" y="0" width="114" height="113" frameX="-9" frameY="0" frameWidth="123" frameHeight="113" />
+<SubTexture name="win0001" x="114" y="0" width="114" height="111" frameX="-9" frameY="-1" frameWidth="123" frameHeight="113" />
+</TextureAtlas>

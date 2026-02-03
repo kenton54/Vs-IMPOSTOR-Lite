@@ -1,0 +1,3 @@
+<character name="boyfriend" textSound="dialogue/bf" mainColor="#66FFFF" shadowColor="#50A5EB">
+    <anim name="neutral" anim="neutral" fps="24" loop="true" />
+</character>
