@@ -187,12 +187,6 @@ class MainMenuState extends MusicBeatState
 		if (huh != 0)
 		{
 			FlxG.sound.play(Paths.sound('scrollMenu'));
-			
-			if (optionShit[curSelected] == 'shop')
-			{
-				changeItem(huh);
-				return;
-			}
 		}
 
 		for (i => item in menuItems.members)
