@@ -2,135 +2,113 @@
 	"animations": [
 		{
 			"offsets": [
-				1,
-				0
-			],
-			"loop": false,
-			"fps": 24,
-			"anim": "hey",
-			"indices": [],
-			"name": "ayy"
-		},
-		{
-			"loop": false,
-			"offsets": [
 				0,
 				0
 			],
-			"anim": "firstDeath",
-			"fps": 24,
-			"name": "lose",
-			"indices": []
+			"loop": false,
+			"fps": 12,
+			"anim": "idle",
+			"indices": [],
+			"name": "Idle"
 		},
 		{
+			"loop": false,
 			"offsets": [
 				4,
 				2
 			],
-			"loop": false,
-			"fps": 24,
 			"anim": "singRIGHT",
-			"indices": [],
-			"name": "rightPregnant"
-		},
-		{
-			"loop": false,
-			"offsets": [
-				0,
-				0
-			],
-			"anim": "idle",
-			"fps": 12,
-			"name": "idle",
+			"fps": 24,
+			"name": "RightNote",
 			"indices": []
 		},
 		{
-			"loop": false,
 			"offsets": [
 				-22,
 				0
 			],
-			"anim": "singLEFT",
+			"loop": false,
 			"fps": 12,
-			"name": "left",
-			"indices": []
+			"anim": "singLEFT",
+			"indices": [],
+			"name": "LeftNote"
 		},
 		{
-			"loop": false,
 			"offsets": [
 				-10,
 				10
 			],
-			"anim": "singUP",
+			"loop": false,
 			"fps": 12,
-			"name": "up",
-			"indices": []
+			"anim": "singUP",
+			"indices": [],
+			"name": "UpNote"
 		},
 		{
-			"loop": false,
 			"offsets": [
 				3,
 				-1
 			],
-			"anim": "singLEFTmiss",
+			"loop": false,
 			"fps": 12,
-			"name": "missleft",
-			"indices": []
+			"anim": "singLEFTmiss",
+			"indices": [],
+			"name": "LeftMiss"
 		},
 		{
-			"loop": false,
 			"offsets": [
 				1,
 				-2
 			],
-			"anim": "singDOWNmiss",
+			"loop": false,
 			"fps": 12,
-			"name": "missdown",
-			"indices": []
+			"anim": "singDOWNmiss",
+			"indices": [],
+			"name": "DownMiss"
 		},
 		{
-			"loop": false,
 			"offsets": [
 				1,
 				2
 			],
-			"anim": "singUPmiss",
+			"loop": false,
 			"fps": 12,
-			"name": "missup",
-			"indices": []
+			"anim": "singUPmiss",
+			"indices": [],
+			"name": "UpMiss"
 		},
 		{
-			"loop": false,
 			"offsets": [
 				10,
 				-6
 			],
-			"anim": "singRIGHTmiss",
+			"loop": false,
 			"fps": 12,
-			"name": "missright",
-			"indices": []
+			"anim": "singRIGHTmiss",
+			"indices": [],
+			"name": "RightMiss"
 		},
 		{
+			"loop": false,
 			"offsets": [
 				28,
 				-15
 			],
+			"anim": "singDOWN",
+			"fps": 12,
+			"name": "DownNote",
 			"indices": [
 				1,
 				0
-			],
-			"fps": 12,
-			"anim": "singDOWN",
-			"loop": false,
-			"name": "down"
+			]
 		}
 	],
 	"vocals_file": "",
 	"no_antialiasing": true,
 	"image": "characters/bfghost",
 	"position": [
-		90,
-		390
+		370,
+		140
 	],
 	"healthicon": "bf",
 	"flip_x": true,
@@ -140,8 +118,8 @@
 		255
 	],
 	"camera_position": [
-		300,
-		-160
+		1622,
+		-164
 	],
 	"sing_duration": 4,
 	"scale": 2.2,
