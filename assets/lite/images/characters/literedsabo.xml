@@ -11,8 +11,8 @@
 	<SubTexture name="Up0001" x="364" y="0" width="356" height="199" frameX="-166" frameY="-234" frameWidth="869" frameHeight="523"/>
 	<SubTexture name="Down0000" x="720" y="182" width="345" height="180" frameX="-181" frameY="-231" frameWidth="869" frameHeight="523"/>
 	<SubTexture name="Down0001" x="720" y="0" width="349" height="182" frameX="-179" frameY="-232" frameWidth="869" frameHeight="523"/>
-	<SubTexture name="Left0000" x="375" y="410" width="252" height="154" frameX="-259" frameY="-254" frameWidth="869" frameHeight="523"/>
-	<SubTexture name="Left0001" x="356" y="580" width="214" height="150" frameX="-263" frameY="-255" frameWidth="869" frameHeight="523"/>
+	<SubTexture name="Left0001" x="375" y="410" width="252" height="154" frameX="-259" frameY="-254" frameWidth="869" frameHeight="523"/>
+	<SubTexture name="Left0000" x="356" y="580" width="214" height="150" frameX="-263" frameY="-255" frameWidth="869" frameHeight="523"/>
 	<SubTexture name="Right0000" x="0" y="410" width="375" height="170" frameX="-245" frameY="-258" frameWidth="869" frameHeight="523"/>
 	<SubTexture name="Right0001" x="0" y="580" width="356" height="173" frameX="-253" frameY="-255" frameWidth="869" frameHeight="523"/>
 </TextureAtlas>

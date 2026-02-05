@@ -1,85 +1,78 @@
 {
 	"animations": [
 		{
-			"loop": false,
-			"offsets": [
-				27,
-				16
-			],
-			"anim": "singLEFT",
-			"fps": 12,
-			"name": "RedMeltdownLeft",
-			"indices": [
-				1,
-				0
-			]
-		},
-		{
-			"loop": false,
-			"offsets": [
-				5,
-				-9
-			],
-			"anim": "singDOWN",
-			"fps": 12,
-			"name": "RedMeltdownDown",
-			"indices": [
-				1,
-				0
-			]
-		},
-		{
-			"loop": false,
-			"offsets": [
-				8,
-				10
-			],
-			"anim": "singUP",
-			"fps": 12,
-			"name": "RedMeltdownUp",
-			"indices": [
-				1,
-				0
-			]
-		},
-		{
-			"loop": false,
-			"offsets": [
-				0,
-				7
-			],
-			"anim": "singRIGHT",
-			"fps": 12,
-			"name": "RedMeltdownRight",
-			"indices": [
-				1,
-				0
-			]
-		},
-		{
 			"offsets": [
 				14,
 				0
 			],
-			"indices": [
-				2,
-				1,
-				0,
-				4,
-				3
-			],
+			"loop": false,
 			"fps": 10,
 			"anim": "idle",
+			"indices": [],
+			"name": "idle"
+		},
+		{
 			"loop": false,
-			"name": "RedMeltdownIdle"
+			"offsets": [
+				18,
+				2
+			],
+			"anim": "singLEFT",
+			"fps": 12,
+			"name": "left",
+			"indices": []
+		},
+		{
+			"loop": false,
+			"offsets": [
+				22,
+				4
+			],
+			"anim": "singDOWN",
+			"fps": 12,
+			"name": "down",
+			"indices": []
+		},
+		{
+			"loop": false,
+			"offsets": [
+				15,
+				0
+			],
+			"anim": "singUP",
+			"fps": 12,
+			"name": "up",
+			"indices": []
+		},
+		{
+			"loop": false,
+			"offsets": [
+				18,
+				-1
+			],
+			"anim": "singRIGHT",
+			"fps": 12,
+			"name": "right",
+			"indices": []
+		},
+		{
+			"loop": false,
+			"offsets": [
+				12,
+				-2
+			],
+			"anim": "stare",
+			"fps": 12,
+			"name": "stare",
+			"indices": []
 		}
 	],
 	"vocals_file": "",
 	"no_antialiasing": true,
-	"image": "characters/RedMeltdown",
+	"image": "characters/redlitemeltdown",
 	"position": [
-		710,
-		-250
+		90,
+		530
 	],
 	"healthicon": "redM",
 	"flip_x": false,
@@ -89,8 +82,8 @@
 		142
 	],
 	"camera_position": [
-		-2700,
-		-450
+		-272,
+		-136
 	],
 	"sing_duration": 4,
 	"scale": 2.3,

@@ -1,5 +1,6 @@
 package states;
 
+import lime.app.Application;
 import backend.WeekData;
 import backend.Highscore;
 import flixel.util.FlxSave;
@@ -9,6 +10,8 @@ import flixel.addons.transition.FlxTransitionableState;
 
 class TitleState extends MusicBeatState
 {
+	public static var isSteginiteBuildLol:Bool = true;
+
 	static var seenIntro:Bool = false;
 	static var passedWarning:Bool = false;
 	var curWacky:Array<String> = [];
@@ -25,6 +28,8 @@ class TitleState extends MusicBeatState
 		Paths.clearStoredMemory();
 		FlxG.mouse.visible = false;
         if(!seenIntro) FlxTransitionableState.skipNextTransOut = true;
+
+		if (isSteginiteBuildLol) Application.current.window.title += " - The Steginite Build";
 
 		#if LUA_ALLOWED
 		Mods.pushGlobalMods();

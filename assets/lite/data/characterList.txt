@@ -1,9 +1,14 @@
 bf
+bf-ghost
+idkbf
+
 gf
+gf-ghost
 
 red
-redsabo
-redscared
+red-sabotage
+red-meltdown
 
 idk
 dave
+dave-angry

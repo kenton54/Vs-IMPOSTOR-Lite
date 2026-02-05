@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+Created with Funkin Packer v0.1.3 https://neeeoo.github.io/funkin-packer/
+-->
+<TextureAtlas imagePath="Cyanbody.png" width="102" height="227">
+	<SubTexture name="Cyanbody1" x="1" y="1" width="100" height="112" frameX="-1" frameY="-0" frameWidth="101" frameHeight="112"/>
+	<SubTexture name="Cyanbody2" x="1" y="116" width="100" height="110" frameX="-0" frameY="-2" frameWidth="101" frameHeight="112"/>
+</TextureAtlas>
