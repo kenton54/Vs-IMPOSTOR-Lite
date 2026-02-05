@@ -10,7 +10,7 @@ function onCreatePost()
 			spaceInf.scale.set(2.2, 2.2);
 			// spaceInf.scrollFactor.set(0.8, 0.8);
 			addBehindGF(spaceInf);
-		]]);
+		]])
 	end
 
 	makeLuaSprite("pbg", "bg/polus/background", -1460, -1200)
