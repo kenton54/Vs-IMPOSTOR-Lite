@@ -256,7 +256,7 @@ class TitleState extends MusicBeatState
 	{
 		var text:Alphabet = new Alphabet(0, 0, hand, false);
 		text.screenCenter(X);
-		text.y = 260 + (textsGrp.length * 70)  + offsetY;
+		text.y = 260 + (textsGrp.length * 70) + offsetY;
 		textsGrp.add(text);
 
 		return text;
@@ -273,6 +273,8 @@ class TitleState extends MusicBeatState
 	var skippedIntro:Bool = false;
 	function finishIntro()
 	{
+		logoTTSpr.destroy();
+
 		if(!seenIntro) seenIntro = true;
 		
 		if(skippedIntro) return;
