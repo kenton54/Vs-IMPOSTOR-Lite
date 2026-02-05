@@ -10,7 +10,10 @@ import flixel.addons.transition.FlxTransitionableState;
 
 class TitleState extends MusicBeatState
 {
-	public static var isSteginiteBuildLol:Bool = true;
+	/**
+	 * The joke being that a specific build was sent exclusively to steginite for the Sussin' Direct lol
+	 */
+	public static var isSteginiteBuildLol:Bool = false;
 
 	static var seenIntro:Bool = false;
 	static var passedWarning:Bool = false;
