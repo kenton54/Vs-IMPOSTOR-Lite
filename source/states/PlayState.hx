@@ -2503,8 +2503,8 @@ class PlayState extends MusicBeatState
 
 		rating.loadGraphic(Paths.image(uiPrefix + daRating.image + uiSuffix));
 		rating.screenCenter();
-		rating.x = boyfriend.getMidpoint().x - 450;
-		rating.y = boyfriend.getMidpoint().y - 520;
+		rating.x = boyfriend.x - 520;
+		rating.y = boyfriend.y - 100;
 		rating.acceleration.y = 550 * playbackRate * playbackRate;
 		rating.velocity.y -= FlxG.random.int(140, 175) * playbackRate;
 		rating.velocity.x -= FlxG.random.int(0, 10) * playbackRate;

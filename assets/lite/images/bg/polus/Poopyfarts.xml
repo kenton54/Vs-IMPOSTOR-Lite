@@ -2,10 +2,10 @@
 <!--
 Created with Funkin Packer v0.1.3 https://neeeoo.github.io/funkin-packer/
 -->
-<TextureAtlas imagePath="Poopyfarts.png" width="398" height="341">
-	<SubTexture name="Poopyfartsmegaphone1" x="1" y="1" width="217" height="219" frameX="-0" frameY="-0" frameWidth="217" frameHeight="223"/>
-	<SubTexture name="Poopyfartsmegaphone2" x="221" y="1" width="176" height="197" frameX="-32" frameY="-22" frameWidth="217" frameHeight="223"/>
-	<SubTexture name="Poopyfartswalk1" x="221" y="201" width="93" height="131" frameX="-111" frameY="-88" frameWidth="217" frameHeight="223"/>
-	<SubTexture name="Poopyfartswalk2" x="89" y="223" width="88" height="113" frameX="-113" frameY="-110" frameWidth="217" frameHeight="223"/>
-	<SubTexture name="Poopyfartswalk3" x="1" y="223" width="85" height="117" frameX="-116" frameY="-93" frameWidth="217" frameHeight="223"/>
+<TextureAtlas imagePath="Poopyf.png" width="513" height="624">
+	<SubTexture name="Poopymegaphone1" x="1" y="1" width="351" height="339" frameX="-0" frameY="-0" frameWidth="351" frameHeight="339"/>
+	<SubTexture name="Poopymegaphone2" x="1" y="343" width="253" height="280" frameX="-83" frameY="-51" frameWidth="351" frameHeight="339"/>
+	<SubTexture name="Poopyrun1" x="355" y="195" width="157" height="183" frameX="-149" frameY="-129" frameWidth="351" frameHeight="339"/>
+	<SubTexture name="Poopyrun2" x="257" y="381" width="158" height="181" frameX="-151" frameY="-149" frameWidth="351" frameHeight="339"/>
+	<SubTexture name="Poopyrun3" x="355" y="1" width="157" height="191" frameX="-151" frameY="-131" frameWidth="351" frameHeight="339"/>
 </TextureAtlas>
