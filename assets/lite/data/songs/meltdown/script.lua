@@ -47,10 +47,10 @@ function onCreatePost()
 	addLuaSprite("pink")
 
 	makeAnimatedLuaSprite("poop", "bg/polus/Poopyfarts", -240, 380)
-	addAnimationByIndices("poop", "megaphone", "Poopyfartsmegaphone", { 2, 1, 2 }, 8, false)
-	addAnimationByIndices("poop", "walk", "Poopyfartswalk", { 1, 2, 3, 2 }, 10, true)
+	addAnimationByIndices("poop", "megaphone", "Poopymegaphone", { 2, 1, 2 }, 8, false)
+	addAnimationByIndices("poop", "walk", "Poopyrun", { 1, 2, 3, 2 }, 10, true)
 	playAnim("poop", "walk")
-	scaleObject("poop", 3.2, 3.2)
+	scaleObject("poop", 2.3, 2.3)
 	setProperty("poop.visible", false)
 	addLuaSprite("poop", true)
 
