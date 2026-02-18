@@ -1,7 +1,5 @@
-export/*
-.vscode/*
+export/
+.vscode/
 .haxelib/
-.github/
 .aaa/
-!.vscode/*
-!.github/*
+dump/
