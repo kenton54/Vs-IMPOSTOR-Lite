@@ -132,7 +132,7 @@ class NoteOffsetState extends MusicBeatState
 		super.create();
 		FlxG.camera.zoom = 0.7;
 
-		Main.fpsVar.y = blackBox.y + blackBox.height;
+		Main.fpsCounter.y = blackBox.y + blackBox.height;
 	}
 
 	var holdTime:Float = 0;
@@ -298,6 +298,6 @@ class NoteOffsetState extends MusicBeatState
 	override function destroy()
 	{
 		super.destroy();
-		Main.fpsVar.y = 0;
+		Main.fpsCounter.y = 0;
 	}
 }

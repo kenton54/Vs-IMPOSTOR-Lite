@@ -1,5 +1,7 @@
 package states;
 
+import objects.VideoSprite;
+import flixel.input.keyboard.FlxKey;
 import flixel.FlxObject;
 import flixel.addons.transition.FlxTransitionableState;
 import flixel.effects.FlxFlicker;
@@ -11,6 +13,12 @@ class MainMenuState extends MusicBeatState
 {
 	public static var psychEngineVersion:String = '0.7.3'; // This is also used for Discord RPC
 	public static var curSelected:Int = 0;
+
+	/**
+	 * Whether to allow the user to access debug features.
+	 */
+	public static final ALLOW_DEBUG_ACCESS:Bool = true;
+
 	var menuItems:FlxTypedGroup<FlxSprite>;
 	var optionShit:Array<String> = [
 		'story_mode',
@@ -139,7 +147,8 @@ class MainMenuState extends MusicBeatState
 
 			if (controls.ACCEPT)
 			{
-				if(optionShit[curSelected] == 'shop') {
+				if (optionShit[curSelected] == 'shop')
+				{
 					FlxG.sound.play(Paths.sound('cancelMenu'));
 					return;
 				}
@@ -172,8 +181,7 @@ class MainMenuState extends MusicBeatState
 
 				for (i in 0...menuItems.members.length)
 				{
-					if (i == curSelected)
-						continue;
+					if (i == curSelected) continue;
 					FlxTween.tween(menuItems.members[i], {alpha: 0}, 0.4, {
 						ease: FlxEase.quadOut,
 						onComplete: function(twn:FlxTween)
@@ -182,11 +190,110 @@ class MainMenuState extends MusicBeatState
 						}
 					});
 				}
-				
 			}
+
+			if (ALLOW_DEBUG_ACCESS && controls.justPressed('debug_1'))
+			{
+				selectedSomethin = true;
+				FlxG.switchState(() -> new MasterEditorMenu());
+			}
+
+			secretsWololo();
 		}
 
 		super.update(elapsed);
+	}
+
+	function secretsWololo()
+	{
+		if (FlxG.keys.justPressed.ANY)
+		{
+			leroyCodeStuff(FlxG.keys.firstJustPressed());
+			gay(FlxG.keys.firstJustPressed());
+
+			//trace("pressed key ID " + FlxG.keys.firstJustPressed());
+		}
+	}
+
+	var secretsVideo:VideoSprite;
+	var secretsBG:FlxSprite;
+
+	var leroyCode:Array<FlxKey> = [L, E, R, O, Y];
+	var leroyPos:Int = 0;
+	function leroyCodeStuff(input:FlxKey)
+	{
+		if (input == leroyCode[leroyPos])
+		{
+			leroyPos++;
+			if (leroyPos >= leroyCode.length) playLeroy();
+		}
+		else
+			leroyPos = 0;
+	}
+
+	var gayGay:Array<FlxKey> = [G, A, Y];
+	var garry:Int = 0;
+	function gay(gayy:FlxKey)
+	{
+		if (gayy == gayGay[garry])
+		{
+			garry++;
+			if (garry >= gayGay.length) thenImGay();
+		}
+		else
+			garry = 0;
+	}
+
+	function playLeroy()
+	{
+		selectedSomethin = true;
+
+		FlxG.sound.music.pause();
+		if (FreeplayState.vocals != null) FreeplayState.vocals.pause();
+
+		secretsBG = new FlxSprite().makeGraphic(FlxG.width + 1, FlxG.height + 1, FlxColor.WHITE);
+		secretsBG.scrollFactor.set();
+		add(secretsBG);
+
+		secretsVideo = new VideoSprite(Paths.getPath("videos/secrets/leroy.mov"), true);
+		secretsVideo.finishCallback = closeSecretVideo;
+		add(secretsVideo);
+
+		secretsVideo.play();
+		leroyPos = 0;
+	}
+
+	function thenImGay()
+	{
+		selectedSomethin = true;
+
+		FlxG.sound.music.pause();
+		if (FreeplayState.vocals != null) FreeplayState.vocals.pause();
+
+		secretsBG = new FlxSprite().makeGraphic(FlxG.width + 1, FlxG.height + 1, FlxColor.WHITE);
+		secretsBG.scrollFactor.set();
+		add(secretsBG);
+
+		secretsVideo = new VideoSprite(Paths.getPath("videos/secrets/gay.mov"), true);
+		secretsVideo.finishCallback = closeSecretVideo;
+		add(secretsVideo);
+
+		secretsVideo.play();
+		garry = 0;
+	}
+
+	function closeSecretVideo()
+	{
+		selectedSomethin = false;
+
+		secretsBG.destroy();
+		remove(secretsBG);
+
+		secretsVideo = null;
+		secretsBG = null;
+
+		FlxG.sound.music.resume();
+		if (FreeplayState.vocals != null) FreeplayState.vocals.resume();
 	}
 
 	function changeItem(huh:Int = 0)
@@ -197,10 +304,7 @@ class MainMenuState extends MusicBeatState
 		if (curSelected < 0)
 			curSelected = menuItems.length - 1;
 
-		if (huh != 0)
-		{
-			FlxG.sound.play(Paths.sound('scrollMenu'));
-		}
+		if (huh != 0) FlxG.sound.play(Paths.sound('scrollMenu'));
 
 		for (i => item in menuItems.members)
 		{

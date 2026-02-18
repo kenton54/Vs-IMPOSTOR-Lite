@@ -125,14 +125,14 @@ class Paths
 		return getLitePath(file);
 	}
 
-	static public function getLibraryPath(file:String, library = "shared")
+	static public function getLibraryPath(file:String, library:String = "shared")
 	{
-		return if (library == "shared") getLitePath(file); else getLibraryPathForce(file, library);
+		return library == "shared" ? getLitePath(file) : getLibraryPathForce(file, library);
 	}
 
 	inline static function getLibraryPathForce(file:String, library:String, ?level:String)
 	{
-		if(level == null) level = library;
+		if (level == null) level = library;
 		var returnPath = '$library:assets/$level/$file';
 		return returnPath;
 	}
@@ -170,15 +170,9 @@ class Paths
 		return getPath('$key.lua', TEXT, library);
 	}
 
-	static public function video(key:String)
+	inline static public function video(key:String, ?library:String)
 	{
-		#if MODS_ALLOWED
-		var file:String = modsVideo(key);
-		if(FileSystem.exists(file)) {
-			return file;
-		}
-		#end
-		return 'assets/videos/$key.$VIDEO_EXT';
+		return getPath('videos/$key.$VIDEO_EXT', library);
 	}
 
 	static public function sound(key:String, ?library:String):Sound
@@ -373,6 +367,24 @@ class Paths
 			}
 		}
 		return getPackerAtlas(key, library);
+	}
+
+	static public function getMultiAtlas(keys:Array<String>, ?parentFolder:String = null, ?allowGPU:Bool = true):FlxAtlasFrames
+	{
+		var parentFrames:FlxAtlasFrames = Paths.getAtlas(keys[0].trim());
+		if (keys.length > 1)
+		{
+			var original:FlxAtlasFrames = parentFrames;
+			parentFrames = new FlxAtlasFrames(parentFrames.parent);
+			parentFrames.addAtlas(original, true);
+			for (i in 1...keys.length)
+			{
+				var extraFrames:FlxAtlasFrames = Paths.getAtlas(keys[i].trim(), parentFolder, allowGPU);
+				if (extraFrames != null)
+					parentFrames.addAtlas(extraFrames, true);
+			}
+		}
+		return parentFrames;
 	}
 
 	inline static public function getSparrowAtlas(key:String, ?library:String = null, ?allowGPU:Bool = true):FlxAtlasFrames

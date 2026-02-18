@@ -48,6 +48,7 @@ class StrumNote extends FlxSprite
 		noteData = leData;
 		this.player = player;
 		this.noteData = leData;
+		ID = noteData;
 		super(x, y);
 
 		var skin:String = null;
@@ -133,18 +134,18 @@ class StrumNote extends FlxSprite
 		}
 		updateHitbox();
 
-		if(lastAnim != null)
+		if (lastAnim != null)
 		{
 			playAnim(lastAnim, true);
 		}
 	}
 
-	public function postAddedToGroup() {
+	public function postAddedToGroup()
+	{
 		playAnim('static');
 		x += Note.swagWidth * noteData;
 		x += 17.5;
 		x += ((FlxG.width / 2) * player);
-		ID = noteData;
 	}
 
 	override function update(elapsed:Float) {
@@ -165,6 +166,7 @@ class StrumNote extends FlxSprite
 			centerOffsets();
 			centerOrigin();
 		}
-		if(useRGBShader) rgbShader.enabled = (animation.curAnim != null && animation.curAnim.name != 'static');
+		if (useRGBShader)
+			rgbShader.enabled = (animation.curAnim != null && animation.curAnim.name != 'static');
 	}
 }

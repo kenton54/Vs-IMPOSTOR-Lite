@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+Created with Funkin Packer v0.1.3 https://neeeoo.github.io/funkin-packer/
+-->
+<TextureAtlas imagePath="meltdowndialogue.png" width="2862" height="315">
+	<SubTexture name="RedDesperate" x="2171" y="1" width="366" height="278" frameX="-49" frameY="-67" frameWidth="479" frameHeight="345"/>
+	<SubTexture name="RedDumbfounded" x="1877" y="1" width="291" height="271" frameX="-65" frameY="-52" frameWidth="479" frameHeight="345"/>
+	<SubTexture name="RedFlabbergasted" x="2540" y="1" width="321" height="313" rotated="true" frameX="-6" frameY="-0" frameWidth="479" frameHeight="345"/>
+	<SubTexture name="RedScared" x="1578" y="1" width="296" height="270" frameX="-18" frameY="-56" frameWidth="479" frameHeight="345"/>
+	<SubTexture name="Redturn1" x="1" y="1" width="360" height="245" frameX="-89" frameY="-46" frameWidth="479" frameHeight="345"/>
+	<SubTexture name="Redturn2" x="364" y="1" width="346" height="246" frameX="-92" frameY="-45" frameWidth="479" frameHeight="345"/>
+	<SubTexture name="Redturn3" x="713" y="1" width="402" height="246" frameX="-77" frameY="-44" frameWidth="479" frameHeight="345"/>
+	<SubTexture name="Redturn4" x="1118" y="1" width="457" height="250" frameX="-0" frameY="-41" frameWidth="479" frameHeight="345"/>
+</TextureAtlas>

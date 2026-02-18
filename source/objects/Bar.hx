@@ -86,21 +86,13 @@ class Bar extends FlxSpriteGroup
 		if(leftToRight) leftSize = FlxMath.lerp(0, barWidth, percent / 100);
 		else leftSize = FlxMath.lerp(0, barWidth, 1 - percent / 100);
 
-		leftBar.clipRect.width = leftSize;
-		leftBar.clipRect.height = barHeight;
-		leftBar.clipRect.x = barOffset.x;
-		leftBar.clipRect.y = barOffset.y;
-
-		rightBar.clipRect.width = barWidth - leftSize;
-		rightBar.clipRect.height = barHeight;
-		rightBar.clipRect.x = barOffset.x + leftSize;
-		rightBar.clipRect.y = barOffset.y;
+		var leftBarClip:FlxRect = new FlxRect(barOffset.x, barOffset.y, leftSize, barHeight);
+		var rightBarClip:FlxRect = new FlxRect(barOffset.x + leftSize, barOffset.y, barWidth - leftSize, barHeight);
 
 		barCenter = leftBar.x + leftSize + barOffset.x;
 
-		// flixel is retarded
-		leftBar.clipRect = leftBar.clipRect;
-		rightBar.clipRect = rightBar.clipRect;
+		leftBar.clipRect = leftBarClip;
+		rightBar.clipRect = rightBarClip;
 	}
 
 	public function regenerateClips()

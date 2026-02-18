@@ -317,7 +317,7 @@ class PauseSubState extends MusicBeatSubstate
 					Conductor.bpm = 109;
 					PlayState.changedDifficulty = false;
 					PlayState.chartingMode = false;
-					if(FlxG.camera.cameraTween != null) FlxG.camera.cameraTween.active = false;
+					if (PlayState.instance.cameraTween != null) PlayState.instance.cameraTween.active = false;
 			}
 		}
 	}

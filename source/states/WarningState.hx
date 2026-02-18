@@ -44,9 +44,8 @@ class WarningState extends MusicBeatState
 		+ "\nas well as #Vs. Impostor V4#."
 		+ "\n\nThe original mod's credits is listed in the *CREDITS section* in the main menu.";
 
-		disclaimerTxtEnter = new FlxText(0, disclaimerTxt.y + disclaimerTxt.height + 25, 0, "", 20);
+		disclaimerTxtEnter = new FlxText(0, disclaimerTxt.y + disclaimerTxt.height + 25, 0, "> Okay, damn, let me play <", 20);
 		disclaimerTxtEnter.setFormat(Paths.font("vcr.ttf"), 20, FlxColor.WHITE, CENTER);
-		disclaimerTxtEnter.text = "> Okay, damn, let me play <";
 
 		// FlxG.camera.bgColor = 0xFF030317;
 		persistentUpdate = persistentDraw = true;
@@ -120,6 +119,8 @@ class WarningState extends MusicBeatState
 					FlxTween.cancelTweensOf(FlxG.camera);
 					FlxTween.tween(FlxG.camera, {"scroll.y": FlxG.height*2}, 1, {ease: FlxEase.smootherStepIn});
 				});
+
+				FlxG.save.data.seenWarning = true;
 			}
 		}
 		super.update(elapsed);

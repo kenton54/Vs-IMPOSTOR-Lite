@@ -1,11 +1,5 @@
 package states;
 
-import lime.app.Application;
-import backend.WeekData;
-import backend.Highscore;
-import flixel.util.FlxSave;
-import flixel.input.keyboard.FlxKey;
-import states.MainMenuState;
 import flixel.addons.transition.FlxTransitionableState;
 
 class TitleState extends MusicBeatState
@@ -13,7 +7,7 @@ class TitleState extends MusicBeatState
 	/**
 	 * The joke being that a specific build was sent exclusively to steginite for the Sussin' Direct lol
 	 */
-	public static var isSteginiteBuildLol:Bool = false;
+	public static final isSteginiteBuildLol:Bool = false;
 
 	static var seenIntro:Bool = false;
 	static var passedWarning:Bool = false;
@@ -30,29 +24,11 @@ class TitleState extends MusicBeatState
 	{
 		Paths.clearStoredMemory();
 		FlxG.mouse.visible = false;
-        if(!seenIntro) FlxTransitionableState.skipNextTransOut = true;
-
-		if (isSteginiteBuildLol) Application.current.window.title += " - The Steginite Build";
-
-		#if LUA_ALLOWED
-		Mods.pushGlobalMods();
-		#end
-		Mods.loadTopMod();
-
-		FlxG.fixedTimestep = false;
-		FlxG.game.focusLostFramerate = 60;
-		FlxG.keys.preventDefaultKeys = [TAB];
-		FlxG.camera.bgColor = 0xFFFFFF;
 
 		curWacky = FlxG.random.getObject(getIntroTextShit());
 
-		FlxG.save.bind('funkin', CoolUtil.getSavePath());
-		ClientPrefs.loadPrefs();
-		Highscore.load();
-
-		if(FlxG.save.data != null && FlxG.save.data.fullscreen) FlxG.fullscreen = FlxG.save.data.fullscreen;
-		persistentUpdate = true;
-		persistentDraw = true;
+		//persistentUpdate = true;
+		//persistentDraw = true;
 
 		if (FlxG.sound.music == null)
 		{
@@ -60,20 +36,6 @@ class TitleState extends MusicBeatState
 			FlxG.sound.music.fadeIn(2, 0, 1);
 		}
 		Conductor.bpm = 109;
-
-		if (FlxG.save.data.weekCompleted != null)
-			StoryMenuState.weekCompleted = FlxG.save.data.weekCompleted;
-
-		if(FlxG.save.data.flashing == null && !WarningState.leftState) {
-            FlxTransitionableState.skipNextTransIn = true;
-            FlxTransitionableState.skipNextTransOut = true;
-            new FlxTimer().start(1, function(_) {
-				FlxG.switchState(() -> new WarningState());
-			});
-			passedWarning = true;
-			allow = false;
-            return;
-        }
 
 		titleStuff = new FlxTypedGroup<FlxSprite>();
 		titleStuff.visible = false;
@@ -109,23 +71,23 @@ class TitleState extends MusicBeatState
 		logoTTSpr.setGraphicSize(Std.int(500));
 		logoTTSpr.updateHitbox();
 		logoTTSpr.screenCenter(X);
-		logoTTSpr.y = FlxG.height - logoTTSpr.height - 80;
+		logoTTSpr.y = FlxG.height - logoTTSpr.height - 120;
 		logoTTSpr.visible = false;
 		add(logoTTSpr);
 		
 		allow = false;
-		new FlxTimer().start((seenIntro ? 0.5 : 0.01), function(_)
+		new FlxTimer().start((seenIntro ? 0.5 : 0.01), _ ->
 		{
 			allow = true;
-			if(passedWarning) {
-				FlxTween.cancelTweensOf(FlxG.camera);
-				FlxG.camera.scroll.y = -FlxG.height;
-				FlxTween.tween(FlxG.camera, {"scroll.y": 0}, 1.25, {ease: FlxEase.smootherStepOut});
-			}
 
 			titleStuff.visible = true;
 		
-			if(seenIntro) finishIntro();
+			if (seenIntro)
+			{
+				finishIntro();
+				//FlxTween.cancelTweensOf(FlxG.camera);
+				//FlxG.camera.scroll.y = 0;
+			}
 		});
 
 		super.create();
@@ -161,8 +123,9 @@ class TitleState extends MusicBeatState
 		var mult:Float = FlxMath.lerp(0.8, logo.scale.x, Math.exp(-elapsed * 9 * 1));
 		logo.scale.set(mult, mult);
 
-		if(!selected) {
-			if(FlxG.keys.justPressed.ENTER && skippedIntro)
+		if (!selected)
+		{
+			if (FlxG.keys.justPressed.ENTER && skippedIntro)
 			{
 				selected = true;
 				FlxG.camera.flash(FlxColor.WHITE, 1);
@@ -173,7 +136,9 @@ class TitleState extends MusicBeatState
 				new FlxTimer().start(1.3, function(_) {
 					FlxG.switchState(() -> new MainMenuState());
 				});
-			} else if(FlxG.keys.justPressed.ENTER && !skippedIntro) {
+			}
+			else if (FlxG.keys.justPressed.ENTER && !skippedIntro)
+			{
 				finishIntro();
 				return; // just making sure
 			}
@@ -273,12 +238,12 @@ class TitleState extends MusicBeatState
 	var skippedIntro:Bool = false;
 	function finishIntro()
 	{
-		logoTTSpr.destroy();
-
 		if(!seenIntro) seenIntro = true;
-		
+
 		if(skippedIntro) return;
 		if(!skippedIntro) skippedIntro = true;
+
+		logoTTSpr.destroy();
 
 		FlxG.camera.flash(FlxColor.WHITE, 1.6);
 		FlxTween.cancelTweensOf(FlxG.camera);

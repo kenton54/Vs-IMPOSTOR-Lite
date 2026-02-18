@@ -1,0 +1,49 @@
+{
+    "image": "red",
+    "scale": 1,
+    "offsets": [0, 0],
+    "expressions": [
+        {
+            "name": "neutral",
+            "prefix": "RedNeutral",
+            "framerate": 0,
+            "offsets": [0, 0]
+        },
+        {
+            "name": "nervous",
+            "prefix": "RedNervous",
+            "framerate": 0,
+            "offsets": [0, 0]
+        },
+        {
+            "name": "amused",
+            "prefix": "RedAmused",
+            "framerate": 0,
+            "offsets": [0, 0]
+        },
+        {
+            "name": "realizing",
+            "prefix": "RedRealizing",
+            "framerate": 0,
+            "offsets": [0, 0]
+        },
+        {
+            "name": "annoyed",
+            "prefix": "RedAnnoyed",
+            "framerate": 0,
+            "offsets": [0, 0]
+        },
+        {
+            "name": "confused",
+            "prefix": "RedConfused",
+            "framerate": 0,
+            "offsets": [0, 0]
+        },
+        {
+            "name": "devilish",
+            "prefix": "RedDevilish",
+            "framerate": 0,
+            "offsets": [0, 0]
+        }
+    ]
+}

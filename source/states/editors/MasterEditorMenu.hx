@@ -12,7 +12,8 @@ class MasterEditorMenu extends MusicBeatState
 	var options:Array<String> = [
 		'Chart Editor',
 		'Character Editor',
-		'Note Splash Debug'
+		'Dialogue Editor',
+		'Note Splash Editor'
 	];
 	private var grpTexts:FlxTypedGroup<Alphabet>;
 	private var directories:Array<String> = [null];
@@ -99,12 +100,15 @@ class MasterEditorMenu extends MusicBeatState
 
 		if (controls.ACCEPT)
 		{
-			switch(options[curSelected]) {
-				case 'Chart Editor'://felt it would be cool maybe
+			switch (curSelected)
+			{
+				case 0:
 					LoadingState.loadAndSwitchState(() -> new ChartingState(), false);
-				case 'Character Editor':
+				case 1:
 					LoadingState.loadAndSwitchState(() -> new CharacterEditorState(Character.DEFAULT_CHARACTER, false));
-				case 'Note Splash Debug':
+				case 2:
+					LoadingState.loadAndSwitchState(() -> new DialogueEditorState(), false);
+				case 3:
 					FlxG.switchState(() -> new NoteSplashDebugState());
 			}
 			FlxG.sound.music.volume = 0;

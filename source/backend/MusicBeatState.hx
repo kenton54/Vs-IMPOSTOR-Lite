@@ -2,7 +2,6 @@ package backend;
 import flixel.addons.ui.FlxUIState;
 import flixel.addons.transition.FlxTransitionableState;
 import flixel.util.typeLimit.NextState;
-import backend.PsychCamera;
 class MusicBeatState extends FlxUIState
 {
 	private var curSection:Int = 0;
@@ -16,10 +15,13 @@ class MusicBeatState extends FlxUIState
 	{
 		return Controls.instance;
 	}
+
 	var _psychCameraInitialized:Bool = true;
-	
+
 	override function create()
 	{
+		FlxG.camera.bgColor = FlxColor.WHITE;
+
 		var cursorSprite:FlxSprite = new FlxSprite().loadGraphic(Paths.image('cursor'));
 		FlxG.mouse.load(cursorSprite.pixels);
 		FlxG.mouse.cursor.pixelSnapping = "always";
@@ -28,7 +30,9 @@ class MusicBeatState extends FlxUIState
 		var skip:Bool = FlxTransitionableState.skipNextTransOut;
 		#if MODS_ALLOWED Mods.updatedOnState = false; #end
 		if(!_psychCameraInitialized) initPsychCamera();
+
 		super.create();
+
 		if(!skip) {
 			openSubState(new CustomFadeTransition(0.6, true));
 		}
@@ -36,16 +40,12 @@ class MusicBeatState extends FlxUIState
 		timePassedOnState = 0;
 	}
 
-	public function initPsychCamera() // :PsychCamera
+	public function initPsychCamera()
 	{
-		/*var camera = new PsychCamera();
-		FlxG.cameras.reset(camera);
-		FlxG.cameras.setDefaultDrawTarget(camera, true);
 		_psychCameraInitialized = true;
-		//trace('initialized psych camera ' + Sys.cpuTime());
-		return camera;*/
 		return FlxG.camera;
 	}
+
 	public static var timePassedOnState:Float = 0;
 	override function update(elapsed:Float)
 	{
@@ -142,6 +142,7 @@ class MusicBeatState extends FlxUIState
 		if (curStep % 4 == 0)
 			beatHit();
 	}
+
 	public var stages:Array<BaseStage> = [];
 	public function beatHit():Void
 	{
@@ -152,6 +153,7 @@ class MusicBeatState extends FlxUIState
 			stage.beatHit();
 		});
 	}
+
 	public function sectionHit():Void
 	{
 		//trace('Section: ' + curSection + ', Beat: ' + curBeat + ', Step: ' + curStep);
@@ -160,12 +162,14 @@ class MusicBeatState extends FlxUIState
 			stage.sectionHit();
 		});
 	}
+
 	function stagesFunc(func:BaseStage->Void)
 	{
 		for (stage in stages)
 			if(stage != null && stage.exists && stage.active)
 				func(stage);
 	}
+
 	function getBeatsOnSection()
 	{
 		var val:Null<Float> = 4;

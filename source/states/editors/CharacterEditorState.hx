@@ -4,7 +4,6 @@ import flixel.FlxObject;
 import flixel.graphics.FlxGraphic;
 
 import flixel.animation.FlxAnimation;
-import flixel.system.debug.interaction.tools.Pointer.GraphicCursorCross;
 import flixel.addons.transition.FlxTransitionableState;
 import flixel.addons.ui.*;
 import flixel.ui.FlxButton;
@@ -24,7 +23,6 @@ class CharacterEditorState extends MusicBeatState
 {
 	var character:Character;
 	var ghost:FlxSprite;
-	var animateGhost:FlxAnimate;
 	var animateGhostImage:String;
 	var cameraFollowPointer:FlxSprite;
 	var isAnimateSprite:Bool = false;
@@ -34,7 +32,7 @@ class CharacterEditorState extends MusicBeatState
 	var bfPosition = FlxPoint.weak();
 
 	var helpBg:FlxSprite;
-	var helpTexts:FlxSpriteGroup;
+	var helpText:FlxText;
 	var cameraZoomText:FlxText;
 	var frameAdvanceText:FlxText;
 
@@ -54,6 +52,8 @@ class CharacterEditorState extends MusicBeatState
 
 	var UI_box:FlxUITabMenu;
 	var UI_characterbox:FlxUITabMenu;
+
+	var health(default, set):Float;
 
 	public function new(char:String = null, goToPlayState:Bool = true)
 	{
@@ -102,20 +102,21 @@ class CharacterEditorState extends MusicBeatState
 
 		addCharacter();
 
-		cameraFollowPointer = new FlxSprite().loadGraphic(FlxGraphic.fromClass(GraphicCursorCross));
+		cameraFollowPointer = new FlxSprite().loadGraphic(Paths.image("editors/cursorCross"));
 		cameraFollowPointer.setGraphicSize(40, 40);
 		cameraFollowPointer.updateHitbox();
 		add(cameraFollowPointer);
 
-		healthBar = new Bar(30, FlxG.height - 75);
+		healthBar = new Bar(80, FlxG.height - 75);
 		healthBar.scrollFactor.set();
-		add(healthBar);
 		healthBar.cameras = [camHUD];
+		healthBar.valueFunction = function():Float return health;
+		add(healthBar);
 
 		healthIcon = new HealthIcon(character.healthIcon, false, false);
 		healthIcon.y = FlxG.height - 150;
-		add(healthIcon);
 		healthIcon.cameras = [camHUD];
+		add(healthIcon);
 
 		animsTxtGroup.cameras = [camHUD];
 		add(animsTxtGroup);
@@ -125,14 +126,14 @@ class CharacterEditorState extends MusicBeatState
 		tipText.setFormat(null, 16, FlxColor.WHITE, RIGHT, OUTLINE_FAST, FlxColor.BLACK);
 		tipText.borderColor = FlxColor.BLACK;
 		tipText.scrollFactor.set();
-		tipText.borderSize = 1;
+		tipText.borderSize = 1.5;
 		tipText.active = false;
 		add(tipText);
 
 		cameraZoomText = new FlxText(0, 50, 200, 'Zoom: 1x');
 		cameraZoomText.setFormat(null, 16, FlxColor.WHITE, CENTER, OUTLINE_FAST, FlxColor.BLACK);
 		cameraZoomText.scrollFactor.set();
-		cameraZoomText.borderSize = 1;
+		cameraZoomText.borderSize = 1.5;
 		cameraZoomText.screenCenter(X);
 		cameraZoomText.cameras = [camHUD];
 		add(cameraZoomText);
@@ -140,22 +141,22 @@ class CharacterEditorState extends MusicBeatState
 		frameAdvanceText = new FlxText(0, 75, 350, '');
 		frameAdvanceText.setFormat(null, 16, FlxColor.WHITE, CENTER, OUTLINE_FAST, FlxColor.BLACK);
 		frameAdvanceText.scrollFactor.set();
-		frameAdvanceText.borderSize = 1;
+		frameAdvanceText.borderSize = 1.5;
 		frameAdvanceText.screenCenter(X);
 		frameAdvanceText.cameras = [camHUD];
 		add(frameAdvanceText);
 
-		addHelpScreen();
 		FlxG.mouse.visible = true;
 		FlxG.camera.zoom = 1;
 
 		makeUIMenu();
+		addHelpScreen();
 
 		updatePointerPos();
 		updateHealthBar();
 		character.finishAnimation();
 
-		if(ClientPrefs.data.cacheOnGPU) Paths.clearUnusedMemory();
+		if (ClientPrefs.data.cacheOnGPU) Paths.clearUnusedMemory();
 
 		super.create();
 	}
@@ -182,34 +183,22 @@ class CharacterEditorState extends MusicBeatState
 		\nHold Shift - Move Offsets 10x faster and Camera 4x faster
 		\nHold Control - Move camera 4x slower";
 
-		helpBg = new FlxSprite().makeGraphic(1, 1, FlxColor.BLACK);
-		helpBg.scale.set(FlxG.width, FlxG.height);
-		helpBg.updateHitbox();
+		helpBg = new FlxSprite().makeGraphic(FlxG.width, FlxG.height, FlxColor.BLACK);
 		helpBg.alpha = 0.6;
 		helpBg.cameras = [camHUD];
 		helpBg.active = helpBg.visible = false;
 		add(helpBg);
 
-		var arr = str.split('\n');
-		helpTexts = new FlxSpriteGroup();
-		helpTexts.cameras = [camHUD];
-		for (i in 0...arr.length)
-		{
-			if(arr[i].length < 2) continue;
-
-			var helpText:FlxText = new FlxText(0, 0, 600, arr[i], 16);
-			helpText.setFormat(null, 16, FlxColor.WHITE, CENTER, OUTLINE_FAST, FlxColor.BLACK);
-			helpText.borderColor = FlxColor.BLACK;
-			helpText.scrollFactor.set();
-			helpText.borderSize = 1;
-			helpText.screenCenter();
-			add(helpText);
-			helpText.y += ((i - arr.length/2) * 16);
-			helpText.active = false;
-			helpTexts.add(helpText);
+		helpText = new FlxText(0, 0, 600, str, 16);
+		helpText.setFormat(null, 16, FlxColor.WHITE, CENTER, OUTLINE_FAST, FlxColor.BLACK);
+		helpText.borderSize = 1.5;
+		@:privateAccess {
+			helpText._defaultFormat.leading = -10;
+			helpText.updateDefaultFormat();
 		}
-		helpTexts.active = helpTexts.visible = false;
-		add(helpTexts);
+		helpText.cameras = [camHUD];
+		helpText.active = helpText.visible = false;
+		add(helpText);
 	}
 
 	function addCharacter(reload:Bool = false)
@@ -236,7 +225,9 @@ class CharacterEditorState extends MusicBeatState
 		else add(character);
 		updateCharacterPositions();
 		reloadAnimList();
-		if(healthBar != null && healthIcon != null) updateHealthBar();
+
+		if (healthBar != null && healthIcon != null)
+			updateHealthBar();
 	}
 
 	function makeUIMenu()
@@ -288,56 +279,23 @@ class CharacterEditorState extends MusicBeatState
 			var anim = anims[curAnim];
 			if(!character.isAnimationNull())
 			{
-				var myAnim = anims[curAnim];
-				if(!character.isAnimateAtlas)
-				{
-					ghost.loadGraphic(character.graphic);
-					ghost.frames.frames = character.frames.frames;
-					ghost.animation.copyFrom(character.animation);
-					ghost.animation.play(character.animation.curAnim.name, true, false, character.animation.curAnim.curFrame);
-					ghost.animation.pause();
-				}
-				else if(myAnim != null) //This is VERY unoptimized and bad, I hope to find a better replacement that loads only a specific frame as bitmap in the future.
-				{
-					if(animateGhost == null) //If I created the animateGhost on create() and you didn't load an atlas, it would crash the game on destroy, so we create it here
-					{
-						animateGhost = new FlxAnimate(ghost.x, ghost.y);
-						animateGhost.showPivot = false;
-						insert(members.indexOf(ghost), animateGhost);
-						animateGhost.active = false;
-					}
+				ghost.loadGraphic(character.graphic);
+				ghost.frames.frames = character.frames.frames;
+				ghost.animation.copyFrom(character.animation);
+				ghost.animation.play(character.animation.curAnim.name, true, false, character.animation.curAnim.curFrame);
+				ghost.animation.pause();
 
-					if(animateGhost == null || animateGhostImage != character.imageFile)
-						Paths.loadAnimateAtlas(animateGhost, character.imageFile);
-					
-					if(myAnim.indices != null && myAnim.indices.length > 0)
-						animateGhost.anim.addBySymbolIndices('anim', myAnim.name, myAnim.indices, 0, false);
-					else
-						animateGhost.anim.addBySymbol('anim', myAnim.name, 0, false);
+				ghost.setPosition(character.x, character.y);
+				ghost.antialiasing = character.antialiasing;
+				ghost.flipX = character.flipX;
+				ghost.alpha = ghostAlpha;
 
-					animateGhost.anim.play('anim', true, false, character.atlas.anim.curFrame);
-					animateGhost.anim.pause();
+				ghost.scale.set(character.scale.x, character.scale.y);
+				ghost.updateHitbox();
 
-					animateGhostImage = character.imageFile;
-				}
-				
-				var spr:FlxSprite = !character.isAnimateAtlas ? ghost : animateGhost;
-				if(spr != null)
-				{
-					spr.setPosition(character.x, character.y);
-					spr.antialiasing = character.antialiasing;
-					spr.flipX = character.flipX;
-					spr.alpha = ghostAlpha;
+				ghost.offset.set(character.offset.x, character.offset.y);
+				ghost.visible = true;
 
-					spr.scale.set(character.scale.x, character.scale.y);
-					spr.updateHitbox();
-
-					spr.offset.set(character.offset.x, character.offset.y);
-					spr.visible = true;
-
-					var otherSpr:FlxSprite = (spr == animateGhost) ? ghost : animateGhost;
-					if(otherSpr != null) otherSpr.visible = false;
-				}
 				/*hideGhostButton.active = true;
 				hideGhostButton.alpha = 1;*/
 				trace('created ghost image');
@@ -359,12 +317,6 @@ class CharacterEditorState extends MusicBeatState
 			ghost.colorTransform.redOffset = value;
 			ghost.colorTransform.greenOffset = value;
 			ghost.colorTransform.blueOffset = value;
-			if(animateGhost != null)
-			{
-				animateGhost.colorTransform.redOffset = value;
-				animateGhost.colorTransform.greenOffset = value;
-				animateGhost.colorTransform.blueOffset = value;
-			}
 		};
 
 		var ghostAlphaSlider:FlxUISlider = new FlxUISlider(this, 'ghostAlpha', 10, makeGhostButton.y + 25, 0, 1, 210, null, 5, FlxColor.WHITE, FlxColor.BLACK);
@@ -372,7 +324,6 @@ class CharacterEditorState extends MusicBeatState
 		ghostAlphaSlider.decimals = 2;
 		ghostAlphaSlider.callback = function(relativePos:Float) {
 			ghost.alpha = ghostAlpha;
-			if(animateGhost != null) animateGhost.alpha = ghostAlpha;
 		};
 		ghostAlphaSlider.value = ghostAlpha;
 
@@ -493,7 +444,6 @@ class CharacterEditorState extends MusicBeatState
 		var tab_group = new FlxUI(null, UI_box);
 		tab_group.name = "Animations";
 
-
 		animationInputText = new FlxUIInputText(15, 85, 80, '', 8);
 		animationNameInputText = new FlxUIInputText(animationInputText.x, animationInputText.y + 35, 150, '', 8);
 		animationIndicesInputText = new FlxUIInputText(animationNameInputText.x, animationNameInputText.y + 40, 250, '', 8);
@@ -531,8 +481,7 @@ class CharacterEditorState extends MusicBeatState
 					lastOffsets = anim.offsets;
 					if(character.animOffsets.exists(animationInputText.text))
 					{
-						if(!character.isAnimateAtlas) character.animation.remove(animationInputText.text);
-						else @:privateAccess character.atlas.anim.animsMap.remove(animationInputText.text);
+						character.animation.remove(animationInputText.text);
 					}
 					character.animationsArray.remove(anim);
 				}
@@ -559,8 +508,7 @@ class CharacterEditorState extends MusicBeatState
 					if(anim.anim == character.getAnimationName()) resetAnim = true;
 					if(character.animOffsets.exists(anim.anim))
 					{
-						if(!character.isAnimateAtlas) character.animation.remove(anim.anim);
-						else @:privateAccess character.atlas.anim.animsMap.remove(anim.anim);
+						character.animation.remove(anim.anim);
 						character.animOffsets.remove(anim.anim);
 						character.animationsArray.remove(anim);
 					}
@@ -706,22 +654,22 @@ class CharacterEditorState extends MusicBeatState
 	}
 
 	override function getEvent(id:String, sender:Dynamic, data:Dynamic, ?params:Array<Dynamic>) {
-		if(id != FlxUIInputText.CHANGE_EVENT && id != FlxUINumericStepper.CHANGE_EVENT) return;
+		if (id != FlxUIInputText.CHANGE_EVENT && id != FlxUINumericStepper.CHANGE_EVENT) return;
 
-		if(sender is FlxUIInputText)
+		if (sender is FlxUIInputText)
 		{
-			if(sender == healthIconInputText) {
+			if (sender == healthIconInputText) {
 				var lastIcon = healthIcon.getCharacter();
 				healthIcon.changeIcon(healthIconInputText.text, false);
 				character.healthIcon = healthIconInputText.text;
-				if(lastIcon != healthIcon.getCharacter()) updatePresence();
+				if (lastIcon != healthIcon.getCharacter()) updatePresence();
 			}
-			else if(sender == vocalsInputText)
+			else if (sender == vocalsInputText)
 				character.vocalsFile = vocalsInputText.text;
-			else if(sender == imageInputText)
+			else if (sender == imageInputText)
 				character.imageFile = imageInputText.text;
 		}
-		else if(sender is FlxUINumericStepper)
+		else if (sender is FlxUINumericStepper)
 		{
 			if (sender == scaleStepper)
 			{
@@ -731,41 +679,43 @@ class CharacterEditorState extends MusicBeatState
 				character.updateHitbox();
 				updatePointerPos(false);
 			}
-			else if(sender == positionXStepper)
+			else if (sender == positionXStepper)
 			{
 				character.positionArray[0] = positionXStepper.value;
 				updateCharacterPositions();
+				updatePointerPos(false);
 			}
-			else if(sender == positionYStepper)
+			else if (sender == positionYStepper)
 			{
 				character.positionArray[1] = positionYStepper.value;
 				updateCharacterPositions();
+				updatePointerPos(false);
 			}
-			else if(sender == singDurationStepper)
+			else if (sender == singDurationStepper)
 			{
 				character.singDuration = singDurationStepper.value;
 			}
-			else if(sender == positionCameraXStepper)
+			else if (sender == positionCameraXStepper)
 			{
 				character.cameraPosition[0] = positionCameraXStepper.value;
 				updatePointerPos();
 			}
-			else if(sender == positionCameraYStepper)
+			else if (sender == positionCameraYStepper)
 			{
 				character.cameraPosition[1] = positionCameraYStepper.value;
 				updatePointerPos();
 			}
-			else if(sender == healthColorStepperR)
+			else if (sender == healthColorStepperR)
 			{
 				character.healthColorArray[0] = Math.round(healthColorStepperR.value);
 				updateHealthBar();
 			}
-			else if(sender == healthColorStepperG)
+			else if (sender == healthColorStepperG)
 			{
 				character.healthColorArray[1] = Math.round(healthColorStepperG.value);
 				updateHealthBar();
 			}
-			else if(sender == healthColorStepperB)
+			else if (sender == healthColorStepperB)
 			{
 				character.healthColorArray[2] = Math.round(healthColorStepperB.value);
 				updateHealthBar();
@@ -778,30 +728,15 @@ class CharacterEditorState extends MusicBeatState
 		var lastAnim:String = character.getAnimationName();
 		var anims:Array<AnimArray> = character.animationsArray.copy();
 
-		character.destroyAtlas();
-		character.isAnimateAtlas = false;
 		character.color = FlxColor.WHITE;
 		character.alpha = 1;
 
-		if(Paths.fileExists('images/' + character.imageFile + '/Animation.json', TEXT))
-		{
-			character.atlas = new FlxAnimate();
-			character.atlas.showPivot = false;
-			try
-			{
-				Paths.loadAnimateAtlas(character.atlas, character.imageFile);
-			}
-			catch(e:Dynamic)
-			{
-				FlxG.log.warn('Could not load atlas ${character.imageFile}: $e');
-			}
-			character.isAnimateAtlas = true;
-		}
-		else if(Paths.fileExists('images/' + character.imageFile + '.txt', TEXT)) character.frames = Paths.getPackerAtlas(character.imageFile);
-		else if(Paths.fileExists('images/' + character.imageFile + '.json', TEXT)) character.frames = Paths.getAsepriteAtlas(character.imageFile);
+		if (Paths.fileExists('images/' + character.imageFile + '.txt', TEXT)) character.frames = Paths.getPackerAtlas(character.imageFile);
+		else if (Paths.fileExists('images/' + character.imageFile + '.json', TEXT)) character.frames = Paths.getAsepriteAtlas(character.imageFile);
 		else character.frames = Paths.getSparrowAtlas(character.imageFile);
 
-		for (anim in anims) {
+		for (anim in anims)
+		{
 			var animAnim:String = '' + anim.anim;
 			var animName:String = '' + anim.name;
 			var animFps:Int = anim.fps;
@@ -841,11 +776,13 @@ class CharacterEditorState extends MusicBeatState
 	var holdingFrameTime:Float = 0;
 	var holdingFrameElapsed:Float = 0;
 	var undoOffsets:Array<Float> = null;
+	var isHelpOpen:Bool = false;
+	var isHoldingIcon:Bool = false;
 	override function update(elapsed:Float)
 	{
 		super.update(elapsed);
 
-		if(animationInputText.hasFocus || animationNameInputText.hasFocus || animationIndicesInputText.hasFocus || imageInputText.hasFocus || healthIconInputText.hasFocus || vocalsInputText.hasFocus)
+		if (animationInputText.hasFocus || animationNameInputText.hasFocus || animationIndicesInputText.hasFocus || imageInputText.hasFocus || healthIconInputText.hasFocus || vocalsInputText.hasFocus)
 		{
 			ClientPrefs.toggleVolumeKeys(false);
 			return;
@@ -869,17 +806,20 @@ class CharacterEditorState extends MusicBeatState
 		if (FlxG.keys.pressed.I) FlxG.camera.scroll.y -= elapsed * 500 * shiftMult * ctrlMult;
 
 		var lastZoom = FlxG.camera.zoom;
-		if(FlxG.keys.justPressed.R && !FlxG.keys.pressed.CONTROL) FlxG.camera.zoom = 1;
-		else if (FlxG.keys.pressed.E && FlxG.camera.zoom < 3) {
+		if (FlxG.keys.justPressed.R && !FlxG.keys.pressed.CONTROL)
+			FlxG.camera.zoom = 1;
+		else if (FlxG.keys.pressed.E && FlxG.camera.zoom < 3)
+		{
 			FlxG.camera.zoom += elapsed * FlxG.camera.zoom * shiftMult * ctrlMult;
-			if(FlxG.camera.zoom > 3) FlxG.camera.zoom = 3;
+			if (FlxG.camera.zoom > 3) FlxG.camera.zoom = 3;
 		}
-		else if (FlxG.keys.pressed.Q && FlxG.camera.zoom > 0.1) {
+		else if (FlxG.keys.pressed.Q && FlxG.camera.zoom > 0.1)
+		{
 			FlxG.camera.zoom -= elapsed * FlxG.camera.zoom * shiftMult * ctrlMult;
-			if(FlxG.camera.zoom < 0.1) FlxG.camera.zoom = 0.1;
+			if (FlxG.camera.zoom < 0.1) FlxG.camera.zoom = 0.1;
 		}
 
-		if(lastZoom != FlxG.camera.zoom) cameraZoomText.text = 'Zoom: ' + FlxMath.roundDecimal(FlxG.camera.zoom, 2) + 'x';
+		if (lastZoom != FlxG.camera.zoom) cameraZoomText.text = 'Zoom: ' + FlxMath.roundDecimal(FlxG.camera.zoom, 2) + 'x';
 
 		// CHARACTER CONTROLS
 		var changedAnim:Bool = false;
@@ -900,17 +840,17 @@ class CharacterEditorState extends MusicBeatState
 		var changedOffset = false;
 		var moveKeysP = [FlxG.keys.justPressed.LEFT, FlxG.keys.justPressed.RIGHT, FlxG.keys.justPressed.UP, FlxG.keys.justPressed.DOWN];
 		var moveKeys = [FlxG.keys.pressed.LEFT, FlxG.keys.pressed.RIGHT, FlxG.keys.pressed.UP, FlxG.keys.pressed.DOWN];
-		if(moveKeysP.contains(true))
+		if (moveKeysP.contains(true))
 		{
 			character.offset.x += ((moveKeysP[0] ? 1 : 0) - (moveKeysP[1] ? 1 : 0)) * shiftMultBig;
 			character.offset.y += ((moveKeysP[2] ? 1 : 0) - (moveKeysP[3] ? 1 : 0)) * shiftMultBig;
 			changedOffset = true;
 		}
 
-		if(moveKeys.contains(true))
+		if (moveKeys.contains(true))
 		{
 			holdingArrowsTime += elapsed;
-			if(holdingArrowsTime > 0.6)
+			if (holdingArrowsTime > 0.6)
 			{
 				holdingArrowsElapsed += elapsed;
 				while(holdingArrowsElapsed > (1/60))
@@ -924,35 +864,35 @@ class CharacterEditorState extends MusicBeatState
 		}
 		else holdingArrowsTime = 0;
 
-		if(FlxG.mouse.pressedRight && (FlxG.mouse.deltaScreenX != 0 || FlxG.mouse.deltaScreenY != 0))
+		if (FlxG.mouse.pressedRight && (FlxG.mouse.deltaScreenX != 0 || FlxG.mouse.deltaScreenY != 0))
 		{
 			character.offset.x -= FlxG.mouse.deltaScreenX;
 			character.offset.y -= FlxG.mouse.deltaScreenY;
 			changedOffset = true;
 		}
 
-		if(FlxG.keys.pressed.CONTROL)
+		if (FlxG.keys.pressed.CONTROL)
 		{
-			if(FlxG.keys.justPressed.C)
+			if (FlxG.keys.justPressed.C)
 			{
 				copiedOffset[0] = character.offset.x;
 				copiedOffset[1] = character.offset.y;
 				changedOffset = true;
 			}
-			else if(FlxG.keys.justPressed.V)
+			else if (FlxG.keys.justPressed.V)
 			{
 				undoOffsets = [character.offset.x, character.offset.y];
 				character.offset.x = copiedOffset[0];
 				character.offset.y = copiedOffset[1];
 				changedOffset = true;
 			}
-			else if(FlxG.keys.justPressed.R)
+			else if (FlxG.keys.justPressed.R)
 			{
 				undoOffsets = [character.offset.x, character.offset.y];
 				character.offset.set(0, 0);
 				changedOffset = true;
 			}
-			else if(FlxG.keys.justPressed.Z && undoOffsets != null)
+			else if (FlxG.keys.justPressed.Z && undoOffsets != null)
 			{
 				character.offset.x = undoOffsets[0];
 				character.offset.y = undoOffsets[1];
@@ -961,7 +901,7 @@ class CharacterEditorState extends MusicBeatState
 		}
 
 		var anim = anims[curAnim];
-		if(changedOffset && anim != null && anim.offsets != null)
+		if (changedOffset && anim != null && anim.offsets != null)
 		{
 			anim.offsets[0] = Std.int(character.offset.x);
 			anim.offsets[1] = Std.int(character.offset.y);
@@ -985,18 +925,8 @@ class CharacterEditorState extends MusicBeatState
 			if(FlxG.keys.justPressed.SPACE)
 				character.playAnim(character.getAnimationName(), true);
 
-			var frames:Int = 0;
-			var length:Int = 0;
-			if(!character.isAnimateAtlas)
-			{
-				frames = character.animation.curAnim.curFrame;
-				length = character.animation.curAnim.numFrames;
-			}
-			else
-			{
-				frames = character.atlas.anim.curFrame;
-				length = character.atlas.anim.length;
-			}
+			var frames:Int = character.animation.curAnim.curFrame;
+			var length:Int = character.animation.curAnim.numFrames;
 
 			if(FlxG.keys.justPressed.A || FlxG.keys.justPressed.D || holdingFrameTime > 0.5)
 			{
@@ -1007,8 +937,7 @@ class CharacterEditorState extends MusicBeatState
 				if(holdingFrameTime <= 0.5 || holdingFrameElapsed > 0.1)
 				{
 					frames = FlxMath.wrap(frames + Std.int(isLeft ? -shiftMult : shiftMult), 0, length-1);
-					if(!character.isAnimateAtlas) character.animation.curAnim.curFrame = frames;
-					else character.atlas.anim.curFrame = frames;
+					character.animation.curAnim.curFrame = frames;
 					holdingFrameElapsed -= 0.1;
 				}
 			}
@@ -1024,21 +953,48 @@ class CharacterEditorState extends MusicBeatState
 		if(FlxG.keys.justPressed.F12)
 			silhouettes.visible = !silhouettes.visible;
 
-		if(FlxG.keys.justPressed.F1 || (helpBg.visible && FlxG.keys.justPressed.ESCAPE))
+		if (FlxG.mouse.overlaps(healthIcon, camHUD) && FlxG.mouse.justPressed)
+			isHoldingIcon = true;
+
+		if (FlxG.mouse.pressed && isHoldingIcon)
 		{
-			helpBg.visible = !helpBg.visible;
-			helpTexts.visible = helpBg.visible;
+			var min:Float = healthBar.x;
+			var max:Float = healthBar.x + healthBar.width;
+			healthIcon.x = FlxMath.bound(FlxG.mouse.getViewPosition(camHUD).x, min, max);
+
+			var healthCal:Float = (healthIcon.x - min) / healthBar.width;
+			health = healthCal;
 		}
-		else if(FlxG.keys.justPressed.ESCAPE)
+
+		if (FlxG.mouse.justReleased && isHoldingIcon)
+		{
+			isHoldingIcon = false;
+		}
+
+		if (FlxG.keys.justPressed.F1 || (isHelpOpen && FlxG.keys.justPressed.ESCAPE))
+		{
+			if (isHelpOpen = !isHelpOpen)
+			{
+				helpBg.visible = true;
+				helpText.visible = true;
+				helpText.screenCenter();
+			}
+			else
+			{
+				helpBg.visible = false;
+				helpText.visible = false;
+			}
+		}
+		else if (FlxG.keys.justPressed.ESCAPE)
 		{
 			FlxG.mouse.visible = false;
-			if(!_goToPlayState)
+			if (!_goToPlayState)
 			{
 				FlxG.switchState(() -> new states.editors.MasterEditorMenu());
 				FlxG.sound.playMusic(Paths.music('freakyMenu'));
 			}
-			else FlxG.switchState(() -> new PlayState());
-			return;
+			else
+				FlxG.switchState(() -> new PlayState());
 		}
 	}
 
@@ -1077,14 +1033,30 @@ class CharacterEditorState extends MusicBeatState
 		}
 	}
 
-	inline function updateHealthBar()
+	function updateHealthBar()
 	{
 		healthColorStepperR.value = character.healthColorArray[0];
 		healthColorStepperG.value = character.healthColorArray[1];
 		healthColorStepperB.value = character.healthColorArray[2];
-		healthBar.leftBar.color = healthBar.rightBar.color = FlxColor.fromRGB(character.healthColorArray[0], character.healthColorArray[1], character.healthColorArray[2]);
+		healthBar.leftBar.color = FlxColor.fromRGB(character.healthColorArray[0], character.healthColorArray[1], character.healthColorArray[2]);
+		healthBar.rightBar.color = FlxColor.WHITE;
 		healthIcon.changeIcon(character.healthIcon, false);
 		updatePresence();
+
+		health = 0.5;
+	}
+
+	function set_health(value:Float):Float
+	{
+		health = FlxMath.bound(value, 0, 1);
+		healthBar.percent = health * 100;
+
+		healthIcon.x = healthBar.barCenter - healthIcon.width / 2;
+
+		if (healthIcon.isAnimatedIcon)
+			healthIcon.animation.play((healthBar.percent < 20) ? 'losing' : (healthBar.percent > 80 ? 'winning' : 'normal'));
+
+		return health;
 	}
 
 	inline function updatePresence() {
@@ -1114,7 +1086,7 @@ class CharacterEditorState extends MusicBeatState
 			text.text = anim.anim + ": " + anim.offsets;
 			text.setFormat(null, 16, FlxColor.WHITE, LEFT, OUTLINE_FAST, FlxColor.BLACK);
 			text.scrollFactor.set();
-			text.borderSize = 1;
+			text.borderSize = 1.5;
 			animsTxtGroup.add(text);
 
 			daLoop++;
@@ -1151,22 +1123,12 @@ class CharacterEditorState extends MusicBeatState
 
 	function addAnimation(anim:String, name:String, fps:Float, loop:Bool, indices:Array<Int>)
 	{
-		if(!character.isAnimateAtlas)
-		{
-			if(indices != null && indices.length > 0)
-				character.animation.addByIndices(anim, name, indices, "", fps, loop);
-			else
-				character.animation.addByPrefix(anim, name, fps, loop);
-		}
+		if (indices != null && indices.length > 0)
+			character.animation.addByIndices(anim, name, indices, "", fps, loop);
 		else
-		{
-			if(indices != null && indices.length > 0)
-				character.atlas.anim.addBySymbolIndices(anim, name, indices, fps, loop);
-			else
-				character.atlas.anim.addBySymbol(anim, name, fps, loop);
-		}
+			character.animation.addByPrefix(anim, name, fps, loop);
 
-		if(!character.animOffsets.exists(anim))
+		if (!character.animOffsets.exists(anim))
 			character.addOffset(anim, 0, 0);
 	}
 

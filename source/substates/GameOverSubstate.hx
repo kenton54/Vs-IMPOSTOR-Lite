@@ -155,7 +155,7 @@ class GameOverSubstate extends MusicBeatSubstate
 		{
 			isEnding = true;
 			FlxG.sound.music.stop();
-			new FlxTimer().start(0.7, function(tmr:FlxTimer)
+			new FlxTimer().start(0.7, _ ->
 			{
 				camGameover.fade(FlxColor.BLACK, 2, false, function() {
 					FlxG.resetState();
@@ -167,8 +167,8 @@ class GameOverSubstate extends MusicBeatSubstate
 
 	function moveItDown()
 	{
-		FlxG.camera.smoothFollow(camFollow, true, (7.5 * (60 / FlxG.updateFramerate)), FlxEase.expoOut);
-		new FlxTimer().start(1.4, function(tmr:FlxTimer)
+		PlayState.instance.moveCameraLite(true, (7.5 * (60 / FlxG.updateFramerate)), FlxEase.expoOut);
+		new FlxTimer().start(1.4, _ ->
 		{
 			FlxG.sound.play(Paths.sound('gameOver'));
 			FlxTween.tween(bfLose, {y: 0}, 1.1, {ease: FlxEase.smootherStepInOut});
