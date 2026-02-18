@@ -6,7 +6,7 @@ class HealthIcon extends FlxSprite
 	private var isOldIcon:Bool = false;
 	private var isPlayer:Bool = false;
 	private var char:String = '';
-	public var isAnimatedIcon:Bool = false;
+	public var isAnimatedIcon(default, null):Bool = false;
 
 	public function new(char:String = 'bf', isPlayer:Bool = false, ?allowGPU:Bool = true)
 	{
@@ -26,13 +26,15 @@ class HealthIcon extends FlxSprite
 	}
 
 	private var iconOffsets:Array<Float> = [0, 0];
-	public function changeIcon(char:String, ?allowGPU:Bool = true) {
-		if(this.char != char) {
+	public function changeIcon(char:String, ?allowGPU:Bool = true)
+	{
+		if (this.char != char)
+		{
 			var name:String = 'icons/' + char;
-			if(!Paths.fileExists('images/' + name + '.png', IMAGE)) name = 'icons/icon-' + char; //Older versions of psych engine's support
-			if(!Paths.fileExists('images/' + name + '.png', IMAGE)) name = 'icons/face'; //Prevents crash from missing icon
-			
-			if((FileSystem.exists(Paths.getLitePath('images/' + name + '.xml'))))
+			if (!Paths.fileExists('images/' + name + '.png', IMAGE)) name = 'icons/icon-' + char; //Older versions of psych engine's support
+			if (!Paths.fileExists('images/' + name + '.png', IMAGE)) name = 'icons/face'; //Prevents crash from missing icon
+
+			if (Paths.fileExists('images/' + name + '.xml', TEXT))
 			{
 				isAnimatedIcon = true;
 				frames = Paths.getSparrowAtlas(name);
@@ -41,7 +43,8 @@ class HealthIcon extends FlxSprite
 				animation.addByPrefix('winning', 'win', 6, true, isPlayer);
 				animation.play('normal');
 			}
-			else {
+			else
+			{
 				isAnimatedIcon = false;
 				var graphic = Paths.image(name, allowGPU);
 				loadGraphic(graphic, true, Math.floor(graphic.width / 2), Math.floor(graphic.height));
@@ -77,7 +80,6 @@ class HealthIcon extends FlxSprite
 		offset.y = iconOffsets[1];
 	}
 
-	public function getCharacter():String {
+	public function getCharacter():String
 		return char;
-	}
 }

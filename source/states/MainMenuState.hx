@@ -192,11 +192,13 @@ class MainMenuState extends MusicBeatState
 				}
 			}
 
+			#if EDITORS_ALLOWED
 			if (ALLOW_DEBUG_ACCESS && controls.justPressed('debug_1'))
 			{
 				selectedSomethin = true;
 				FlxG.switchState(() -> new MasterEditorMenu());
 			}
+			#end
 
 			secretsWololo();
 		}

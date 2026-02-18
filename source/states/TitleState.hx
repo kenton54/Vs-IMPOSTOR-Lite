@@ -1,5 +1,6 @@
 package states;
 
+import openfl.utils.Assets;
 import flixel.addons.transition.FlxTransitionableState;
 
 class TitleState extends MusicBeatState

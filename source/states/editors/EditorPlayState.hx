@@ -1,5 +1,6 @@
 package states.editors;
 
+#if EDITORS_ALLOWED
 import backend.Song;
 import backend.Section;
 import backend.Rating;
@@ -1013,3 +1014,4 @@ class EditorPlayState extends MusicBeatSubstate
 		return cast Json.parse(rawJson);
 	}
 }
+#end

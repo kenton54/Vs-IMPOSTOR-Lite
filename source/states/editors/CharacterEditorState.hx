@@ -1,5 +1,6 @@
 package states.editors;
 
+#if EDITORS_ALLOWED
 import flixel.FlxObject;
 import flixel.graphics.FlxGraphic;
 
@@ -1239,3 +1240,4 @@ class CharacterEditorState extends MusicBeatState
 		}
 	}
 }
+#end

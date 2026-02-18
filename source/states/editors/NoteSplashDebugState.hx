@@ -1,5 +1,6 @@
 package states.editors;
 
+#if EDITORS_ALLOWED
 import objects.Note;
 import objects.StrumNote;
 import objects.NoteSplash;
@@ -476,3 +477,4 @@ class NoteSplashDebugState extends MusicBeatState
 		super.destroy();
 	}
 }
+#end

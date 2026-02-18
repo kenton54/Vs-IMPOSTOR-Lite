@@ -124,7 +124,7 @@ class DialogueLiteBox extends FlxGroup
 		#if MODS_ALLOWED
 		if (!FileSystem.exists(file))
 		#else
-		if (!OpenFlAssets.exists(file))
+		if (!Assets.exists(file))
 		#end
 		{
 			FlxG.log.error('Could not find dialogue file at path "$file"!');

@@ -2,29 +2,38 @@ package objects;
 
 import flixel.addons.display.FlxPieDial;
 
+#if VIDEOS_ALLOWED
 #if hxvlc
-import hxvlc.flixel.FlxVideoSprite;
+import hxvlc.flixel.FlxVideoSprite as VideoHandler;
+#elseif html5
+import backend.HTML5Video as VideoHandler;
 #end
 
 class VideoSprite extends FlxSpriteGroup
 {
-	#if VIDEOS_ALLOWED
 	public var finishCallback:Void->Void = null;
 	public var onSkip:Void->Void = null;
 
 	final _timeToSkip:Float = 1;
 
-	public var holdingTime:Float = 0;
-	public var videoSprite:FlxVideoSprite;
+	public var speed(get, set):Float;
+
+	public var videoSprite:VideoHandler;
 	public var skipSprite:FlxPieDial;
 	public var cover:FlxSprite;
+
+	/**
+	 * Whether the video can be skipped.
+	 */
 	public var canSkip(default, set):Bool = false;
 
 	private var videoName:String;
 
 	public var waiting:Bool = false;
 
-	public function new(videoName:String, isWaiting:Bool, canSkip:Bool = false, shouldLoop:Bool = false)
+	var holdingTime:Float = 0;
+
+	public function new(videoName:String, isWaiting:Bool, canSkip:Bool = false)
 	{
 		super();
 
@@ -43,15 +52,14 @@ class VideoSprite extends FlxSpriteGroup
 		}
 
 		// initialize sprites
-		videoSprite = new FlxVideoSprite();
+		videoSprite = new VideoHandler();
 		videoSprite.antialiasing = ClientPrefs.data.antialiasing;
 		add(videoSprite);
 		if (canSkip)
 			this.canSkip = true;
 
 		// callbacks
-		if (!shouldLoop)
-			videoSprite.bitmap.onEndReached.add(finishVideo);
+		videoSprite.bitmap.onEndReached.add(finishVideo);
 
 		videoSprite.bitmap.onFormatSetup.add(function()
 		{
@@ -62,7 +70,7 @@ class VideoSprite extends FlxSpriteGroup
 		});
 
 		// start video and adjust resolution to screen size
-		videoSprite.load(videoName, shouldLoop ? ['input-repeat=65545'] : null);
+		videoSprite.load(videoName);
 	}
 
 	var alreadyDestroyed:Bool = false;
@@ -72,7 +80,6 @@ class VideoSprite extends FlxSpriteGroup
 		if (alreadyDestroyed)
 			return;
 
-		trace('Video destroyed');
 		if (cover != null)
 		{
 			remove(cover);
@@ -165,10 +172,32 @@ class VideoSprite extends FlxSpriteGroup
 		skipSprite.alpha = FlxMath.remapToRange(skipSprite.amount, 0.025, 1, 0, 1);
 	}
 
-	public function play() videoSprite?.play();
+	public function play() videoSprite.play();
 
-	public function resume() videoSprite?.resume();
+	public function resume() videoSprite.resume();
 
-	public function pause() videoSprite?.pause();
-	#end
+	public function pause() videoSprite.pause();
+
+	function get_speed():Float
+	{
+		#if hxvlc
+		return videoSprite.bitmap.rate;
+		#elseif html5
+		return videoSprite.netStream.speed;
+		#else
+		return 1.0;
+		#end
+	}
+
+	function set_speed(value:Float):Float
+	{
+		#if hxvlc
+		return videoSprite.bitmap.rate = value;
+		#elseif html5
+		return videoSprite.netStream.speed = value;
+		#else
+		return value;
+		#end
+	}
 }
+#end

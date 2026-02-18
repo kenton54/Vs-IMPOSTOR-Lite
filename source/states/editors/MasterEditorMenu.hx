@@ -1,5 +1,6 @@
 package states.editors;
 
+#if EDITORS_ALLOWED
 import backend.WeekData;
 
 import objects.Character;
@@ -169,3 +170,4 @@ class MasterEditorMenu extends MusicBeatState
 	}
 	#end
 }
+#end

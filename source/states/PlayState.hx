@@ -36,10 +36,6 @@ import flixel.addons.display.FlxRuntimeShader;
 import openfl.filters.ShaderFilter;
 #end
 
-#if VIDEOS_ALLOWED
-import hxvlc.flixel.FlxVideoSprite;
-#end
-
 import objects.Note.EventNote;
 import objects.*;
 import states.stages.objects.*;
@@ -846,7 +842,7 @@ class PlayState extends MusicBeatState
 	}
 
 	public var videoCutscene:VideoSprite;
-	public function startVideo(name:String, forMidSong:Bool = false, canSkip:Bool = true, loop:Bool = false):VideoSprite
+	public function startVideo(name:String, forMidSong:Bool = false, canSkip:Bool = true):VideoSprite
 	{
 		#if VIDEOS_ALLOWED
 		inCutscene = !forMidSong;
@@ -863,9 +859,9 @@ class PlayState extends MusicBeatState
 			return null;
 		}
 
-		videoCutscene = new VideoSprite(filePath, forMidSong, canSkip, loop);
+		videoCutscene = new VideoSprite(filePath, forMidSong, canSkip);
 		videoCutscene.cameras = [camHUD];
-		if (forMidSong) videoCutscene.videoSprite.bitmap.rate = playbackRate;
+		if (forMidSong) videoCutscene.speed = playbackRate;
 
 		if (!forMidSong)
 		{
@@ -1450,7 +1446,6 @@ class PlayState extends MusicBeatState
 				swagNote.sustainLength = songNotes[2];
 				swagNote.gfNote = (section.gfSection && (songNotes[1]<4));
 				swagNote.noteType = songNotes[3];
-				if(!Std.isOfType(songNotes[3], String)) swagNote.noteType = ChartingState.noteTypeList[songNotes[3]]; //Backward compatibility + compatibility with Week 7 charts
 
 				swagNote.scrollFactor.set();
 
@@ -1781,6 +1776,7 @@ class PlayState extends MusicBeatState
 			}
 		}
 
+		#if EDITORS_ALLOWED
 		if (!endingSong && !inCutscene && allowDebugKeys && MainMenuState.ALLOW_DEBUG_ACCESS)
 		{
 			if (controls.justPressed('debug_1'))
@@ -1788,6 +1784,7 @@ class PlayState extends MusicBeatState
 			else if (controls.justPressed('debug_2'))
 				openCharacterEditor();
 		}
+		#end
 
 		if (healthBar.bounds.max != null && health > healthBar.bounds.max)
 			health = healthBar.bounds.max;
@@ -2021,6 +2018,7 @@ class PlayState extends MusicBeatState
 		#end
 	}
 
+	#if EDITORS_ALLOWED
 	function openChartEditor()
 	{
 		if (cameraTween != null) cameraTween.active = false;
@@ -2057,6 +2055,7 @@ class PlayState extends MusicBeatState
 
 		FlxG.switchState(() -> new CharacterEditorState(SONG.player2));
 	}
+	#end
 
 	public var isDead:Bool = false; //Don't mess with this on Lua!!!
 	function doDeathCheck(?skipHealthCheck:Bool = false) {
@@ -2554,11 +2553,13 @@ class PlayState extends MusicBeatState
 			#end
 			playbackRate = 1;
 
+			#if EDITORS_ALLOWED
 			if (chartingMode)
 			{
 				openChartEditor();
 				return false;
 			}
+			#end
 
 			if (isStoryMode)
 			{

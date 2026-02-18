@@ -1,5 +1,6 @@
 package states.editors;
 
+#if EDITORS_ALLOWED
 import flash.geom.Rectangle;
 import haxe.Json;
 import haxe.format.JsonParser;
@@ -3260,3 +3261,4 @@ class AttachedFlxText extends FlxText
 		}
 	}
 }
+#end

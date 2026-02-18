@@ -1,22 +1,16 @@
 package backend;
 
-import flixel.graphics.frames.FlxFrame.FlxFrameAngle;
 import flixel.graphics.frames.FlxAtlasFrames;
 import flixel.graphics.FlxGraphic;
-import flixel.math.FlxRect;
 
 import openfl.display.BitmapData;
 import openfl.display3D.textures.RectangleTexture;
 import openfl.utils.AssetType;
 import openfl.utils.Assets as OpenFlAssets;
 import openfl.system.System;
-import openfl.geom.Rectangle;
 
 import lime.utils.Assets;
 import flash.media.Sound;
-
-import haxe.Json;
-
 
 #if MODS_ALLOWED
 import backend.Mods;
@@ -24,7 +18,6 @@ import backend.Mods;
 
 class Paths
 {
-	inline public static var SOUND_EXT = #if web "mp3" #else "ogg" #end;
 	inline public static var VIDEO_EXT = "mp4";
 
 	public static function excludeAsset(key:String) {
@@ -32,7 +25,7 @@ class Paths
 			dumpExclusions.push(key);
 	}
 
-	public static var dumpExclusions:Array<String> = ['assets/lite/music/freakyMenu.$SOUND_EXT'];
+	public static var dumpExclusions:Array<String> = ['assets/lite/music/freakyMenu.ogg'];
 	/// haya I love you for the base cache dump I took to the max
 	public static function clearUnusedMemory() {
 		// clear non local assets in the tracked assets list
@@ -209,7 +202,7 @@ class Paths
 	}
 
 	public static var currentTrackedAssets:Map<String, FlxGraphic> = [];
-	static public function image(key:String, ?library:String = null, ?allowGPU:Bool = true):FlxGraphic
+	static public function image(key:String, ?library:String = null, ?allowGPU:Bool = #if web false #else true #end):FlxGraphic
 	{
 		var bitmap:BitmapData = null;
 		var file:String = null;
@@ -246,7 +239,7 @@ class Paths
 		return null;
 	}
 
-	static public function cacheBitmap(file:String, ?bitmap:BitmapData = null, ?allowGPU:Bool = true)
+	static public function cacheBitmap(file:String, ?bitmap:BitmapData = null, ?allowGPU:Bool = #if web false #else true #end)
 	{
 		if(bitmap == null)
 		{
@@ -340,7 +333,7 @@ class Paths
 		return false;
 	}
 
-	static public function getAtlas(key:String, ?library:String = null, ?allowGPU:Bool = true):FlxAtlasFrames
+	static public function getAtlas(key:String, ?library:String = null, ?allowGPU:Bool = #if web false #else true #end):FlxAtlasFrames
 	{
 		var useMod = false;
 		var imageLoaded:FlxGraphic = image(key, library, allowGPU);
@@ -369,7 +362,7 @@ class Paths
 		return getPackerAtlas(key, library);
 	}
 
-	static public function getMultiAtlas(keys:Array<String>, ?parentFolder:String = null, ?allowGPU:Bool = true):FlxAtlasFrames
+	static public function getMultiAtlas(keys:Array<String>, ?parentFolder:String = null, ?allowGPU:Bool = #if web false #else true #end):FlxAtlasFrames
 	{
 		var parentFrames:FlxAtlasFrames = Paths.getAtlas(keys[0].trim());
 		if (keys.length > 1)
@@ -387,7 +380,7 @@ class Paths
 		return parentFrames;
 	}
 
-	inline static public function getSparrowAtlas(key:String, ?library:String = null, ?allowGPU:Bool = true):FlxAtlasFrames
+	inline static public function getSparrowAtlas(key:String, ?library:String = null, ?allowGPU:Bool = #if web false #else true #end):FlxAtlasFrames
 	{
 		var imageLoaded:FlxGraphic = image(key, library, allowGPU);
 		#if MODS_ALLOWED
@@ -402,7 +395,7 @@ class Paths
 		#end
 	}
 
-	inline static public function getPackerAtlas(key:String, ?library:String = null, ?allowGPU:Bool = true):FlxAtlasFrames
+	inline static public function getPackerAtlas(key:String, ?library:String = null, ?allowGPU:Bool = #if web false #else true #end):FlxAtlasFrames
 	{
 		var imageLoaded:FlxGraphic = image(key, library, allowGPU);
 		#if MODS_ALLOWED
@@ -417,7 +410,7 @@ class Paths
 		#end
 	}
 
-	inline static public function getAsepriteAtlas(key:String, ?library:String = null, ?allowGPU:Bool = true):FlxAtlasFrames
+	inline static public function getAsepriteAtlas(key:String, ?library:String = null, ?allowGPU:Bool = #if web false #else true #end):FlxAtlasFrames
 	{
 		var imageLoaded:FlxGraphic = image(key, library, allowGPU);
 		#if MODS_ALLOWED
@@ -460,7 +453,7 @@ class Paths
 		#end
 
 		// I hate this so god damn much
-		var gottenPath:String = '$key.$SOUND_EXT';
+		var gottenPath:String = '$key.ogg';
 		if(path != null) gottenPath = '$path/$gottenPath';
 		gottenPath = getPath(gottenPath, SOUND, library);
 		gottenPath = gottenPath.substring(gottenPath.indexOf(':') + 1, gottenPath.length);
@@ -468,7 +461,7 @@ class Paths
 		if(!currentTrackedSounds.exists(gottenPath))
 		{
 			var retKey:String = (path != null) ? '$path/$key' : key;
-			retKey = getPath('$retKey.$SOUND_EXT', SOUND, library);
+			retKey = getPath('$retKey.ogg', SOUND, library);
 			//trace(retKey);
 			if(OpenFlAssets.exists(retKey, SOUND))
 			{
@@ -498,7 +491,7 @@ class Paths
 	}
 
 	inline static public function modsSounds(path:String, key:String) {
-		return modFolders(path + '/' + key + '.' + SOUND_EXT);
+		return modFolders(path + '/' + key + '.ogg');
 	}
 
 	inline static public function modsImages(key:String) {

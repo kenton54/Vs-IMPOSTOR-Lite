@@ -1,5 +1,6 @@
 package states.editors;
 
+#if EDITORS_ALLOWED
 import cutscenes.DialogueLiteBox;
 
 class DialogueEditorState extends MusicBeatState
@@ -111,3 +112,4 @@ class DialogueEditorState extends MusicBeatState
         };
     }
 }
+#end
