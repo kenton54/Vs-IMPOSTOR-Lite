@@ -55,7 +55,7 @@
     {
       "name": "tjson",
       "type": "haxelib",
-      "version": "1.4.0"
+      "version": null
     },
     {
       "name": "hxdiscord_rpc",
