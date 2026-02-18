@@ -69,7 +69,6 @@ class StoryMenuState extends MusicBeatState
 		add(grpLocks);
 
 		#if DISCORD_ALLOWED
-		// Updating Discord Rich Presence
 		DiscordClient.changePresence("Looking at the story menu", null);
 		#end
 
@@ -295,10 +294,10 @@ class StoryMenuState extends MusicBeatState
 					trace('ERROR! $e');
 					return;
 				}
-				
+
 				LoadingState.loadAndSwitchState(() -> new PlayState(), true);
 				FreeplayState.destroyFreeplayVocals();
-				
+
 				#if (MODS_ALLOWED && DISCORD_ALLOWED)
 				DiscordClient.loadModRPC();
 				#end

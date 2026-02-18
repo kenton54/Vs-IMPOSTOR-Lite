@@ -1,7 +1,6 @@
 package backend;
 
 import openfl.utils.Assets;
-import lime.utils.Assets as LimeAssets;
 
 class CoolUtil
 {

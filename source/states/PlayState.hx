@@ -16,8 +16,7 @@ import flixel.util.FlxStringUtil;
 import flixel.util.FlxSave;
 import flixel.input.keyboard.FlxKey;
 import flixel.animation.FlxAnimationController;
-import lime.utils.Assets;
-import openfl.utils.Assets as OpenFlAssets;
+import openfl.utils.Assets;
 import openfl.events.KeyboardEvent;
 import haxe.Json;
 
@@ -776,7 +775,7 @@ class PlayState extends MusicBeatState
 		}
 		#else
 		luaFile = Paths.getLitePath(luaFile);
-		if(Assets.exists(luaFile)) doPush = true;
+		if (Assets.exists(luaFile)) doPush = true;
 		#end
 
 		if(doPush)
@@ -852,7 +851,7 @@ class PlayState extends MusicBeatState
 		#if sys
 		if(!FileSystem.exists(filePath))
 		#else
-		if(!OpenFlAssets.exists(filePath))
+		if (!Assets.exists(filePath))
 		#end
 		{
 			FlxG.log.warn('Couldn\'t find video file: ' + name);
@@ -910,7 +909,7 @@ class PlayState extends MusicBeatState
 		#if MODS_ALLOWED
 		if (!FileSystem.exists(file))
 		#else
-		if (!OpenFlAssets.exists(file))
+		if (!Assets.exists(file))
 		#end
 		{
 			startCountdown();
@@ -919,7 +918,6 @@ class PlayState extends MusicBeatState
 
 		liteDialg = new DialogueLiteBox(file);
 		liteDialg.cameras = [camDialogue];
-		//liteDialg.scrollFactor.set();
 		liteDialg.onFinish = startCountdown;
 		add(liteDialg);
 	}
@@ -1413,7 +1411,7 @@ class PlayState extends MusicBeatState
 		#if MODS_ALLOWED
 		if (FileSystem.exists(Paths.modsJson(songName + '/events')) || FileSystem.exists(file))
 		#else
-		if (OpenFlAssets.exists(file))
+		if (Assets.exists(file))
 		#end
 		{
 			var eventsData:Array<Dynamic> = Song.loadFromJson('events', songName).events;
@@ -3400,7 +3398,7 @@ class PlayState extends MusicBeatState
 		if(FileSystem.exists(luaToLoad))
 		#elseif sys
 		var luaToLoad:String = Paths.getLitePath(luaFile);
-		if(OpenFlAssets.exists(luaToLoad))
+		if (Assets.exists(luaToLoad))
 		#end
 		{
 			for (script in luaArray)

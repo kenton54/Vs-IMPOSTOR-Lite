@@ -47,13 +47,6 @@ class Main extends Sprite
 
 	public static var fpsCounter(default, null):FPSCounter;
 
-	public static var game(default, null):FlxGame;
-
-	public static function main():Void
-	{
-		Lib.current.addChild(new Main());
-	}
-
 	public function new()
 	{
 		super();
@@ -101,12 +94,18 @@ class Main extends Sprite
 		}
 		*/
 	
-		#if LUA_ALLOWED Lua.set_callbacks_function(cpp.Callable.fromStaticFunction(psychlua.CallbackHandler.call)); #end
+		#if LUA_ALLOWED
+		Lua.set_callbacks_function(cpp.Callable.fromStaticFunction(psychlua.CallbackHandler.call));
+		#end
+
 		Controls.instance = new Controls();
 		ClientPrefs.loadDefaultKeys();
-		#if ACHIEVEMENTS_ALLOWED Achievements.load(); #end
 
-		addChild(game = new FlxGame(gameData.width, gameData.height, gameData.initialState, gameData.framerate, gameData.framerate, gameData.skipSplash, gameData.startFullscreen));
+		#if ACHIEVEMENTS_ALLOWED
+		Achievements.load();
+		#end
+
+		addChild(new FlxGame(gameData.width, gameData.height, gameData.initialState, gameData.framerate, gameData.framerate, gameData.skipSplash, gameData.startFullscreen));
 
 		#if !mobile
 		fpsCounter = new FPSCounter(0, 0, 0xFFFFFF);
@@ -119,11 +118,6 @@ class Main extends Sprite
 
 		#if linux
 		Lib.current.stage.window.setIcon(Image.fromFile("icon.png"));
-		#end
-
-		#if html5
-		FlxG.autoPause = false;
-		FlxG.mouse.visible = false;
 		#end
 		
 		#if CRASH_HANDLER

@@ -1,8 +1,10 @@
 package backend;
 
-import openfl.events.NetStatusEvent;
 #if html5
+import flixel.math.FlxRect;
+import flixel.util.FlxDestroyUtil;
 import flixel.util.FlxSignal;
+import openfl.events.NetStatusEvent;
 import openfl.media.SoundTransform;
 import openfl.media.Video;
 import openfl.net.NetConnection;
@@ -48,6 +50,11 @@ class HTML5Video extends FlxSprite
 		netStream = new NetStream(netConnection);
 		netStream.client = {onMetaData: onClientMetaData};
 
+		if (FlxG.autoPause)
+		{
+			FlxG.signals.focusGained.add(resume);
+			FlxG.signals.focusLost.add(pause);
+		}
 		FlxG.sound.onVolumeChange.add(onVolumeChange);
     }
 
@@ -55,7 +62,16 @@ class HTML5Video extends FlxSprite
     {
         super.destroy();
 		netStream.dispose();
+		video = null;
 
+		FlxDestroyUtil.destroy(onFormatSetup);
+		FlxDestroyUtil.destroy(onEndReached);
+
+		if (FlxG.autoPause)
+		{
+			FlxG.signals.focusGained.remove(resume);
+			FlxG.signals.focusLost.remove(pause);
+		}
 		FlxG.sound.onVolumeChange.remove(onVolumeChange);
     }
 
@@ -90,6 +106,7 @@ class HTML5Video extends FlxSprite
     {
         renderVideo();
 		onFormatSetup.dispatch();
+		onVolumeChange(FlxG.sound.muted ? 0 : FlxG.sound.volume);
     }
 
     function finishVideo()
@@ -107,17 +124,29 @@ class HTML5Video extends FlxSprite
 		netStream.soundTransform = new SoundTransform(volume);
     }
 
+	override function updateHitbox()
+	{
+		renderVideo();
+		super.updateHitbox();
+	}
+
+	override public function getScreenBounds(?newRect:FlxRect, ?camera:FlxCamera)
+	{
+		renderVideo();
+		return super.getScreenBounds(newRect, camera);
+	}
+
     override function draw()
     {
 		renderVideo();
 		super.draw();
     }
 
-    override function updateHitbox()
-    {
+	override function calcFrame(force:Bool = false)
+	{
 		renderVideo();
-        super.updateHitbox();
-    }
+		super.calcFrame(force);
+	}
 
 	function get_bitmap():HTML5Video
         return this;
@@ -152,11 +181,7 @@ class HTML5Video extends FlxSprite
         frameWidth = video.videoWidth;
 		frameHeight = video.videoHeight;
 
-		_matrix.identity();
-		_matrix.translate(-origin.x, -origin.y);
-		_matrix.scale(scale.x, scale.y);
-
-        graphic.bitmap.draw(video, _matrix);
+        graphic.bitmap.draw(video);
 
 		resetFrame();
 	}

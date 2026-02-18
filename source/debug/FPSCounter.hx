@@ -76,7 +76,7 @@ class FPSCounter extends Sprite
 		}
 
 		currentFPS = times.length < FlxG.updateFramerate ? times.length : FlxG.updateFramerate;
-		
+
 		updateText();
 		underlay.width = text.width + 10;
 		underlay.height = text.height + 10;
@@ -95,7 +95,11 @@ class FPSCounter extends Sprite
 	{
 		if (!updating) return;
 
-		text.text = 'FPS: $currentFPS' + '\nMEMORY: ${flixel.util.FlxStringUtil.formatBytes(memoryMegas)}';
+		text.text = 'FPS: $currentFPS';
+
+		#if !web
+		text.text += '\nMEMORY: ${flixel.util.FlxStringUtil.formatBytes(memoryMegas)}';
+		#end
 
 		text.textColor = 0xFFFFFFFF;
 		if (currentFPS < FlxG.drawFramerate * 0.5) text.textColor = 0xFFFF0000;
