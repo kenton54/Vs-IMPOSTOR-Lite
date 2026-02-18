@@ -63,8 +63,8 @@ class VideoSprite extends FlxSpriteGroup
 
 		videoSprite.bitmap.onFormatSetup.add(function()
 		{
-			final scale:Float = Math.min(FlxG.width / videoSprite.bitmap.bitmapData.width, FlxG.height / videoSprite.bitmap.bitmapData.height);
-			videoSprite.setGraphicSize(videoSprite.bitmap.bitmapData.width * scale, videoSprite.bitmap.bitmapData.height * scale);
+			final scale:Float = Math.min(FlxG.width / getVideoWidth(), FlxG.height / getVideoHeight());
+			videoSprite.setGraphicSize(getVideoWidth() * scale, getVideoHeight() * scale);
 			videoSprite.updateHitbox();
 			videoSprite.screenCenter();
 		});
@@ -170,6 +170,28 @@ class VideoSprite extends FlxSpriteGroup
 
 		skipSprite.amount = Math.min(1, Math.max(0, (holdingTime / _timeToSkip) * 1.025));
 		skipSprite.alpha = FlxMath.remapToRange(skipSprite.amount, 0.025, 1, 0, 1);
+	}
+
+	public function getVideoWidth():Int
+	{
+		#if hxvlc
+		return videoSprite.bitmap.bitmapData.width;
+		#elseif html5
+		return videoSprite.video.videoWidth;
+		#else
+		return 0;
+		#end
+	}
+
+	public function getVideoHeight():Int
+	{
+		#if hxvlc
+		return videoSprite.bitmap.bitmapData.height;
+		#elseif html5
+		return videoSprite.video.videoHeight;
+		#else
+		return 0;
+		#end
 	}
 
 	public function play() videoSprite.play();

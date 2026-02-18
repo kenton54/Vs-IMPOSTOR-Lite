@@ -88,6 +88,7 @@ class HTML5Video extends FlxSprite
 
     function videoReady()
     {
+        renderVideo();
 		onFormatSetup.dispatch();
     }
 
@@ -150,6 +151,10 @@ class HTML5Video extends FlxSprite
 		makeGraphic(daWidth, daHeight, FlxColor.TRANSPARENT, false, key);
         frameWidth = video.videoWidth;
 		frameHeight = video.videoHeight;
+
+		_matrix.identity();
+		_matrix.translate(-origin.x, -origin.y);
+		_matrix.scale(scale.x, scale.y);
 
         graphic.bitmap.draw(video, _matrix);
 
