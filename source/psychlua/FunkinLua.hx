@@ -1310,7 +1310,7 @@ class FunkinLua {
 			game.changeUIStyle(style);
 		});
 
-		Lua_helper.add_callback(lua, "startVideo", function(videoFile:String, ?canSkip:Bool = true, ?forMidSong:Bool = false, ?shouldLoop:Bool = false) {
+		Lua_helper.add_callback(lua, "startVideo", function(videoFile:String, ?canSkip:Bool = true, ?forMidSong:Bool = false) {
 			#if VIDEOS_ALLOWED
 			if (FileSystem.exists(Paths.video(videoFile)))
 			{
@@ -1319,7 +1319,7 @@ class FunkinLua {
 					game.remove(game.videoCutscene);
 					game.videoCutscene.destroy();
 				}
-				game.videoCutscene = game.startVideo(videoFile, forMidSong, canSkip, shouldLoop);
+				game.videoCutscene = game.startVideo(videoFile, forMidSong, canSkip);
 				return true;
 			}
 			else
@@ -1329,7 +1329,7 @@ class FunkinLua {
 			return false;
 			#else
 			PlayState.instance.inCutscene = true;
-			new FlxTimer().start(0.1, function(tmr:FlxTimer)
+			new FlxTimer().start(0.1, _ ->
 			{
 				PlayState.instance.inCutscene = false;
 				if (game.endingSong)
