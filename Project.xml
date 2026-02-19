@@ -20,7 +20,7 @@
 
 	<!-- ______________________ PSYCH ENGINE CUSTOMIZATION ______________________ -->
 
-	<define name="CRASH_HANDLER" />
+	<define name="CRASH_HANDLER" unless="web" />
 	<define name="EDITORS_ALLOWED" if="desktop" />
 	<define name="MODS_ALLOWED" if="desktop" />
 	<define name="HSCRIPT_ALLOWED" if="desktop" />
@@ -99,6 +99,7 @@
 
 	<!--Disable the Flixel core debugger. Automatically gets set whenever you compile in release mode!-->
 	<haxedef name="FLX_NO_DEBUG" unless="debug" />
+	<haxedef name="analyzer-optimize" unless="debug" />
 
 	<!--Enable this for Nape release builds for a serious peformance improvement-->
 	<haxedef name="NAPE_RELEASE_BUILD" unless="debug" />
@@ -111,7 +112,7 @@
 	<!--Disable deprecated warnings-->
 	<haxedef name='no-deprecation-warnings' />
 
-	<!--Prevents lime from recompiling each time we compile-->
+	<!--Prevents lime from recompiling their cache backend each time we compile-->
 	<haxedef name="lime_disable_assets_version" />
 
 	<!-- _________________________________ Custom _______________________________ -->

@@ -129,9 +129,7 @@ class ModSettingsSubState extends BaseOptionsMenu
 		{
 			var errorTitle = 'Mod name: ' + folder;
 			var errorMsg = 'An error occurred: $e';
-			#if windows
-			lime.app.Application.current.window.alert(errorMsg, errorTitle);
-			#end
+			CoolUtil.popupWarning(errorMsg, errorTitle);
 			trace('$errorTitle - $errorMsg');
 
 			_crashed = true;

@@ -20,7 +20,7 @@ class DialogueEditorState extends MusicBeatState
 
 		dialogueBox = new DialogueLiteBox();
 		dialogueBox.bgFade.visible = false;
-		dialogueBox.loadFromData(getDefaultDialogue());
+		dialogueBox.loadFromData(DialogueLiteBox.getDefaultDialogue());
 		dialogueBox.allowControls = false;
         add(dialogueBox);
 
@@ -66,7 +66,7 @@ class DialogueEditorState extends MusicBeatState
         }
         else if (FlxG.keys.justPressed.P)
         {
-			dialogueBox.addLine(getDefaultLine(), curLine + 1);
+			dialogueBox.addLine(DialogueLiteBox.getDefaultLine(), curLine + 1);
 			dialogueBox.advanceDialogue(false);
 			updateDialogue();
         }
@@ -89,27 +89,6 @@ class DialogueEditorState extends MusicBeatState
 	function get_curLine():Int
     {
         return dialogueBox.curLine;
-    }
-
-    function getDefaultDialogue():DialogueData
-    {
-        return {
-			portraits: [
-				{id: "test1", character: "red", position: 0.25},
-				{id: "test2", character: "red", position: 0.75}
-            ],
-			lines: [getDefaultLine(), {text: "asdfnawfwqfnirughwregu", phoneColor: "#0000FF", portrait: "test2", expression: "realizing"}]
-        };
-    }
-
-    function getDefaultLine():DialogueLineData
-    {
-        return {
-            text: "Lorem ipsum dolor sit amet.",
-            phoneColor: "#FF0000",
-            portrait: "test1",
-            expression: "neutral"
-        };
     }
 }
 #end

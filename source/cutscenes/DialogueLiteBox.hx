@@ -11,6 +11,34 @@ import shaders.RGBPalette;
 
 class DialogueLiteBox extends FlxGroup
 {
+	public static inline function parseDialogue(path:String):DialogueData
+	{
+		#if MODS_ALLOWED
+		return FileSystem.exists(path) ? TJSON.parse(File.getContent(path)) : getDefaultDialogue();
+		#else
+		return Assets.exists(path, TEXT) ? TJSON.parse(Assets.getText(path)) : getDefaultDialogue();
+		#end
+	}
+
+	public static inline function getDefaultDialogue():DialogueData
+	{
+		return {
+			portraits: [{id: "test1", character: "red", position: 0.25},],
+			lines: [getDefaultLine()]
+		};
+	}
+
+	@:allow(states.editors.DialogueEditorState)
+	static inline function getDefaultLine():DialogueLineData
+	{
+		return {
+			text: "Lorem ipsum dolor sit amet.",
+			phoneColor: "#FF0000",
+			portrait: "test1",
+			expression: "neutral"
+		};
+	}
+
 	public var dialogueLines:Array<DialogueLineData>;
 	var dialogueMusic:FlxSound;
 

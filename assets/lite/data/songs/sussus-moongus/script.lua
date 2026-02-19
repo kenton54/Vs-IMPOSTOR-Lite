@@ -5,11 +5,11 @@ function onCreatePost()
     setProperty('camGame.zoom', 0.65)
     setProperty('camHUD.alpha', 0);
 
-    makeLuaSprite('whiteThing', '', 0, 0)
-    makeGraphic('whiteThing', 2000, 2000, 'FFFFFF')
+    makeLuaSprite('whiteThing', nil, 0, 0)
+    makeGraphic('whiteThing', screenWidth, screenHeight, 'FFFFFF')
     setObjectCamera('whiteThing', 'camOther')
     setProperty('whiteThing.alpha', 1)
-    addLuaSprite('whiteThing', false)
+    addLuaSprite('whiteThing', true)
 
     setProperty('isCameraOnForcedPos', true)
 end
@@ -21,6 +21,8 @@ function onSongStart()
     setProperty('camGame.scroll.y', -2000)
     setProperty('camFollow.x', -500)
     setProperty('camFollow.y', -2000)
+
+    setProperty('isCameraOnForcedPos', true)
 end
 
 local tweened = false

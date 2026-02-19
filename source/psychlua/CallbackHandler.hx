@@ -1,6 +1,6 @@
-#if LUA_ALLOWED
 package psychlua;
 
+#if LUA_ALLOWED
 class CallbackHandler
 {
 	public static inline function call(l:State, fname:String):Int
@@ -50,11 +50,14 @@ class CallbackHandler
 				return 1;
 			}
 		}
-		catch(e:Dynamic)
+		catch (e:Dynamic)
 		{
-			if(Lua_helper.sendErrorsToLua) {LuaL.error(l, 'CALLBACK ERROR! ${if(e.message != null) e.message else e}');return 0;}
-			trace(e);
-			throw(e);
+			if (Lua_helper.sendErrorsToLua)
+			{
+				LuaL.error(l, 'CALLBACK ERROR! ${if(e.message != null) e.message else e}');
+				return 0;
+			}
+			throw e;
 		}
 		return 0;
 	}

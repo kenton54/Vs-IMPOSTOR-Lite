@@ -21,26 +21,25 @@ class CustomSubstate extends MusicBeatSubstate
 	{
 		if(pauseGame)
 		{
+			FlxG.camera.followLerp = 0;
 			if (PlayState.instance.cameraTween != null) PlayState.instance.cameraTween.active = false;
 			PlayState.instance.persistentUpdate = false;
 			PlayState.instance.persistentDraw = true;
 			PlayState.instance.paused = true;
-			if(FlxG.sound.music != null) {
+			if(FlxG.sound.music != null)
+			{
 				FlxG.sound.music.pause();
 				PlayState.instance.vocals.pause();
 			}
 		}
 		PlayState.instance.openSubState(new CustomSubstate(name));
-		PlayState.instance.setOnHScript('customSubstate', instance);
-		PlayState.instance.setOnHScript('customSubstateName', name);
 	}
 
 	public static function closeCustomSubstate()
 	{
-		if(instance != null)
+		if (instance != null)
 		{
 			PlayState.instance.closeSubState();
-			instance = null;
 			return true;
 		}
 		return false;
@@ -50,8 +49,7 @@ class CustomSubstate extends MusicBeatSubstate
 	{
 		if(instance != null)
 		{
-			var tagObject:FlxObject = cast (PlayState.instance.variables.get(tag), FlxObject);
-			#if LUA_ALLOWED if(tagObject == null) tagObject = cast (PlayState.instance.modchartSprites.get(tag), FlxObject); #end
+			var tagObject:FlxObject = cast(MusicBeatState.getVariables().get(tag), FlxObject);
 
 			if(tagObject != null)
 			{
@@ -65,7 +63,7 @@ class CustomSubstate extends MusicBeatSubstate
 
 	override function create()
 	{
-		instance = this;
+		PlayState.instance.setOnHScript('customSubstate', instance = this);
 
 		PlayState.instance.callOnScripts('onCustomSubstateCreate', [name]);
 		super.create();
@@ -75,8 +73,9 @@ class CustomSubstate extends MusicBeatSubstate
 	public function new(name:String)
 	{
 		CustomSubstate.name = name;
+		PlayState.instance.setOnHScript('customSubstateName', name);
 		super();
-		cameras = [FlxG.cameras.list[FlxG.cameras.list.length - 1]];
+		camera = FlxG.cameras.list[FlxG.cameras.list.length - 1];
 	}
 	
 	override function update(elapsed:Float)
@@ -89,6 +88,7 @@ class CustomSubstate extends MusicBeatSubstate
 	override function destroy()
 	{
 		PlayState.instance.callOnScripts('onCustomSubstateDestroy', [name]);
+		instance = null;
 		name = 'unnamed';
 
 		PlayState.instance.setOnHScript('customSubstate', null);

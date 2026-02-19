@@ -1,22 +1,35 @@
 package backend;
+
 import flixel.addons.ui.FlxUIState;
 import flixel.addons.transition.FlxTransitionableState;
 import flixel.util.typeLimit.NextState;
+
 class MusicBeatState extends FlxUIState
 {
-	private var curSection:Int = 0;
+	public static function getState():MusicBeatState
+		return cast(FlxG.state, MusicBeatState);
+
+	public inline static function getVariables()
+		return getState().variables;
+
 	private var stepsToDo:Int = 0;
-	private var curStep:Int = 0;
-	private var curBeat:Int = 0;
+
+	public var curSection(default, null):Int = 0;
+	public var curStep(default, null):Int = 0;
+	public var curBeat(default, null):Int = 0;
+
 	private var curDecStep:Float = 0;
 	private var curDecBeat:Float = 0;
+
 	public var controls(get, never):Controls;
-	private function get_controls()
+	function get_controls()
 	{
 		return Controls.instance;
 	}
 
 	var _psychCameraInitialized:Bool = true;
+
+	public var variables:Map<String, Dynamic> = new Map<String, Dynamic>();
 
 	override function create()
 	{
@@ -29,7 +42,7 @@ class MusicBeatState extends FlxUIState
 
 		var skip:Bool = FlxTransitionableState.skipNextTransOut;
 		#if MODS_ALLOWED Mods.updatedOnState = false; #end
-		if(!_psychCameraInitialized) initPsychCamera();
+		if (!_psychCameraInitialized) initPsychCamera();
 
 		super.create();
 
@@ -73,7 +86,8 @@ class MusicBeatState extends FlxUIState
 		});
 		super.update(elapsed);
 	}
-	private function updateSection():Void
+
+	function updateSection():Void
 	{
 		if(stepsToDo < 1) stepsToDo = Math.round(getBeatsOnSection() * 4);
 		while(curStep >= stepsToDo)
@@ -84,7 +98,8 @@ class MusicBeatState extends FlxUIState
 			sectionHit();
 		}
 	}
-	private function rollbackSection():Void
+
+	function rollbackSection():Void
 	{
 		if(curStep < 0) return;
 		var lastSection:Int = curSection;
@@ -102,12 +117,14 @@ class MusicBeatState extends FlxUIState
 		}
 		if(curSection > lastSection) sectionHit();
 	}
-	private function updateBeat():Void
+
+	function updateBeat():Void
 	{
 		curBeat = Math.floor(curStep / 4);
 		curDecBeat = curDecStep/4;
 	}
-	private function updateCurStep():Void
+
+	function updateCurStep():Void
 	{
 		var lastChange = Conductor.getBPMFromSeconds(Conductor.songPosition);
 		var shit = ((Conductor.songPosition - ClientPrefs.data.noteOffset) - lastChange.songTime) / lastChange.stepCrochet;
@@ -125,11 +142,6 @@ class MusicBeatState extends FlxUIState
 		}
 		FlxTransitionableState.skipNextTransIn = false;
 		onOutroComplete();
-	}
-
-	public static function getState():MusicBeatState
-	{
-		return cast (FlxG.state, MusicBeatState);
 	}
 	
 	public function stepHit():Void

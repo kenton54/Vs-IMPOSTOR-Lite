@@ -1,5 +1,6 @@
 package psychlua;
 
+import backend.StageData;
 import backend.WeekData;
 import objects.Character;
 
@@ -26,9 +27,9 @@ class LuaUtils
 	public static final Function_StopHScript:Dynamic = "##PSYCHLUA_FUNCTIONSTOPHSCRIPT";
 	public static final Function_StopAll:Dynamic = "##PSYCHLUA_FUNCTIONSTOPALL";
 
-	public static function getLuaTween(options:Dynamic)
+	public static function getLuaTween(?options:Dynamic)
 	{
-		return {
+		return options != null ? {
 			type: getTweenTypeByString(options.type),
 			startDelay: options.startDelay,
 			onUpdate: options.onUpdate,
@@ -36,7 +37,7 @@ class LuaUtils
 			onComplete: options.onComplete,
 			loopDelay: options.loopDelay,
 			ease: getTweenEaseByString(options.ease)
-		};
+		} : null;
 	}
 
 	public static function setVarInArray(instance:Dynamic, variable:String, value:Dynamic, allowMaps:Bool = false):Any
@@ -45,9 +46,9 @@ class LuaUtils
 		if(splitProps.length > 1)
 		{
 			var target:Dynamic = null;
-			if(PlayState.instance.variables.exists(splitProps[0]))
+			if(MusicBeatState.getVariables().exists(splitProps[0]))
 			{
-				var retVal:Dynamic = PlayState.instance.variables.get(splitProps[0]);
+				var retVal:Dynamic = MusicBeatState.getVariables().get(splitProps[0]);
 				if(retVal != null)
 					target = retVal;
 			}
@@ -71,9 +72,9 @@ class LuaUtils
 			return value;
 		}
 
-		if(PlayState.instance.variables.exists(variable))
+		if(instance is MusicBeatState && MusicBeatState.getVariables().exists(variable))
 		{
-			PlayState.instance.variables.set(variable, value);
+			MusicBeatState.getVariables().set(variable, value);
 			return value;
 		}
 		Reflect.setProperty(instance, variable, value);
@@ -85,9 +86,9 @@ class LuaUtils
 		if(splitProps.length > 1)
 		{
 			var target:Dynamic = null;
-			if(PlayState.instance.variables.exists(splitProps[0]))
+			if(MusicBeatState.getVariables().exists(splitProps[0]))
 			{
-				var retVal:Dynamic = PlayState.instance.variables.get(splitProps[0]);
+				var retVal:Dynamic = MusicBeatState.getVariables().get(splitProps[0]);
 				if(retVal != null)
 					target = retVal;
 			}
@@ -108,9 +109,9 @@ class LuaUtils
 			return instance.get(variable);
 		}
 
-		if(PlayState.instance.variables.exists(variable))
+		if(instance is MusicBeatState && MusicBeatState.getVariables().exists(variable))
 		{
-			var retVal:Dynamic = PlayState.instance.variables.get(variable);
+			var retVal:Dynamic = MusicBeatState.getVariables().get(variable);
 			if(retVal != null)
 				return retVal;
 		}
@@ -120,11 +121,11 @@ class LuaUtils
 	public static function getModSetting(saveTag:String, ?modName:String = null)
 	{
 		#if MODS_ALLOWED
-		if(FlxG.save.data.modSettings == null) FlxG.save.data.modSettings = new Map<String, Dynamic>();
+		if (FlxG.save.data.modSettings == null) FlxG.save.data.modSettings = new Map<String, Dynamic>();
 
 		var settings:Map<String, Dynamic> = FlxG.save.data.modSettings.get(modName);
 		var path:String = Paths.mods('$modName/data/settings.json');
-		if(FileSystem.exists(path))
+		if (FileSystem.exists(path))
 		{
 			if(settings == null || !settings.exists(saveTag))
 			{
@@ -160,9 +161,7 @@ class LuaUtils
 				{
 					var errorTitle = 'Mod name: ' + Mods.currentModDirectory;
 					var errorMsg = 'An error occurred: $e';
-					#if windows
-					lime.app.Application.current.window.alert(errorMsg, errorTitle);
-					#end
+					CoolUtil.popupWarning(errorMsg, errorTitle);
 					trace('$errorTitle - $errorMsg');
 				}
 			}
@@ -178,7 +177,7 @@ class LuaUtils
 			return null;
 		}
 
-		if(settings.exists(saveTag)) return settings.get(saveTag);
+		if (settings.exists(saveTag)) return settings.get(saveTag);
 		#if (LUA_ALLOWED || HSCRIPT_ALLOWED)
 		PlayState.instance.addTextToDebug('getModSetting: "$saveTag" could not be found inside $modName\'s settings!', FlxColor.RED);
 		#else
@@ -198,13 +197,15 @@ class LuaUtils
 		}*/
 
 		//trace(variable);
-		if(variable.exists != null && variable.keyValueIterator != null) return true;
+		if (variable.exists != null && variable.keyValueIterator != null) return true;
 		return false;
 	}
 
-	public static function setGroupStuff(leArray:Dynamic, variable:String, value:Dynamic, ?allowMaps:Bool = false) {
+	public static function setGroupStuff(leArray:Dynamic, variable:String, value:Dynamic, ?allowMaps:Bool = false)
+	{
 		var split:Array<String> = variable.split('.');
-		if(split.length > 1) {
+		if (split.length > 1)
+		{
 			var obj:Dynamic = Reflect.getProperty(leArray, split[0]);
 			for (i in 1...split.length-1)
 				obj = Reflect.getProperty(obj, split[i]);
@@ -212,13 +213,19 @@ class LuaUtils
 			leArray = obj;
 			variable = split[split.length-1];
 		}
-		if(allowMaps && isMap(leArray)) leArray.set(variable, value);
-		else Reflect.setProperty(leArray, variable, value);
+		if (allowMaps && isMap(leArray))
+			leArray.set(variable, value);
+		else
+			Reflect.setProperty(leArray, variable, value);
+
 		return value;
 	}
-	public static function getGroupStuff(leArray:Dynamic, variable:String, ?allowMaps:Bool = false) {
+
+	public static function getGroupStuff(leArray:Dynamic, variable:String, ?allowMaps:Bool = false)
+	{
 		var split:Array<String> = variable.split('.');
-		if(split.length > 1) {
+		if (split.length > 1)
+		{
 			var obj:Dynamic = Reflect.getProperty(leArray, split[0]);
 			for (i in 1...split.length-1)
 				obj = Reflect.getProperty(obj, split[i]);
@@ -227,13 +234,13 @@ class LuaUtils
 			variable = split[split.length-1];
 		}
 
-		if(allowMaps && isMap(leArray)) return leArray.get(variable);
+		if (allowMaps && isMap(leArray)) return leArray.get(variable);
 		return Reflect.getProperty(leArray, variable);
 	}
 
-	public static function getPropertyLoop(split:Array<String>, ?checkForTextsToo:Bool = true, ?getProperty:Bool=true, ?allowMaps:Bool = false):Dynamic
+	public static function getPropertyLoop(split:Array<String>, ?getProperty:Bool = true, ?allowMaps:Bool = false):Dynamic
 	{
-		var obj:Dynamic = getObjectDirectly(split[0], checkForTextsToo);
+		var obj:Dynamic = getObjectDirectly(split[0]);
 		var end = split.length;
 		if(getProperty) end = split.length-1;
 
@@ -241,7 +248,7 @@ class LuaUtils
 		return obj;
 	}
 
-	public static function getObjectDirectly(objectName:String, ?checkForTextsToo:Bool = true, ?allowMaps:Bool = false):Dynamic
+	public static function getObjectDirectly(objectName:String, ?allowMaps:Bool = false):Dynamic
 	{
 		switch(objectName)
 		{
@@ -249,45 +256,45 @@ class LuaUtils
 				return PlayState.instance;
 			
 			default:
-				var obj:Dynamic = PlayState.instance.getLuaObject(objectName, checkForTextsToo);
-				if(obj == null) obj = getVarInArray(getTargetInstance(), objectName, allowMaps);
+				var obj:Dynamic = MusicBeatState.getVariables().get(objectName);
+				if (obj == null) obj = getVarInArray(MusicBeatState.getState(), objectName, allowMaps);
 				return obj;
 		}
-	}
-
-	inline public static function getTextObject(name:String):FlxText
-	{
-		return #if LUA_ALLOWED PlayState.instance.modchartTexts.exists(name) ? PlayState.instance.modchartTexts.get(name) : #end Reflect.getProperty(PlayState.instance, name);
 	}
 	
 	public static function isOfTypes(value:Any, types:Array<Dynamic>)
 	{
 		for (type in types)
 		{
-			if(Std.isOfType(value, type)) return true;
+			if (Std.isOfType(value, type)) return true;
 		}
 		return false;
 	}
-	
+
+	public static function isLuaSupported(value:Any):Bool
+		return (value == null || isOfTypes(value, [Bool, Int, Float, String, Array]) || Type.typeof(value) == ValueType.TObject);
+
 	public static inline function getTargetInstance()
 	{
-		return PlayState.instance.isDead ? GameOverSubstate.instance : PlayState.instance;
+		if (PlayState.instance != null) return PlayState.instance.isDead ? GameOverSubstate.instance : PlayState.instance;
+		return MusicBeatState.getState();
 	}
 
-	public static inline function getLowestCharacterGroup():FlxSpriteGroup
+	public static function getLowestCharacterGroup():FlxSpriteGroup
 	{
-		var group:FlxSpriteGroup = PlayState.instance.gfGroup;
+		var stageData:StageFile = StageData.getStageFile(PlayState.SONG.stage);
+		var group:FlxSpriteGroup = stageData.hide_girlfriend ? PlayState.instance.boyfriendGroup : PlayState.instance.gfGroup;
 		var pos:Int = PlayState.instance.members.indexOf(group);
 
 		var newPos:Int = PlayState.instance.members.indexOf(PlayState.instance.boyfriendGroup);
-		if(newPos < pos)
+		if (newPos < pos)
 		{
 			group = PlayState.instance.boyfriendGroup;
 			pos = newPos;
 		}
-		
+
 		newPos = PlayState.instance.members.indexOf(PlayState.instance.dadGroup);
-		if(newPos < pos)
+		if (newPos < pos)
 		{
 			group = PlayState.instance.dadGroup;
 			pos = newPos;
@@ -298,24 +305,27 @@ class LuaUtils
 	public static function addAnimByIndices(obj:String, name:String, prefix:String, indices:Any = null, framerate:Int = 24, loop:Bool = false)
 	{
 		var obj:Dynamic = LuaUtils.getObjectDirectly(obj, false);
-		if(obj != null && obj.animation != null)
+		if (obj != null && obj.animation != null)
 		{
-			if(indices == null)
+			if (indices == null)
 				indices = [0];
-			else if(Std.isOfType(indices, String))
+			else if (Std.isOfType(indices, String))
 			{
 				var strIndices:Array<String> = cast (indices, String).trim().split(',');
 				var myIndices:Array<Int> = [];
-				for (i in 0...strIndices.length) {
+				for (i in 0...strIndices.length)
 					myIndices.push(Std.parseInt(strIndices[i]));
-				}
 				indices = myIndices;
 			}
 
-			obj.animation.addByIndices(name, prefix, indices, '', framerate, loop);
-			if(obj.animation.curAnim == null)
+			if (prefix != null)
+				obj.animation.addByIndices(name, prefix, indices, '', framerate, loop);
+			else
+				obj.animation.add(name, indices, framerate, loop);
+
+			if (obj.animation.curAnim == null)
 			{
-				if(obj.playAnim != null) obj.playAnim(name, true);
+				if (obj.playAnim != null) obj.playAnim(name, true);
 				else obj.animation.play(name, true);
 			}
 			return true;
@@ -325,7 +335,7 @@ class LuaUtils
 	
 	public static function loadFrames(spr:FlxSprite, image:String, spriteType:String)
 	{
-		switch(spriteType.toLowerCase().trim())
+		switch(spriteType.toLowerCase().replace(' ', ''))
 		{
 			//case "texture" | "textureatlas" | "tex":
 				//spr.frames = AtlasFrameMaker.construct(image);
@@ -333,70 +343,70 @@ class LuaUtils
 			//case "texture_noaa" | "textureatlas_noaa" | "tex_noaa":
 				//spr.frames = AtlasFrameMaker.construct(image, null, true);
 
-			case "packer" | "packeratlas" | "pac":
+			case "aseprite", "ase", "json":
+				spr.frames = Paths.getAsepriteAtlas(image);
+
+			case "packer", "packeratlas", "pac":
 				spr.frames = Paths.getPackerAtlas(image);
 
-			default:
+			case 'sparrow', 'sparrowatlas', 'sparrowv2':
 				spr.frames = Paths.getSparrowAtlas(image);
+
+			default:
+				spr.frames = Paths.getAtlas(image);
 		}
 	}
 
-	public static function resetTextTag(tag:String) {
-		#if LUA_ALLOWED
-		if(!PlayState.instance.modchartTexts.exists(tag)) {
-			return;
-		}
+	public static function destroyObject(tag:String)
+	{
+		var variables = MusicBeatState.getVariables();
+		var object:FlxSprite = variables.get(tag);
+		if (object == null || object.destroy == null) return;
 
-		var target:FlxText = PlayState.instance.modchartTexts.get(tag);
-		target.kill();
-		PlayState.instance.remove(target, true);
-		target.destroy();
-		PlayState.instance.modchartTexts.remove(tag);
-		#end
+		getTargetInstance().remove(object, true);
+		object.destroy();
+		variables.remove(tag);
 	}
 
-	public static function resetSpriteTag(tag:String) {
-		#if LUA_ALLOWED
-		if(!PlayState.instance.modchartSprites.exists(tag)) {
-			return;
-		}
+	public static function cancelTween(tag:String)
+	{
+		if (!tag.startsWith("tween_")) tag = "tween_" + formatVariable(tag);
+		var variables = MusicBeatState.getVariables();
+		var tween:FlxTween = variables.get(tag);
 
-		var target:ModchartSprite = PlayState.instance.modchartSprites.get(tag);
-		target.kill();
-		PlayState.instance.remove(target, true);
-		target.destroy();
-		PlayState.instance.modchartSprites.remove(tag);
-		#end
+		if (tween != null)
+		{
+			tween.cancel();
+			tween.destroy();
+			variables.remove(tag);
+		}
 	}
 
-	public static function cancelTween(tag:String) {
-		#if LUA_ALLOWED
-		if(PlayState.instance.modchartTweens.exists(tag)) {
-			PlayState.instance.modchartTweens.get(tag).cancel();
-			PlayState.instance.modchartTweens.get(tag).destroy();
-			PlayState.instance.modchartTweens.remove(tag);
+	public static function cancelTimer(tag:String)
+	{
+		if (!tag.startsWith("timer_")) tag = "timer_" + formatVariable(tag);
+		var variables = MusicBeatState.getVariables();
+		var timer:FlxTimer = variables.get(tag);
+
+		if (timer != null)
+		{
+			timer.cancel();
+			timer.destroy();
+			variables.remove(tag);
 		}
-		#end
 	}
 
-	public static function tweenPrepare(tag:String, vars:String) {
+	public static function tweenPrepare(tag:String, vars:String)
+	{
 		cancelTween(tag);
 		var variables:Array<String> = vars.split('.');
 		var sexyProp:Dynamic = LuaUtils.getObjectDirectly(variables[0]);
-		if(variables.length > 1) sexyProp = LuaUtils.getVarInArray(LuaUtils.getPropertyLoop(variables), variables[variables.length-1]);
+		if (variables.length > 1) sexyProp = LuaUtils.getVarInArray(LuaUtils.getPropertyLoop(variables), variables[variables.length-1]);
 		return sexyProp;
 	}
 
-	public static function cancelTimer(tag:String) {
-		#if LUA_ALLOWED
-		if(PlayState.instance.modchartTimers.exists(tag)) {
-			var theTimer:FlxTimer = PlayState.instance.modchartTimers.get(tag);
-			theTimer.cancel();
-			theTimer.destroy();
-			PlayState.instance.modchartTimers.remove(tag);
-		}
-		#end
-	}
+	public static function formatVariable(tag:String)
+		return tag.trim().replace(' ', '_').replace('.', '');
 
 	public static function getBuildTarget():String
 	{
@@ -410,6 +420,8 @@ class LuaUtils
 		return 'browser';
 		#elseif android
 		return 'android';
+		#elseif ios
+		return 'ios';
 		#elseif switch
 		return 'switch';
 		#else
@@ -418,77 +430,83 @@ class LuaUtils
 	}
 
 	//buncho string stuffs
-	public static function getTweenTypeByString(?type:String = '') {
-		switch(type.toLowerCase().trim())
+	public static function getTweenTypeByString(type:String = ''):FlxTweenType
+	{
+		return switch (type.toLowerCase().trim())
 		{
-			case 'backward': return FlxTweenType.BACKWARD;
-			case 'looping'|'loop': return FlxTweenType.LOOPING;
-			case 'persist': return FlxTweenType.PERSIST;
-			case 'pingpong': return FlxTweenType.PINGPONG;
+			case 'backward': BACKWARD;
+			case 'looping', 'loop': LOOPING;
+			case 'persist': PERSIST;
+			case 'pingpong': PINGPONG;
+			default: ONESHOT;
 		}
-		return FlxTweenType.ONESHOT;
 	}
 
-	public static function getTweenEaseByString(?ease:String = '') {
-		switch(ease.toLowerCase().trim()) {
-			case 'backin': return FlxEase.backIn;
-			case 'backinout': return FlxEase.backInOut;
-			case 'backout': return FlxEase.backOut;
-			case 'bouncein': return FlxEase.bounceIn;
-			case 'bounceinout': return FlxEase.bounceInOut;
-			case 'bounceout': return FlxEase.bounceOut;
-			case 'circin': return FlxEase.circIn;
-			case 'circinout': return FlxEase.circInOut;
-			case 'circout': return FlxEase.circOut;
-			case 'cubein': return FlxEase.cubeIn;
-			case 'cubeinout': return FlxEase.cubeInOut;
-			case 'cubeout': return FlxEase.cubeOut;
-			case 'elasticin': return FlxEase.elasticIn;
-			case 'elasticinout': return FlxEase.elasticInOut;
-			case 'elasticout': return FlxEase.elasticOut;
-			case 'expoin': return FlxEase.expoIn;
-			case 'expoinout': return FlxEase.expoInOut;
-			case 'expoout': return FlxEase.expoOut;
-			case 'quadin': return FlxEase.quadIn;
-			case 'quadinout': return FlxEase.quadInOut;
-			case 'quadout': return FlxEase.quadOut;
-			case 'quartin': return FlxEase.quartIn;
-			case 'quartinout': return FlxEase.quartInOut;
-			case 'quartout': return FlxEase.quartOut;
-			case 'quintin': return FlxEase.quintIn;
-			case 'quintinout': return FlxEase.quintInOut;
-			case 'quintout': return FlxEase.quintOut;
-			case 'sinein': return FlxEase.sineIn;
-			case 'sineinout': return FlxEase.sineInOut;
-			case 'sineout': return FlxEase.sineOut;
-			case 'smoothstepin': return FlxEase.smoothStepIn;
-			case 'smoothstepinout': return FlxEase.smoothStepInOut;
-			case 'smoothstepout': return FlxEase.smoothStepInOut;
-			case 'smootherstepin': return FlxEase.smootherStepIn;
-			case 'smootherstepinout': return FlxEase.smootherStepInOut;
-			case 'smootherstepout': return FlxEase.smootherStepOut;
+	public static function getTweenEaseByString(ease:String = ''):(t:Float)->Float // basically a FlxEase
+	{
+		return switch (ease.toLowerCase().trim())
+		{
+			case 'backin': FlxEase.backIn;
+			case 'backinout': FlxEase.backInOut;
+			case 'backout': FlxEase.backOut;
+			case 'bouncein': FlxEase.bounceIn;
+			case 'bounceinout': FlxEase.bounceInOut;
+			case 'bounceout': FlxEase.bounceOut;
+			case 'circin': FlxEase.circIn;
+			case 'circinout': FlxEase.circInOut;
+			case 'circout': FlxEase.circOut;
+			case 'cubein': FlxEase.cubeIn;
+			case 'cubeinout': FlxEase.cubeInOut;
+			case 'cubeout': FlxEase.cubeOut;
+			case 'elasticin': FlxEase.elasticIn;
+			case 'elasticinout': FlxEase.elasticInOut;
+			case 'elasticout': FlxEase.elasticOut;
+			case 'expoin': FlxEase.expoIn;
+			case 'expoinout': FlxEase.expoInOut;
+			case 'expoout': FlxEase.expoOut;
+			case 'quadin': FlxEase.quadIn;
+			case 'quadinout': FlxEase.quadInOut;
+			case 'quadout': FlxEase.quadOut;
+			case 'quartin': FlxEase.quartIn;
+			case 'quartinout': FlxEase.quartInOut;
+			case 'quartout': FlxEase.quartOut;
+			case 'quintin': FlxEase.quintIn;
+			case 'quintinout': FlxEase.quintInOut;
+			case 'quintout': FlxEase.quintOut;
+			case 'sinein': FlxEase.sineIn;
+			case 'sineinout': FlxEase.sineInOut;
+			case 'sineout': FlxEase.sineOut;
+			case 'smoothstepin': FlxEase.smoothStepIn;
+			case 'smoothstepinout': FlxEase.smoothStepInOut;
+			case 'smoothstepout': FlxEase.smoothStepInOut;
+			case 'smootherstepin': FlxEase.smootherStepIn;
+			case 'smootherstepinout': FlxEase.smootherStepInOut;
+			case 'smootherstepout': FlxEase.smootherStepOut;
+			default: FlxEase.linear;
 		}
-		return FlxEase.linear;
 	}
 
-	public static function blendModeFromString(blend:String):BlendMode {
-		switch(blend.toLowerCase().trim()) {
-			case 'add': return ADD;
-			case 'alpha': return ALPHA;
-			case 'darken': return DARKEN;
-			case 'difference': return DIFFERENCE;
-			case 'erase': return ERASE;
-			case 'hardlight': return HARDLIGHT;
-			case 'invert': return INVERT;
-			case 'layer': return LAYER;
-			case 'lighten': return LIGHTEN;
-			case 'multiply': return MULTIPLY;
-			case 'overlay': return OVERLAY;
-			case 'screen': return SCREEN;
-			case 'shader': return SHADER;
-			case 'subtract': return SUBTRACT;
+	public static function blendModeFromString(blend:String):BlendMode
+	{
+		return switch (blend.toLowerCase().trim())
+		{
+			case 'add': ADD;
+			case 'alpha': ALPHA;
+			case 'darken': DARKEN;
+			case 'difference': DIFFERENCE;
+			case 'erase': ERASE;
+			case 'hardlight': HARDLIGHT;
+			case 'invert': INVERT;
+			case 'layer': LAYER;
+			case 'lighten': LIGHTEN;
+			case 'multiply': MULTIPLY;
+			case 'normal': NORMAL;
+			case 'overlay': OVERLAY;
+			case 'screen': SCREEN;
+			case 'shader': SHADER;
+			case 'subtract': SUBTRACT;
+			default: null;
 		}
-		return NORMAL;
 	}
 	
 	public static function typeToString(type:Int):String {
@@ -505,11 +523,17 @@ class LuaUtils
 		return "unknown";
 	}
 
-	public static function cameraFromString(cam:String):FlxCamera {
-		switch(cam.toLowerCase()) {
+	public static function cameraFromString(cam:String):FlxCamera
+	{
+		switch (cam.toLowerCase())
+		{
+			case 'camgame' | 'game': PlayState.instance.camGame;
 			case 'camhud' | 'hud': return PlayState.instance.camHUD;
 			case 'camother' | 'other': return PlayState.instance.camOther;
 		}
-		return PlayState.instance.camGame;
+
+		var camera:FlxCamera = MusicBeatState.getVariables().get(cam);
+		if (camera == null || !Std.isOfType(camera, FlxCamera)) camera = FlxG.camera;
+		return camera;
 	}
 }

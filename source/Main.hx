@@ -12,7 +12,6 @@ import openfl.Lib;
 import openfl.display.Sprite;
 import openfl.events.Event;
 import openfl.display.StageScaleMode;
-import lime.app.Application;
 
 import states.InitState;
 
@@ -56,6 +55,10 @@ class Main extends Sprite
 		Sys.setCwd(Path.addTrailingSlash(Context.getExternalFilesDir()));
 		#elseif ios
 		Sys.setCwd(lime.system.System.applicationStorageDirectory);
+		#end
+
+		#if windows
+		backend.native.Windows.setWindowDarkMode(true);
 		#end
 
 		if (stage != null)
@@ -197,7 +200,7 @@ class Main extends Sprite
 		Sys.println(errMsg);
 		Sys.println("Crash dump saved in " + Path.normalize(path));
 
-		Application.current.window.alert(errMsg, "Error!");
+		CoolUtil.popupWarning(errMsg, "Error!");
 		#if DISCORD_ALLOWED
 		DiscordClient.shutdown();
 		#end

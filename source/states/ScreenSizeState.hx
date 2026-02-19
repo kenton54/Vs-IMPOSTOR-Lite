@@ -1,7 +1,6 @@
 package states;
 
 import flixel.effects.FlxFlicker;
-import lime.app.Application;
 import flixel.addons.transition.FlxTransitionableState;
 import openfl.system.Capabilities;
 import flixel.system.scaleModes.RatioScaleMode;
@@ -197,10 +196,12 @@ class ScreenSizeState extends MusicBeatState
 		FlxG.updateFramerate = ClientPrefs.data.framerate;
 
 		FlxG.resizeWindow(screenSizes[curSelectedSize][0], screenSizes[curSelectedSize][1]);
+        /*
         FlxG.width = screenSizes[curSelectedSize][0];
         FlxG.height = screenSizes[curSelectedSize][1];
         FlxG.initialWidth = screenSizes[curSelectedSize][0];
         FlxG.initialHeight = screenSizes[curSelectedSize][1];
+        */
 		FlxG.resizeGame(screenSizes[curSelectedSize][0], screenSizes[curSelectedSize][1]);
 		CoolUtil.centerWindowOnPoint(windowPos);
 
