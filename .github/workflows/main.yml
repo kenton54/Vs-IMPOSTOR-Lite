@@ -2,9 +2,9 @@ name: Build
 
 on:
   push:
-    branches: [ main, experimental ]
+    branches: [main]
   pull_request:
-    branches: [ main, experimental ]
+    branches: [main]
 
   workflow_dispatch:
 
@@ -12,7 +12,6 @@ jobs:
   buildLinux:
     name: Linux Build
     runs-on: ubuntu-latest
-    permissions: write-all
     steps:
       - name: Pulling new Commit
         uses: actions/checkout@v5
@@ -20,16 +19,16 @@ jobs:
         uses: krdlab/setup-haxe@v2
         with:
           haxe-version: 4.3.7
-      - name: Install Haxelib and Libraries
+      - name: Install LibVLC, Haxelib and Libraries
         run: |
+          sudo apt-get install libvlc-dev
+          sudo apt-get install libvlccore-dev
           haxelib setup ~/haxelib
-          haxelib install hxcpp > /dev/null --quiet
-          haxe -cp ./setup -D analyzer-optimize -main Main --interp
-      - name: Install LibVLC
-        run: |
-            sudo apt-get install libvlc-dev libvlccore-dev
-      - name: Skip SScript setup mode
-        run: echo 'oy9:showMacroty8:loopCosti25y10:includeAllfg' >> ~/settings.cocoa
+          haxelib git hxcpp https://github.com/HaxeFoundation/hxcpp master
+          chmod +x ./setup/unix.sh
+          sh ./setup/unix.sh
+      - name: Create Version Tag
+        run: echo "${{github.run_id}}" > VERSION
       - name: Build Game
         run: |
           haxelib run lime build linux
@@ -42,7 +41,6 @@ jobs:
   buildWindows:
     name: Windows Build
     runs-on: windows-latest
-    permissions: write-all
     steps:
       - name: Pulling new Commit
         uses: actions/checkout@v5
@@ -53,12 +51,11 @@ jobs:
       - name: Install Haxelib and Libraries
         run: |
           haxelib setup C:/haxelib
-          haxelib install hxcpp > /dev/null --quiet
-          haxe -cp ./setup -D analyzer-optimize -main Main --interp
+          haxelib git hxcpp https://github.com/HaxeFoundation/hxcpp master
+          .\"setup/windows.bat"
         shell: cmd
-      - name: Skip SScript setup mode
-        run: echo 'oy9:showMacroty8:loopCosti25y10:includeAllfg' >> %USERPROFILE%/settings.cocoa
-        shell: cmd
+      - name: Create Version Tag
+        run: echo "${{github.run_id}}" > VERSION
       - name: Build Game
         run: haxelib run lime build windows
       - name: Publish Artifact
@@ -70,7 +67,6 @@ jobs:
   buildMac:
     name: MacOS Build
     runs-on: macos-latest
-    permissions: write-all
     steps:
       - name: Pulling new Commit
         uses: actions/checkout@v5
@@ -81,10 +77,11 @@ jobs:
       - name: Install/Update Libraries
         run: |
           haxelib setup ~/haxelib
-          haxelib install hxcpp > /dev/null --quiet
-          haxe -cp ./setup -D analyzer-optimize -main Main --interp
-      - name: Skip SScript setup mode
-        run: echo 'oy9:showMacroty8:loopCosti25y10:includeAllfg' >> ~/settings.cocoa
+          haxelib git hxcpp https://github.com/HaxeFoundation/hxcpp master
+          chmod +x ./setup/unix.sh
+          sh ./setup/unix.sh
+      - name: Create Version Tag
+        run: echo "${{github.run_id}}" > VERSION
       - name: Build Game
         run: arch -x86_64 haxelib run lime build mac
       - name: Publish Artifact

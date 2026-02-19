@@ -80,7 +80,7 @@
 
 	<!--Psych stuff needed-->
 	<haxelib name="linc_luajit" if="LUA_ALLOWED"/>
-	<haxelib name="SScript" if="HSCRIPT_ALLOWED" version="19.0.618" />
+	<haxelib name="hscript-iris" if="HSCRIPT_ALLOWED" />
 	<haxelib name="hxvlc" if="VIDEOS_ALLOWED desktop"/>
 	<haxelib name="hxdiscord_rpc" if="DISCORD_ALLOWED"/>
 
@@ -113,15 +113,18 @@
 	<!--Disable deprecated warnings-->
 	<haxedef name='no-deprecation-warnings' />
 
+	<!--Prevents lime from recompiling each time we compile-->
+	<haxedef name="lime_disable_assets_version" />
+
 	<!-- _________________________________ Custom _______________________________ -->
 
 	<!--Place custom nodes like icons here (higher priority to override the HaxeFlixel icon)-->
 
-	<assets path='setup/art/iconOG.png' rename='icon.png' if="linux" />
+	<assets path='art/icons/iconOG.png' rename='icon.png' if="linux" />
 
-	<icon path="setup/art/icon16.png" size='16'/>
-	<icon path="setup/art/icon64.png" size='64'/>
-	<icon path="setup/art/icon150.png" size='160'/>
-	<icon path="setup/art/icon300.png" size='320'/>
-	<icon path="setup/art/iconOG.png" />
+	<icon path="art/icons/icon16.png" size='16'/>
+	<icon path="art/icons/icon64.png" size='64'/>
+	<icon path="art/icons/icon150.png" size='160'/>
+	<icon path="art/icons/icon300.png" size='320'/>
+	<icon path="art/icons/iconOG.png" />
 </project>
