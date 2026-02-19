@@ -24,7 +24,7 @@ jobs:
           sudo apt-get install libvlc-dev
           sudo apt-get install libvlccore-dev
           haxelib setup ~/haxelib
-          haxelib git hxcpp https://github.com/HaxeFoundation/hxcpp master
+          haxelib git hxcpp https://github.com/HaxeFoundation/hxcpp v4.3.126
           chmod +x ./setup/setup.sh
           sh ./setup/setup.sh
       - name: Create Version Tag
@@ -51,7 +51,7 @@ jobs:
       - name: Install Haxelib and Libraries
         run: |
           haxelib setup C:/haxelib
-          haxelib git hxcpp https://github.com/HaxeFoundation/hxcpp master
+          haxelib git hxcpp https://github.com/HaxeFoundation/hxcpp v4.3.126
           .\"setup/setup-windows.bat"
         shell: cmd
       - name: Create Version Tag
@@ -77,7 +77,7 @@ jobs:
       - name: Install/Update Libraries
         run: |
           haxelib setup ~/haxelib
-          haxelib git hxcpp https://github.com/HaxeFoundation/hxcpp master
+          haxelib git hxcpp https://github.com/HaxeFoundation/hxcpp v4.3.126
           chmod +x ./setup/setup.sh
           sh ./setup/setup.sh
       - name: Create Version Tag
