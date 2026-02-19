@@ -31,7 +31,9 @@ jobs:
         run: echo "${{github.run_id}}" > VERSION
       - name: Set Up HXCPP
         run: |
-          haxe ~/haxelib/hxcpp/git/tools/hxcpp/compile.hxml
+          cd ~/haxelib/hxcpp/git/tools/hxcpp/
+          haxe compile.hxml
+          cd ~/
       - name: Build Game
         run: |
           haxelib run lime build linux
@@ -61,7 +63,9 @@ jobs:
         run: echo "${{github.run_id}}" > VERSION
       - name: Set Up HXCPP
         run: |
-          haxe C:/haxelib/hxcpp/git/tools/hxcpp/compile.hxml
+          cd C:/haxelib/hxcpp/git/tools/hxcpp/
+          haxe compile.hxml
+          cd C:/
       - name: Build Game
         run: haxelib run lime build windows
       - name: Publish Artifact
@@ -90,7 +94,9 @@ jobs:
         run: echo "${{github.run_id}}" > VERSION
       - name: Set Up HXCPP
         run: |
-          haxe ~/haxelib/hxcpp/git/tools/hxcpp/compile.hxml
+          cd ~/haxelib/hxcpp/git/tools/hxcpp/
+          haxe compile.hxml
+          cd ~/
       - name: Build Game
         run: arch -x86_64 haxelib run lime build mac
       - name: Publish Artifact
