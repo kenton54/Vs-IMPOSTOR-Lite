@@ -31,7 +31,6 @@ jobs:
         run: echo "${{github.run_id}}" > VERSION
       - name: Set Up HXCPP
         run: |
-          cd tools/hxcpp
           haxe compile.hxml
       - name: Build Game
         run: |
@@ -62,7 +61,6 @@ jobs:
         run: echo "${{github.run_id}}" > VERSION
       - name: Set Up HXCPP
         run: |
-          cd tools/hxcpp
           haxe compile.hxml
       - name: Build Game
         run: haxelib run lime build windows
@@ -92,7 +90,6 @@ jobs:
         run: echo "${{github.run_id}}" > VERSION
       - name: Set Up HXCPP
         run: |
-          cd tools/hxcpp
           haxe compile.hxml
       - name: Build Game
         run: arch -x86_64 haxelib run lime build mac
