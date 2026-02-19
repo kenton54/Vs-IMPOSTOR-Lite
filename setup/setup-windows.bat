@@ -4,6 +4,7 @@ haxelib install openfl
 haxelib install flixel
 haxelib install flixel-addons
 haxelib install flixel-tools
+haxelib install flixel-ui
 haxelib install hscript-iris
 haxelib install tjson
 haxelib install hxdiscord_rpc --skip-dependencies
