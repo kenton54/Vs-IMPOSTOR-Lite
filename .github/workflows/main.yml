@@ -31,7 +31,7 @@ jobs:
         run: echo "${{github.run_id}}" > VERSION
       - name: Set Up HXCPP
         run: |
-          haxe .haxelib/hxcpp/git/tools/hxcpp/compile.hxml
+          haxe ~/haxelib/hxcpp/git/tools/hxcpp/compile.hxml
       - name: Build Game
         run: |
           haxelib run lime build linux
@@ -61,7 +61,7 @@ jobs:
         run: echo "${{github.run_id}}" > VERSION
       - name: Set Up HXCPP
         run: |
-          haxe .haxelib/hxcpp/git/tools/hxcpp/compile.hxml
+          haxe C:/haxelib/hxcpp/git/tools/hxcpp/compile.hxml
       - name: Build Game
         run: haxelib run lime build windows
       - name: Publish Artifact
@@ -80,7 +80,7 @@ jobs:
         uses: krdlab/setup-haxe@v2
         with:
           haxe-version: 4.3.7
-      - name: Install/Update Libraries
+      - name: Install Haxelib and Libraries
         run: |
           haxelib setup ~/haxelib
           haxelib git hxcpp https://github.com/HaxeFoundation/hxcpp master
@@ -90,7 +90,7 @@ jobs:
         run: echo "${{github.run_id}}" > VERSION
       - name: Set Up HXCPP
         run: |
-          haxe .haxelib/hxcpp/git/tools/hxcpp/compile.hxml
+          haxe ~/haxelib/hxcpp/git/tools/hxcpp/compile.hxml
       - name: Build Game
         run: arch -x86_64 haxelib run lime build mac
       - name: Publish Artifact
