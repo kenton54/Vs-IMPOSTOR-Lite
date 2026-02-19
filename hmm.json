@@ -68,6 +68,11 @@
       "dir": null,
       "ref": "master",
       "url": "https://github.com/superpowers04/linc_luajit"
+    },
+    {
+      "name": "extension-androidtools",
+      "type": "haxelib",
+      "version": null
     }
   ]
 }

@@ -1,13 +1,10 @@
 package;
 
-#if android
-import android.content.Context;
-#end
-
 import debug.FPSCounter;
 
 import flixel.FlxGame;
 import haxe.io.Path;
+import lime.system.System;
 import openfl.Lib;
 import openfl.display.Sprite;
 import openfl.events.Event;
@@ -23,6 +20,10 @@ import lime.graphics.Image;
 #if CRASH_HANDLER
 import openfl.events.UncaughtErrorEvent;
 import haxe.CallStack;
+#end
+
+#if android
+import extension.androidtools.content.Context;
 #end
 
 #if linux
@@ -50,11 +51,10 @@ class Main extends Sprite
 	{
 		super();
 
-		// Credits to MAJigsaw77 (he's the og author for this code)
 		#if android
 		Sys.setCwd(Path.addTrailingSlash(Context.getExternalFilesDir()));
 		#elseif ios
-		Sys.setCwd(lime.system.System.applicationStorageDirectory);
+		Sys.setCwd(Path.addTrailingSlash(System.documentsDirectory));
 		#end
 
 		#if windows
