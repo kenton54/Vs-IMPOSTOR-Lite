@@ -6,6 +6,7 @@ jobs:
   buildLinux:
     name: Linux Build
     runs-on: ubuntu-latest
+    permissions: write-all
     steps:
       - name: Pulling new Commit
         uses: actions/checkout@v5
@@ -73,6 +74,7 @@ jobs:
   buildWindows:
     name: Windows Build
     runs-on: windows-latest
+    permissions: write-all
     steps:
       - name: Pulling new Commit
         uses: actions/checkout@v5
@@ -137,6 +139,7 @@ jobs:
   buildMac:
     name: MacOS Build
     runs-on: macos-latest
+    permissions: write-all
     steps:
       - name: Pulling new Commit
         uses: actions/checkout@v5
@@ -201,6 +204,7 @@ jobs:
   buildAndroid:
     name: Android Build
     runs-on: ubuntu-latest
+    permissions: write-all
     steps:
       - name: Pulling new Commit
         uses: actions/checkout@v5
