@@ -232,7 +232,7 @@ class CreditsState extends MusicBeatState
 		if (change != 0) FlxG.sound.play(Paths.sound('scrollMenu'), 0.4);
 
 		var descTxt:String = description != "" ? description : (curCredits[2] != null ? curCredits[2] : "");
-		description = descTxt;
+		this.description = descTxt;
 		var newColor:FlxColor = CoolUtil.colorFromString(curCredits[4] ?? "FFFFFF");
 		color = newColor;
 

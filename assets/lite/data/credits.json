@@ -14,7 +14,7 @@
         [
             "liteImp", [275, 0], [0.475, 0.475],
             [
-                ["portrait", "gtm", "AppleDash Maxxing", "https://x.com/gtmdoesart", "9C897A"],
+                ["portrait", "gtm", "AppleDash Maxxing", "https://x.com/gtmdoesart", "8C7064"],
                 ["portrait", "upqgg",       "I did some things, and when I mean somethings I mean my things", "https://youtube.com/@upqgg", "9DEC98"],
                 ["portrait", "jio",         "", "", "D48EFF"],
                 ["portrait", "lego",        "", "", "4388FF"],
@@ -38,7 +38,8 @@
                     ["Choma41", "Composing Meltdown Lite (Commission)", "https://x.com/Choma411"],
                     ["Ra_TanG", "Giving us advice on Lite Funkin's artstyle", "https://x.com/Ra_TanG1234"],
                     ["MotorFrog", "Team behind the original Vs. Impostor", "https://vsimpostor.com"],
-                    ["Innersloth", "Creators of Among us", "https://www.innersloth.com"]
+                    ["Innersloth", "Creators of Among us", "https://www.innersloth.com"],
+                    ["Leroy.dacat", "Don't type \"leroy\" in the main menu", "https://www.instagram.com/leroy.dacat/"]
                 ]]
             ]
         ]
