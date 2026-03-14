@@ -1,13 +1,16 @@
-<?xml version='1.0' encoding='utf-8'?>
-<TextureAtlas imagePath="menu.png">
-<SubTexture name="sel_story_mode0000" x="363" y="236" width="724" height="220" frameX="-13" frameY="-12" frameWidth="749" frameHeight="250" />
-<SubTexture name="story_mode0000" x="0" y="864" width="614" height="178" frameX="-68" frameY="-33" frameWidth="749" frameHeight="250" />
-<SubTexture name="sel_freeplay0000" x="0" y="0" width="632" height="236" frameX="-55" frameY="-11" frameWidth="749" frameHeight="250" />
-<SubTexture name="freeplay0000" x="352" y="461" width="535" height="191" frameX="-104" frameY="-33" frameWidth="749" frameHeight="250" />
-<SubTexture name="sel_options0000" x="632" y="0" width="647" height="232" frameX="-40" frameY="-13" frameWidth="749" frameHeight="250" />
-<SubTexture name="options0000" x="0" y="675" width="548" height="189" frameX="-91" frameY="-34" frameWidth="749" frameHeight="250" />
-<SubTexture name="sel_credits0000" x="548" y="675" width="531" height="189" frameX="-101" frameY="-28" frameWidth="749" frameHeight="250" />
-<SubTexture name="credits0000" x="614" y="864" width="449" height="152" frameX="-143" frameY="-47" frameWidth="749" frameHeight="250" />
-<SubTexture name="sel_shop0000" x="0" y="236" width="363" height="225" frameX="-180" frameY="-15" frameWidth="749" frameHeight="250" />
-<SubTexture name="shop0000" x="0" y="461" width="352" height="214" frameX="-186" frameY="-21" frameWidth="749" frameHeight="250" />
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+Created with Funkin Packer v0.1.3 https://neeeoo.github.io/funkin-packer/
+-->
+<TextureAtlas imagePath="menu.png" width="1260" height="1150">
+	<SubTexture name="credits0000" x="715" y="454" width="521" height="179" frameX="-5" frameY="-5" frameWidth="531" frameHeight="189"/>
+	<SubTexture name="freeplay0000" x="638" y="924" width="622" height="226" frameX="-5" frameY="-5" frameWidth="632" frameHeight="236"/>
+	<SubTexture name="gallery0000" x="633" y="683" width="598" height="240" frameX="-5" frameY="-5" frameWidth="608" frameHeight="250"/>
+	<SubTexture name="options0000" x="0" y="924" width="637" height="222" frameX="-5" frameY="-5" frameWidth="647" frameHeight="232"/>
+	<SubTexture name="sel_credits0000" x="725" y="0" width="531" height="189" frameX="-0" frameY="-0" frameWidth="531" frameHeight="189"/>
+	<SubTexture name="sel_freeplay0000" x="0" y="683" width="632" height="236" frameX="-0" frameY="-0" frameWidth="632" frameHeight="236"/>
+	<SubTexture name="sel_gallery0000" x="0" y="221" width="608" height="250" frameX="-0" frameY="-0" frameWidth="608" frameHeight="250"/>
+	<SubTexture name="sel_options0000" x="609" y="221" width="647" height="232" frameX="-0" frameY="-0" frameWidth="647" frameHeight="232"/>
+	<SubTexture name="sel_story_mode0000" x="0" y="0" width="724" height="220" frameX="-0" frameY="-0" frameWidth="724" frameHeight="220"/>
+	<SubTexture name="story_mode0000" x="0" y="472" width="714" height="210" frameX="-5" frameY="-5" frameWidth="724" frameHeight="220"/>
 </TextureAtlas>

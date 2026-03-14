@@ -121,12 +121,14 @@ class TitleState extends MusicBeatState
 
 		if (FlxG.sound.music != null) Conductor.songPosition = FlxG.sound.music.time;
 
+		var pressedEnter:Bool = FlxG.keys.justPressed.ENTER #if mobile || (FlxG.touches.getFirst() != null && FlxG.touches.getFirst().justPressed) #end;
+
 		var mult:Float = FlxMath.lerp(0.8, logo.scale.x, Math.exp(-elapsed * 9 * 1));
 		logo.scale.set(mult, mult);
 
 		if (!selected)
 		{
-			if (FlxG.keys.justPressed.ENTER && skippedIntro)
+			if (pressedEnter && skippedIntro)
 			{
 				selected = true;
 				FlxG.camera.flash(FlxColor.WHITE, 1);
@@ -138,7 +140,7 @@ class TitleState extends MusicBeatState
 					FlxG.switchState(() -> new MainMenuState());
 				});
 			}
-			else if (FlxG.keys.justPressed.ENTER && !skippedIntro)
+			else if (pressedEnter && !skippedIntro)
 			{
 				finishIntro();
 				return; // just making sure
@@ -177,12 +179,12 @@ class TitleState extends MusicBeatState
 					removeIntroTexts();
 					logoTTSpr.visible = false;
 				case 9:
-					makeIntroArrText([curWacky[0]]);
+					makeIntroText(curWacky[0]);
 				case 11:
 					// kenton... hear me out...
-					if(curWacky[1] != null) makeIntroText(curWacky[1]);
-					if(curWacky[2] != null) makeIntroText(curWacky[2]);
-					if(curWacky[3] != null) makeIntroText(curWacky[3]);
+					if (curWacky[1] != null) makeIntroText(curWacky[1]);
+					if (curWacky[2] != null) makeIntroText(curWacky[2]);
+					if (curWacky[3] != null) makeIntroText(curWacky[3]);
 				case 12:
 					removeIntroTexts();
 				case 13:
@@ -245,6 +247,7 @@ class TitleState extends MusicBeatState
 		if(!skippedIntro) skippedIntro = true;
 
 		logoTTSpr.destroy();
+		remove(logoTTSpr);
 
 		FlxG.camera.flash(FlxColor.WHITE, 1.6);
 		FlxTween.cancelTweensOf(FlxG.camera);

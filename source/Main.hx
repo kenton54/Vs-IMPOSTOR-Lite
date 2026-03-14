@@ -96,7 +96,10 @@ class Main extends Sprite
 			game.height = Math.ceil(stageHeight / game.zoom);
 		}
 		*/
-	
+
+		// we're a pixelated mod
+		FlxSprite.defaultAntialiasing = false;
+
 		#if LUA_ALLOWED
 		Lua.set_callbacks_function(cpp.Callable.fromStaticFunction(psychlua.CallbackHandler.call));
 		#end
@@ -112,11 +115,8 @@ class Main extends Sprite
 
 		#if !mobile
 		fpsCounter = new FPSCounter(0, 0, 0xFFFFFF);
-		addChild(fpsCounter);
-
-		Lib.current.stage.align = "tl";
-		Lib.current.stage.scaleMode = StageScaleMode.NO_SCALE;
 		fpsCounter.visible = ClientPrefs.data.showFPS;
+		addChild(fpsCounter);
 		#end
 
 		#if linux
@@ -143,8 +143,6 @@ class Main extends Sprite
 			if (FlxG.game != null)
 			resetSpriteCache(FlxG.game);
 		});
-
-		FlxSprite.defaultAntialiasing = false;
 	}
 
 	static function resetSpriteCache(sprite:Sprite):Void {

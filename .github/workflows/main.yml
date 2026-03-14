@@ -10,7 +10,7 @@ jobs:
       - name: Pulling new Commit
         uses: actions/checkout@v5
 
-      - name: Set up Haxe
+      - name: Install Haxe
         uses: krdlab/setup-haxe@v2
         with:
           haxe-version: 4.3.7
@@ -33,8 +33,8 @@ jobs:
           haxelib git hxcpp https://github.com/HaxeFoundation/hxcpp master
           chmod +x ./setup/setup.sh
           sh ./setup/setup.sh
-          
-      - name: Set Up HXCPP
+
+      - name: Setup HXCPP
         run: |
           cd ~/haxelib/hxcpp/git/tools/hxcpp/
           haxe compile.hxml
@@ -51,7 +51,6 @@ jobs:
           path: export/release/linux/bin
 
       - name: Clear old Cache
-        id: cache-clear
         uses: actions/github-script@v8
         if: ${{ steps.cache-restore.outputs.cache-hit == 'true' }}
         with:
@@ -63,7 +62,6 @@ jobs:
             });
 
       - name: Save new Cache
-        id: cache-save
         uses: actions/cache/save@v5
         with:
           key: cache_linux
@@ -79,7 +77,7 @@ jobs:
       - name: Pulling new Commit
         uses: actions/checkout@v5
 
-      - name: Set up Haxe
+      - name: Install Haxe
         uses: krdlab/setup-haxe@v2
         with:
           haxe-version: 4.3.7
@@ -101,7 +99,7 @@ jobs:
           .\"setup/setup-windows.bat"
         shell: cmd
         
-      - name: Set Up HXCPP
+      - name: Setup HXCPP
         run: |
           cd C:/haxelib/hxcpp/git/tools/hxcpp/
           haxe compile.hxml
@@ -117,7 +115,6 @@ jobs:
           path: export/release/windows/bin
 
       - name: Clear old Cache
-        id: cache-clear
         uses: actions/github-script@v8
         if: ${{ steps.cache-restore.outputs.cache-hit == 'true' }}
         with:
@@ -129,7 +126,6 @@ jobs:
             });
 
       - name: Save new Cache
-        id: cache-save
         uses: actions/cache/save@v5
         with:
           key: cache_windows
@@ -145,7 +141,7 @@ jobs:
       - name: Pulling new Commit
         uses: actions/checkout@v5
 
-      - name: Set up Haxe
+      - name: Install Haxe
         uses: krdlab/setup-haxe@v2
         with:
           haxe-version: 4.3.7
@@ -167,7 +163,7 @@ jobs:
           chmod +x ./setup/setup.sh
           sh ./setup/setup.sh
           
-      - name: Set Up HXCPP
+      - name: Setup HXCPP
         run: |
           cd ~/haxelib/hxcpp/git/tools/hxcpp/
           haxe compile.hxml
@@ -183,7 +179,6 @@ jobs:
           path: export/release/macos/bin
 
       - name: Clear old Cache
-        id: cache-clear
         uses: actions/github-script@v8
         if: ${{ steps.cache-restore.outputs.cache-hit == 'true' }}
         with:
@@ -195,7 +190,6 @@ jobs:
             });
 
       - name: Save new Cache
-        id: cache-save
         uses: actions/cache/save@v5
         with:
           key: cache_mac
@@ -203,3 +197,98 @@ jobs:
             .haxelib/
             export/release/macos/haxe/
             export/release/macos/obj/
+
+  buildAndroid:
+    name: Android Build
+    runs-on: ubuntu-latest
+    steps:
+      - name: Pulling new Commit
+        uses: actions/checkout@v5
+
+      - name: Install Java JDK
+        uses: actions/setup-java@v5
+        with:
+          java-version: 21
+          distribution: temurin
+
+      - name: Install Android SDK
+        uses: android-actions/setup-android@v3.2.2
+
+      - name: Install Android NDK
+        id: ndk-install
+        uses: nttld/setup-ndk@v1.6.0
+        with:
+          ndk-version: r29
+
+      - name: Install Haxe
+        uses: krdlab/setup-haxe@v2
+        with:
+          haxe-version: 4.3.7
+
+      - name: Restore Cache
+        id: cache-restore
+        uses: actions/cache/restore@v5
+        with:
+          key: cache_android
+          path: |
+            .haxelib/
+            export/release/android/haxe/
+            export/release/android/obj/
+
+      - name: Install Haxelib and Libraries
+        run: |
+          haxelib setup ~/haxelib
+          haxelib git hxcpp https://github.com/HaxeFoundation/hxcpp master
+          chmod +x ./setup/setup.sh
+          sh ./setup/setup.sh
+
+      - name: Setup HXCPP
+        run: |
+          cd ~/haxelib/hxcpp/git/tools/hxcpp/
+          haxe compile.hxml
+          cd ~/
+
+      - name: Setup Android
+        run: |
+          haxelib run lime config ANDROID_SDK $ANDROID_SDK_ROOT
+          haxelib run lime config ANDROID_NDK_ROOT ${{ steps.ndk-install.outputs.ndk-path }}
+          haxelib run lime config JAVA_HOME ${{ env.JAVA_HOME }}
+          haxelib run lime config ANDROID_SETUP true
+
+      - name: Build Game
+        run: haxelib run lime build android
+
+      - name: Build APK
+        run: |
+          chmod +x export/release/android/bin/gradlew
+
+          cd export/release/android/bin/
+          ./gradlew clean
+          ./gradlew assembleDebug
+          cd ../../../../
+
+      - name: Publish Artifact
+        uses: actions/upload-artifact@v6
+        with:
+          name: Impostor Lite (Android)
+          path: export/release/android/bin/app/build/outputs/apk/debug
+
+      - name: Clear old Cache
+        uses: actions/github-script@v8
+        if: ${{ steps.cache-restore.outputs.cache-hit == 'true' }}
+        with:
+          script: |
+            const caches = github.rest.actions.deleteActionsCacheByKey({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              key: "cache_android"
+            });
+
+      - name: Save new Cache
+        uses: actions/cache/save@v5
+        with:
+          key: cache_android
+          path: |
+            .haxelib/
+            export/release/android/haxe/
+            export/release/android/obj/

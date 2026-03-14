@@ -52,7 +52,7 @@ class WarningState extends MusicBeatState
 		Lib.application.window.resizable = false;
 
 		#if DISCORD_ALLOWED
-        DiscordClient.changePresence("Warning!", null);
+        DiscordClient.changePresence("Warning Screen", null);
         #end
 
 		disclaimerTxt.applyMarkup(disclaimerTxt.text,
@@ -97,9 +97,9 @@ class WarningState extends MusicBeatState
 		whiteTransitionTail.x = whiteTransition.x;
 		whiteTransitionTail.y = whiteTransition.y + whiteTransition.height;
 
-		if(actuallyAllowed)
+		if (actuallyAllowed)
 		{
-			if ((FlxG.keys.justPressed.ENTER || FlxG.mouse.justPressed) && !leftState)
+			if ((FlxG.keys.justPressed.ENTER || FlxG.mouse.justPressed #if mobile || FlxG.touches.getFirst() != null && FlxG.touches.getFirst().justPressed #end) && !leftState)
 			{
             	FlxTransitionableState.skipNextTransOut = true;
             	FlxTransitionableState.skipNextTransIn = true;

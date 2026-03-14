@@ -56,11 +56,11 @@
 	<!-- __________________________ Game Assets & Etc. __________________________ -->
 
 	<!-- Assets -->
-	<assets path="assets/fonts" />
-	<assets path="assets/lite/data" library="data" />
-	<assets path="assets/lite" />
+	<assets path="assets/fonts" library="default" />
+	<assets path="assets/lite" library="default" />
 
-	<library name="data" preload="true" unless="web" />
+	<library name="default" preload="true" unless="web" />
+	<library name="default" embed="true" if="web" />
 
 	<assets path='art/readme.txt' rename='funkin_readme.txt' />
 
