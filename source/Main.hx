@@ -22,7 +22,7 @@ import haxe.CallStack;
 import extension.androidtools.content.Context;
 #end
 
-#if linux
+#if (linux && !macro)
 import hxgamemode.GamemodeClient;
 #end
 
