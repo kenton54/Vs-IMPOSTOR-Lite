@@ -2,7 +2,7 @@
 <project>
 	<!-- _________________________ Application Settings _________________________ -->
 
-	<app title="Vs. Impostor: Lite" file="Vs-Impostor-Lite" packageName="com.gtm.impostorlite" package="com.gtm.impostorlite" main="Main" version="0.2.8" company="GTM" />
+	<app title="Vs. Impostor: Lite" file="Vs-Impostor-Lite" packageName="com.gtm.impostorlite" main="Main" version="1.0" build-number="1" company="GTM" />
 
 	<!--Switch Export with Unique ApplicationID and Icon-->
 	<set name="APP_ID" value="0x0100f6c013bbc000" />
@@ -31,16 +31,17 @@
 	<!-- ____________________________ Window Settings ___________________________ -->
 
 	<!--These window settings apply to all targets-->
-	<window width="1200" height="900" fps="60" background="#FFFFFF" hardware="true" vsync="false" />
+	<window width="1200" height="900" fps="60" background="#FFFFFF" hardware="true" vsync="false" allow-high-dpi="true" />
 
 	<!--HTML5-specific-->
 	<window if="html5" resizable="true" />
 
 	<!--Desktop-specific-->
-	<window if="desktop" orientation="landscape" fullscreen="false" resizable="true" vsync="false"/>
+	<window if="desktop" orientation="landscape" fullscreen="false" resizable="true" vsync="false" />
+	<window if="desktop mac" allow-high-dpi="false" />
 
 	<!--Mobile-specific-->
-	<window if="mobile" orientation="landscape" fullscreen="true" width="0" height="0" resizable="false"/>
+	<window if="mobile" orientation="landscape" fullscreen="true" width="0" height="0" resizable="false" />
 
 	<!--Switch-specific-->
 	<window if="switch" orientation="landscape" fullscreen="true" width="0" height="0" resizable="true" />
@@ -119,7 +120,11 @@
 
 	<!-- _________________________________ Custom _______________________________ -->
 
-	<!--Place custom nodes like icons here (higher priority to override the HaxeFlixel icon)-->
+	<!-- The XML might be throwing an error, but it's fine, this doesn't break the Project file -->
+	<section if="android" >
+		<config:android minimum-sdk-version="28" />
+		<config:android target-sdk-version="35" />
+	</section>
 
 	<assets path='art/icons/iconOG.png' rename='icon.png' if="linux" />
 

@@ -173,6 +173,11 @@ class MainMenuState extends MusicBeatState
 				if (touch.justReleased)
 					checkSelection(lastTouched);
 		}
+
+		#if android
+		if (FlxG.android.justReleased.BACK)
+			FlxG.switchState(() -> new TitleState());
+		#end
 	}
 	#else
 	function handleKeyboard()
@@ -182,7 +187,7 @@ class MainMenuState extends MusicBeatState
 		if (controls.UI_DOWN_P)
 			changeItem(1);
 
-		if (controls.BACK || FlxG.mouse.justPressedRight)
+		if (controls.BACK)
 		{
 			selectedSomethin = true;
 			FlxG.sound.play(Paths.sound('cancelMenu'));

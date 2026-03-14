@@ -4,17 +4,13 @@ import debug.FPSCounter;
 
 import flixel.FlxGame;
 import haxe.io.Path;
+import lime.graphics.Image;
 import lime.system.System;
 import openfl.Lib;
 import openfl.display.Sprite;
 import openfl.events.Event;
-import openfl.display.StageScaleMode;
 
 import states.InitState;
-
-#if linux
-import lime.graphics.Image;
-#end
 
 //crash handler stuff
 #if CRASH_HANDLER
@@ -27,10 +23,6 @@ import extension.androidtools.content.Context;
 #end
 
 #if linux
-@:cppInclude('./external/gamemode_client.h')
-@:cppFileCode('
-	#define GAMEMODE_AUTO
-')
 #end
 
 class Main extends Sprite
@@ -39,23 +31,31 @@ class Main extends Sprite
 		width: 1200, // WINDOW width
 		height: 900, // WINDOW height
 		initialState: InitState, // initial game state
-		//zoom: -1.0, // game state bounds
 		framerate: 60, // default framerate
 		skipSplash: true, // if the default flixel splash screen should be skipped
 		startFullscreen: false // if the game should start at fullscreen mode
 	};
+
+	public static function main()
+	{
+		#if android
+		Sys.setCwd(Path.addTrailingSlash(Context.getExternalFilesDir()));
+		#elseif ios
+		Sys.setCwd(Path.addTrailingSlash(System.documentsDirectory));
+		#end
+
+		#if CRASH_HANDLER
+		Lib.current.loaderInfo.uncaughtErrorEvents.addEventListener(UncaughtErrorEvent.UNCAUGHT_ERROR, onCrash);
+		#end
+
+		Lib.current.addChild(new Main());
+	}
 
 	public static var fpsCounter(default, null):FPSCounter;
 
 	public function new()
 	{
 		super();
-
-		#if android
-		Sys.setCwd(Path.addTrailingSlash(Context.getExternalFilesDir()));
-		#elseif ios
-		Sys.setCwd(Path.addTrailingSlash(System.documentsDirectory));
-		#end
 
 		#if windows
 		backend.native.Windows.setWindowDarkMode(true);
@@ -122,10 +122,6 @@ class Main extends Sprite
 		#if linux
 		Lib.current.stage.window.setIcon(Image.fromFile("icon.png"));
 		#end
-		
-		#if CRASH_HANDLER
-		Lib.current.loaderInfo.uncaughtErrorEvents.addEventListener(UncaughtErrorEvent.UNCAUGHT_ERROR, onCrash);
-		#end
 
 		#if DISCORD_ALLOWED
 		DiscordClient.prepare();
@@ -165,7 +161,7 @@ class Main extends Sprite
 	// Code was entirely made by sqirra-rng for their fnf engine named "Izzy Engine", big props to them!!!
 	// very cool person for real they don't get enough credit for their work
 	#if CRASH_HANDLER
-	function onCrash(e:UncaughtErrorEvent):Void
+	static function onCrash(e:UncaughtErrorEvent):Void
 	{
 		var errMsg:String = "";
 		var path:String;

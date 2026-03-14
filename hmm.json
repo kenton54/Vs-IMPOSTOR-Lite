@@ -73,6 +73,11 @@
       "name": "extension-androidtools",
       "type": "haxelib",
       "version": null
+    },
+    {
+      "name": "hxgamemode",
+      "type": "haxelib",
+      "version": null
     }
   ]
 }

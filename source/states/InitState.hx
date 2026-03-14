@@ -18,6 +18,10 @@ class InitState extends FlxState
 		FlxG.game.focusLostFramerate = 60;
 		FlxG.keys.preventDefaultKeys = [TAB];
 
+		#if android
+		FlxG.android.preventDefaultKeys = [flixel.input.android.FlxAndroidKey.BACK];
+		#end
+
 		if (FlxG.save.data != null && FlxG.save.data.fullscreen)
 			FlxG.fullscreen = FlxG.save.data.fullscreen;
 

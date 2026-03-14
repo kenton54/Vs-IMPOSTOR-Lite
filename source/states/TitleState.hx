@@ -148,6 +148,11 @@ class TitleState extends MusicBeatState
 		}
 
 		super.update(elapsed);
+
+		#if android
+		if (FlxG.android.justReleased.BACK)
+			openfl.Lib.application.window.close();
+		#end
 	}
 
 	private var correctBeat:Int = 0;
