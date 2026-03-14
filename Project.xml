@@ -84,6 +84,7 @@
 	<haxelib name="hxdiscord_rpc" if="DISCORD_ALLOWED"/>
 
 	<haxelib name="extension-androidtools" if="android" />
+	<haxelib name="hxgamemode" if="linux" />
 
 	<!-- Enables a terminal log prompt on debug builds -->
 	<haxelib name="hxcpp-debug-server" if="debug"/>
