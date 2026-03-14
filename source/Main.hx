@@ -23,6 +23,7 @@ import extension.androidtools.content.Context;
 #end
 
 #if linux
+import hxgamemode.GamemodeClient;
 #end
 
 class Main extends Sprite
@@ -42,6 +43,10 @@ class Main extends Sprite
 		Sys.setCwd(Path.addTrailingSlash(Context.getExternalFilesDir()));
 		#elseif ios
 		Sys.setCwd(Path.addTrailingSlash(System.documentsDirectory));
+		#end
+
+		#if linux
+		GamemodeClient.request_start();
 		#end
 
 		#if CRASH_HANDLER
