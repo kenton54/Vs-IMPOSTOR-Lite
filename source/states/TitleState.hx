@@ -45,13 +45,13 @@ class TitleState extends MusicBeatState
 		var red:FlxSprite = new FlxSprite().loadGraphic(Paths.image('title/red'));
 		red.antialiasing = false;
 		red.x = 75;
-		red.y = FlxG.height - red.height - 125;
+		red.y = FlxG.height - red.height - #if mobile 100 #else 125 #end;
 		titleStuff.add(red);
 
 		var enter:FlxSprite = new FlxSprite().loadGraphic(Paths.image('title/press'));
 		enter.antialiasing = false;
-		enter.screenCenter();
-		enter.y += 325;
+		enter.screenCenter(X);
+		enter.y = (FlxG.height * 0.95) - enter.height;
 		titleStuff.add(enter);
 
 		logo = new FlxSprite(0, 50).loadGraphic(Paths.image('title/logo'));
@@ -225,7 +225,7 @@ class TitleState extends MusicBeatState
 		}
 	}	
 
-	function makeIntroText(hand:String, ?offsetY:Float = 0)
+	function makeIntroText(hand:String = '', ?offsetY:Float = 0)
 	{
 		var text:Alphabet = new Alphabet(0, 0, hand, false);
 		text.screenCenter(X);
@@ -239,6 +239,7 @@ class TitleState extends MusicBeatState
 	{
 		while (textsGrp.members.length > 0)
 		{
+			textsGrp.members[0].destroy();
 			textsGrp.remove(textsGrp.members[0], true);
 		}
 	}
