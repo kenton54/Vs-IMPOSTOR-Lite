@@ -1,10 +1,10 @@
 package cutscenes;
 
 import flixel.util.FlxDestroyUtil;
-import tjson.TJSON;
 import flixel.system.FlxAssets.FlxSoundAsset;
 import flixel.addons.text.FlxTypeText;
 import flixel.group.FlxGroup;
+import haxe.Json;
 import objects.HealthIcon;
 import openfl.utils.Assets;
 import shaders.RGBPalette;
@@ -14,9 +14,9 @@ class DialogueLiteBox extends FlxGroup
 	public static inline function parseDialogue(path:String):DialogueData
 	{
 		#if MODS_ALLOWED
-		return FileSystem.exists(path) ? TJSON.parse(File.getContent(path)) : getDefaultDialogue();
+		return FileSystem.exists(path) ? Json.parse(File.getContent(path)) : getDefaultDialogue();
 		#else
-		return Assets.exists(path, TEXT) ? TJSON.parse(Assets.getText(path)) : getDefaultDialogue();
+		return Assets.exists(path, TEXT) ? Json.parse(Assets.getText(path)) : getDefaultDialogue();
 		#end
 	}
 
@@ -159,7 +159,7 @@ class DialogueLiteBox extends FlxGroup
 			return;
 		}
 
-		var dialogueData:DialogueData = TJSON.parse(Assets.getText(file));
+		var dialogueData:DialogueData = Json.parse(Assets.getText(file));
 		loadFromData(dialogueData);
 	}
 

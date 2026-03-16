@@ -29,8 +29,6 @@ import hxgamemode.GamemodeClient;
 class Main extends Sprite
 {
 	var gameData = {
-		width: 1200, // WINDOW width
-		height: 900, // WINDOW height
 		initialState: InitState, // initial game state
 		framerate: 60, // default framerate
 		skipSplash: true, // if the default flixel splash screen should be skipped
@@ -116,7 +114,7 @@ class Main extends Sprite
 		Achievements.load();
 		#end
 
-		addChild(new FlxGame(gameData.width, gameData.height, gameData.initialState, gameData.framerate, gameData.framerate, gameData.skipSplash, gameData.startFullscreen));
+		addChild(new FlxGame(0, 0, gameData.initialState, gameData.framerate, gameData.framerate, gameData.skipSplash, gameData.startFullscreen));
 
 		#if !mobile
 		fpsCounter = new FPSCounter(0, 0, 0xFFFFFF);

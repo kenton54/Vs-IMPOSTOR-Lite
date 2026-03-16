@@ -163,10 +163,10 @@ class WeekData {
 		var jsonData:Dynamic = null;
 		#if MODS_ALLOWED
 		if (FileSystem.exists(path))
-			jsonData = tjson.TJSON.parse(File.getContent(path));
+			jsonData = haxe.Json.parse(File.getContent(path));
 		#else
 		if (Assets.exists(path))
-			jsonData = tjson.TJSON.parse(Assets.getText(path));
+			jsonData = haxe.Json.parse(Assets.getText(path));
 		#end
 
 		if (jsonData != null)

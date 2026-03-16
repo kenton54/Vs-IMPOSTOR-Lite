@@ -11,7 +11,7 @@ class SelectCreditsState extends MusicBeatState
     public var logosGrp:FlxTypedGroup<FlxSprite>;
 
     // ARRAY: [Team Name - Position Add[X/Y] - Scale[X/Y] - Devs]
-    public var teamsList:Array<Dynamic> = tjson.TJSON.parse(Assets.getText(Paths.getLitePath("data/credits.json"))).credits;
+    public var teamsList:Array<Dynamic> = haxe.Json.parse(Assets.getText(Paths.getLitePath("data/credits.json"))).credits;
 
     override function create()
     {

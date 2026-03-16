@@ -1,7 +1,6 @@
 package cutscenes;
 
 import openfl.utils.Assets;
-import tjson.TJSON;
 
 class DialogueCharacter extends FlxSprite
 {
@@ -35,7 +34,7 @@ class DialogueCharacter extends FlxSprite
 			characterToLoad = DEFAULT_CHARACTER;
         }
 
-		var charData:DialogueCharacterData = TJSON.parse(Assets.getText(Paths.json('dialogues/characters/$characterToLoad')));
+		var charData:DialogueCharacterData = haxe.Json.parse(Assets.getText(Paths.json('dialogues/characters/$characterToLoad')));
 
 		data = {
 			image: charData.image,

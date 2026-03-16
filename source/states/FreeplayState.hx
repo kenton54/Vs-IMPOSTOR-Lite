@@ -102,9 +102,21 @@ class FreeplayState extends MusicBeatState
 		for (i in 0...songs.length) Paths.image('portraits/${songs[i].portrait}');
 
 		portrait = new FlxSprite().loadGraphic(Paths.image('portraits/${songs[curSelected].portrait}'));
+		portrait.antialiasing = false;
+
+		if (songs[curSelected].portrait == "idk")
+		{
+			portrait.scale.set(0.7, 0.7);
+			portrait.updateHitbox();
+		}
+		else
+		{
+			portrait.scale.set(1, 1);
+			portrait.updateHitbox();
+		}
+
 		portrait.x = FlxG.width - portrait.width + 25;
 		portrait.y = FlxG.height - portrait.height;
-		portrait.antialiasing = false;
 		add(portrait);
 
 		grpSongs = new FlxTypedGroup<Alphabet>();
@@ -285,10 +297,23 @@ class FreeplayState extends MusicBeatState
 			ratingText.text = '\n' + ratingSplit.join('.') + '%';
 			positionHighscore();
 
-			if(portraitHolder > 0.2 && !isPortraitOn && portrait.x >= FlxG.width) {
+			if (portraitHolder > 0.2 && !isPortraitOn && portrait.x >= FlxG.width)
+			{
 				isPortraitOn = true;
 				FlxTween.cancelTweensOf(portrait);
 				portrait.loadGraphic(Paths.image('portraits/${songs[curSelected].portrait}'));
+
+				if (songs[curSelected].portrait == "idk")
+				{
+					portrait.scale.set(0.7, 0.7);
+					portrait.updateHitbox();
+				}
+				else
+				{
+					portrait.scale.set(1, 1);
+					portrait.updateHitbox();
+				}
+
 				portrait.y = FlxG.height - portrait.height;
 				FlxTween.tween(portrait, {x: FlxG.width - portrait.width + 25, alpha: 1}, 0.55, {ease: FlxEase.quartOut});
 			}
