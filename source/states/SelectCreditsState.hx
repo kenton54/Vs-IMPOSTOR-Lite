@@ -64,10 +64,8 @@ class SelectCreditsState extends MusicBeatState
 			if(controls.UI_RIGHT_P)
 				changeItem(1);
 
-            #if !mobile
-            if (FlxG.mouse.justMoved)
-                FlxG.mouse.visible = true;
-            #end
+            if (PointerUtil.justMoved)
+				PointerUtil.visible = true;
 
             logosGrp.forEach(function(spr:FlxSprite) {
                 #if mobile
@@ -133,21 +131,18 @@ class SelectCreditsState extends MusicBeatState
         FlxG.sound.play(Paths.sound('confirmMenu'));
         selected = true;
 
-        #if desktop
-        FlxG.mouse.visible = false;
-        #end
+		PointerUtil.visible = false;
 
         FlxFlicker.flicker(logosGrp.members[curCredit], 1, 0.06, false, false, _ -> FlxG.switchState(() -> new CreditsState(teamsList[curCredit][0], teamsList[curCredit][3])));
     }
 
     function changeItem(huh:Int = 0)
     {
-        if(huh != 0) FlxG.sound.play(Paths.sound('scrollMenu'));
         prevCurCredit = curCredit;
-        curCredit += huh;
-        if (curCredit >= teamsList.length) curCredit = 0;
-        if (curCredit < 0) curCredit = teamsList.length - 1;
+		curCredit = FlxMath.wrap(curCredit + huh, 0, teamsList.length - 1);
 
-        FlxG.mouse.visible = false;
+		if (curCredit != prevCurCredit) FlxG.sound.play(Paths.sound('scrollMenu'));
+
+		PointerUtil.visible = false;
     }
 }

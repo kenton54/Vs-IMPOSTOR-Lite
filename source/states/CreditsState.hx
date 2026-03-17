@@ -8,6 +8,7 @@ import objects.MenuItem;
 class CreditsState extends MusicBeatState
 {
 	var curSelected:Int = 0;
+	var curSelectedFloat:Float = 0;
 
 	public var description(default, set):String;
 
@@ -153,46 +154,74 @@ class CreditsState extends MusicBeatState
 
 	var quitting:Bool = false;
 	var holdTime:Float = 0;
+	var isSwiping:Bool = false;
+	var moveLength:Float = 0;
 	override function update(elapsed:Float)
 	{
 		#if mobile
 		var overlapLeft:Bool = false;
 		var overlapRight:Bool = false;
-		for (touch in FlxG.touches.list)
+		if (PointerUtil.overlaps(leftArrow))
 		{
-			if (touch.overlaps(leftArrow))
-			{
-				overlapLeft = true;
-				leftArrow.color = touch.pressed ? FlxColor.GRAY : FlxColor.WHITE;
+			overlapLeft = true;
+			leftArrow.color = PointerUtil.pressed ? FlxColor.GRAY : FlxColor.WHITE;
 
-				if (touch.justPressed)
-					changeSelection(-1);
-			}
-
-			if (touch.overlaps(rightArrow))
-			{
-				overlapRight = true;
-				rightArrow.color = touch.pressed ? FlxColor.GRAY : FlxColor.WHITE;
-
-				if (touch.justPressed)
-					changeSelection(1);
-			}
-
-			if (touch.overlaps(grpOptions.members[curSelected]) && !(overlapLeft || overlapRight) && touch.justReleased)
-				checkSelection();
+			if (PointerUtil.justPressed)
+				changeSelection(-1);
 		}
+
+		if (PointerUtil.overlaps(rightArrow))
+		{
+			overlapRight = true;
+			rightArrow.color = PointerUtil.pressed ? FlxColor.GRAY : FlxColor.WHITE;
+
+			if (PointerUtil.justPressed)
+				changeSelection(1);
+		}
+
+		if (PointerUtil.justPressed && !(overlapLeft || overlapRight))
+			isSwiping = true;
+
+		if (PointerUtil.pressed && isSwiping)
+		{
+			final fpsMult:Float = FlxG.updateFramerate / 60;
+			final delta:Float = PointerUtil.pointer.deltaViewX * fpsMult;
+
+			if (Math.abs(delta) >= 2)
+			{
+				var dpiScale:Float = FlxG.stage.window.display.dpi / 160;
+				dpiScale = FlxMath.bound(dpiScale, 0.5, #if android 1 #else 2 #end);
+
+				var _moveLength:Float = delta / FlxG.updateFramerate / dpiScale / 2;
+				moveLength += Math.abs(_moveLength);
+				curSelectedFloat -= _moveLength;
+
+				updateScroll();
+			}
+		}
+		else if (moveLength > 0)
+		{
+			moveLength = 0;
+			changeSelection();
+		}
+
+		if (PointerUtil.justReleased)
+			isSwiping = false;
 
 		if ((overlapLeft || overlapRight) && !(overlapLeft && overlapRight))
 		{
 			var checkLastHold:Int = Math.floor((holdTime - 0.5) * 10);
 			holdTime += elapsed;
 			var checkNewHold:Int = Math.floor((holdTime - 0.5) * 10);
-
+			
 			if (holdTime > 0.5 && checkNewHold - checkLastHold > 0)
 				changeSelection((checkNewHold - checkLastHold) * (overlapLeft ? -1 : 1));
 		}
 		else
 			holdTime = 0;
+			
+		if (PointerUtil.overlaps(grpOptions.members[curSelected]) && !(overlapLeft || overlapRight) && !isSwiping && PointerUtil.justReleased)
+			checkSelection();
 
 		#if android
 		if (FlxG.android.justReleased.BACK)
@@ -264,10 +293,11 @@ class CreditsState extends MusicBeatState
 			return;
 		}
 
-		if (change != 0) FlxG.sound.play(Paths.sound('scrollMenu'), 0.4);
+		if (change != 0) FlxG.sound.play(Paths.sound('scrollMenu'));
 
 		var descTxt:String = description != "" ? description : (curCredits[2] != null ? curCredits[2] : "");
 		this.description = descTxt;
+
 		var newColor:FlxColor = CoolUtil.colorFromString(curCredits[4] ?? "FFFFFF");
 		color = newColor;
 
@@ -286,6 +316,39 @@ class CreditsState extends MusicBeatState
 			}
 		}
 	}
+
+	#if mobile
+	function updateScroll()
+	{
+		var lastSelected:Int = curSelected;
+		curSelected = Math.round(curSelectedFloat);
+
+		if (curSelected != lastSelected)
+		{
+			FlxG.sound.play(Paths.sound('scrollMenu'));
+
+			var descTxt:String = curCredits != null && curCredits[2] != null ? curCredits[2] : "";
+			description = descTxt;
+
+			var newColor:FlxColor = CoolUtil.colorFromString(curCredits != null ? (curCredits[4] ?? "FFFFFF") : "FFFFFF");
+			color = newColor;
+		}
+
+		for (i => item in grpOptions.members)
+		{
+			if (Std.isOfType(item, MenuItem))
+				cast(item, MenuItem).targetX = i - curSelectedFloat;
+			else if (Std.isOfType(item, CreditsList))
+			{
+				var list:CreditsList = cast(item, CreditsList);
+				list.targetX = i - curSelectedFloat;
+
+				list.allowSelection = i == curSelected;
+				list.changePerson();
+			}
+		}
+	}
+	#end
 
 	function checkSelection()
 	{

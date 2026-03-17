@@ -24,7 +24,8 @@ class StoryMenuState extends MusicBeatState
 
 	var txtWeekTitle:FlxText;
 
-	private static var curWeek:Int = 0;
+	static var curWeek:Int = 0;
+	var curWeekFloat:Float = 0;
 
 	var txtTracklist:FlxText;
 
@@ -180,6 +181,8 @@ class StoryMenuState extends MusicBeatState
 		super.closeSubState();
 	}
 
+	var isSwiping:Bool = false;
+	var moveLength:Float = 0;
 	override function update(elapsed:Float)
 	{
 		lerpScore = Math.floor(FlxMath.lerp(intendedScore, lerpScore, Math.exp(-elapsed * 30)));
@@ -190,29 +193,60 @@ class StoryMenuState extends MusicBeatState
 		#if mobile
 		var overlapLeft:Bool = false;
 		var overlapRight:Bool = false;
-		for (touch in FlxG.touches.list)
+		if (PointerUtil.overlaps(leftArrow))
 		{
-			if (touch.overlaps(leftArrow))
-			{
-				overlapLeft = true;
-				leftArrow.color = touch.pressed ? FlxColor.GRAY : FlxColor.WHITE;
+			overlapLeft = true;
+			leftArrow.color = PointerUtil.pressed ? FlxColor.GRAY : FlxColor.WHITE;
 
-				if (touch.justPressed)
-					changeWeek(-1);
-			}
-
-			if (touch.overlaps(rightArrow))
-			{
-				overlapRight = true;
-				rightArrow.color = touch.pressed ? FlxColor.GRAY : FlxColor.WHITE;
-
-				if (touch.justPressed)
-					changeWeek(1);
-			}
-
-			if (touch.overlaps(grpWeekOptions.members[curWeek]) && !(overlapLeft || overlapRight) && touch.justReleased)
-				selectWeek();
+			if (PointerUtil.justPressed)
+				changeWeek(-1);
 		}
+
+		if (PointerUtil.overlaps(rightArrow))
+		{
+			overlapRight = true;
+			rightArrow.color = PointerUtil.pressed ? FlxColor.GRAY : FlxColor.WHITE;
+
+			if (PointerUtil.justPressed)
+				changeWeek(1);
+		}
+
+		if (PointerUtil.justPressed && !(overlapLeft || overlapRight))
+			isSwiping = true;
+
+		if (PointerUtil.pressed && isSwiping)
+		{
+			final fpsMult:Float = FlxG.updateFramerate / 60;
+			final delta:Float = PointerUtil.pointer.deltaViewX * fpsMult;
+
+			if (Math.abs(delta) >= 2)
+			{
+				var dpiScale:Float = FlxG.stage.window.display.dpi / 160;
+				dpiScale = FlxMath.bound(dpiScale, 0.5, #if android 1 #else 2 #end);
+
+				var _moveLength:Float = delta / FlxG.updateFramerate / dpiScale;
+				moveLength += Math.abs(_moveLength);
+				curWeekFloat -= _moveLength;
+
+				var bullShit:Int = 0;
+				for (item in grpWeekOptions.members)
+				{
+					item.targetX = bullShit - curWeekFloat;
+					bullShit++;
+				}
+			}
+		}
+		else if (moveLength > 0)
+		{
+			moveLength = 0;
+			changeWeek();
+		}
+
+		if (PointerUtil.justReleased)
+			isSwiping = false;
+
+		if (PointerUtil.overlaps(grpWeekOptions.members[curWeek]) && !(overlapLeft || overlapRight) && !isSwiping && PointerUtil.justReleased)
+			selectWeek();
 
 		#if android
 		if (FlxG.android.justReleased.BACK)

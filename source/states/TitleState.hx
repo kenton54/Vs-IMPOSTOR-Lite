@@ -112,11 +112,11 @@ class TitleState extends MusicBeatState
 	var allow:Bool = false;
 	override function update(elapsed:Float)
 	{
-		if(!allow) return;
+		if (!allow) return;
 
 		if (FlxG.sound.music != null) Conductor.songPosition = FlxG.sound.music.time;
 
-		var pressedEnter:Bool = FlxG.keys.justPressed.ENTER #if mobile || (FlxG.touches.getFirst() != null && FlxG.touches.getFirst().justPressed) #end;
+		var pressedEnter:Bool = FlxG.keys.justPressed.ENTER #if mobile || (PointerUtil.justReleased && !SwipeUtil.justSwipedAny) #end;
 
 		var mult:Float = FlxMath.lerp(0.8, logo.scale.x, Math.exp(-elapsed * 9 * 1));
 		logo.scale.set(mult, mult);
@@ -137,10 +137,7 @@ class TitleState extends MusicBeatState
 				});
 			}
 			else
-			{
 				finishIntro();
-				return; // just making sure
-			}
 		}
 
 		super.update(elapsed);

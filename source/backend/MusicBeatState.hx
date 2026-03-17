@@ -1,5 +1,6 @@
 package backend;
 
+import backend.CustomFadeTransition;
 import flixel.addons.ui.FlxUIState;
 import flixel.addons.transition.FlxTransitionableState;
 import flixel.util.typeLimit.NextState;
