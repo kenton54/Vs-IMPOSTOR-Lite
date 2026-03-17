@@ -81,14 +81,16 @@ class CreditsState extends MusicBeatState
 		descBox.alpha = 0.6;
 		add(descBox);
 
-		descText = new FlxText(50, FlxG.height + offsetThing - 25, 1100, "", 32);
+		descText = new FlxText(0, FlxG.height + offsetThing - 25, 1100, "", 32);
 		descText.setFormat(Paths.font("vcr.ttf"), 32, FlxColor.WHITE, CENTER /*, FlxTextBorderStyle.OUTLINE, FlxColor.BLACK*/);
 		descText.scrollFactor.set();
 		// descText.borderSize = 2.4;
+		descText.screenCenter(X);
 		descBox.sprTracker = descText;
 		add(descText);
 
-		var socialCheck:FlxText = new FlxText(0, FlxG.height - 24, 0, "Press ACCEPT to move to social media!", 12);
+		var socialText:String = #if mobile "Touch the person to open their social media!" #else "Press ACCEPT to open their social media!" #end;
+		var socialCheck:FlxText = new FlxText(0, FlxG.height - 24, 0, socialText, 12);
 		socialCheck.setFormat(Paths.font("vcr.ttf"), 18, FlxColor.WHITE, CENTER, FlxTextBorderStyle.OUTLINE, FlxColor.BLACK);
 		socialCheck.screenCenter(X);
 		add(socialCheck);
@@ -109,8 +111,12 @@ class CreditsState extends MusicBeatState
 
 				var creditPortrait:MenuItem = new MenuItem();
 				creditPortrait.loadGraphic(Paths.image('credits/${teamName}/' + credit[1]));
-				creditPortrait.x = creditPortrait.width * i;
+				creditPortrait.centerInScreen = true;
+				creditPortrait.setGraphicSize(0, FlxG.height);
+				creditPortrait.updateHitbox();
+				creditPortrait.x = creditPortrait.width / 2 + FlxG.width * i;
 				creditPortrait.targetX = i;
+				creditPortrait.screenCenter(Y);
 				creditPortrait.antialiasing = ClientPrefs.data.antialiasing;
 				grpOptions.add(creditPortrait);
 			}
@@ -149,19 +155,59 @@ class CreditsState extends MusicBeatState
 	var holdTime:Float = 0;
 	override function update(elapsed:Float)
 	{
-		if (controls.UI_RIGHT)
-			rightArrow.color = FlxColor.GRAY;
-		else
-			rightArrow.color = FlxColor.WHITE;
-
-		if (controls.UI_LEFT)
-			leftArrow.color = FlxColor.GRAY;
-		else
-			leftArrow.color = FlxColor.WHITE;
-
-		if(!quitting)
+		#if mobile
+		var overlapLeft:Bool = false;
+		var overlapRight:Bool = false;
+		for (touch in FlxG.touches.list)
 		{
-			if(creditsList.length > 1)
+			if (touch.overlaps(leftArrow))
+			{
+				overlapLeft = true;
+				leftArrow.color = touch.pressed ? FlxColor.GRAY : FlxColor.WHITE;
+
+				if (touch.justPressed)
+					changeSelection(-1);
+			}
+
+			if (touch.overlaps(rightArrow))
+			{
+				overlapRight = true;
+				rightArrow.color = touch.pressed ? FlxColor.GRAY : FlxColor.WHITE;
+
+				if (touch.justPressed)
+					changeSelection(1);
+			}
+
+			if (touch.overlaps(grpOptions.members[curSelected]) && !(overlapLeft || overlapRight) && touch.justReleased)
+				checkSelection();
+		}
+
+		if ((overlapLeft || overlapRight) && !(overlapLeft && overlapRight))
+		{
+			var checkLastHold:Int = Math.floor((holdTime - 0.5) * 10);
+			holdTime += elapsed;
+			var checkNewHold:Int = Math.floor((holdTime - 0.5) * 10);
+
+			if (holdTime > 0.5 && checkNewHold - checkLastHold > 0)
+				changeSelection((checkNewHold - checkLastHold) * (overlapLeft ? -1 : 1));
+		}
+		else
+			holdTime = 0;
+
+		#if android
+		if (FlxG.android.justReleased.BACK)
+		{
+			quitting = true;
+			FlxG.switchState(() -> new SelectCreditsState());
+		}
+		#end
+		#else
+		rightArrow.color = controls.UI_RIGHT ? FlxColor.GRAY : FlxColor.WHITE;
+		leftArrow.color = controls.UI_LEFT ? FlxColor.GRAY : FlxColor.WHITE;
+
+		if (!quitting)
+		{
+			if (creditsList.length > 1)
 			{
 				var shiftMult:Int = 1;
 				if(FlxG.keys.pressed.SHIFT) shiftMult = 3;
@@ -180,31 +226,19 @@ class CreditsState extends MusicBeatState
 					holdTime = 0;
 				}
 
-				if(rightP || leftP)
+				if (rightP || leftP)
 				{
 					var checkLastHold:Int = Math.floor((holdTime - 0.5) * 10);
 					holdTime += elapsed;
 					var checkNewHold:Int = Math.floor((holdTime - 0.5) * 10);
 
-					if(holdTime > 0.5 && checkNewHold - checkLastHold > 0)
-					{
+					if (holdTime > 0.5 && checkNewHold - checkLastHold > 0)
 						changeSelection((checkNewHold - checkLastHold) * (leftP ? -shiftMult : shiftMult));
-					}
 				}
 			}
 
 			if (controls.ACCEPT)
-			{
-				if (curCredits[1] == "sparkly")
-				{
-					var sixSeven:FlxSound = FlxG.sound.load(Paths.sound("67"), 1, false, null, true);
-					sixSeven.persist = true;
-					sixSeven.play();
-				}
-
-				if (Std.isOfType(grpOptions.members[curSelected], MenuItem) && curCredits[3] != null && curCredits[3] != "")
-					CoolUtil.browserLoad(curCredits[3]);
-			}
+				checkSelection();
 
 			if (controls.BACK)
 			{
@@ -214,6 +248,7 @@ class CreditsState extends MusicBeatState
 				quitting = true;
 			}
 		}
+		#end
 
 		super.update(elapsed);
 	}
@@ -250,6 +285,19 @@ class CreditsState extends MusicBeatState
 				list.changePerson();
 			}
 		}
+	}
+
+	function checkSelection()
+	{
+		if (curCredits[1] == "sparkly")
+		{
+			var sixSeven:FlxSound = FlxG.sound.load(Paths.sound("67"), 1, false, null, true);
+			sixSeven.persist = true;
+			sixSeven.play();
+		}
+
+		if (Std.isOfType(grpOptions.members[curSelected], MenuItem) && curCredits[3] != null && curCredits[3] != "")
+			CoolUtil.browserLoad(curCredits[3]);
 	}
 
 	#if MODS_ALLOWED

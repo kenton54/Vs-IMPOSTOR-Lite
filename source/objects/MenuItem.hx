@@ -3,6 +3,7 @@ package objects;
 class MenuItem extends FlxSprite
 {
 	public var targetX:Float = 0;
+	public var centerInScreen:Bool = false;
 
 	public function new(x:Float = 0, y:Float = 0)
 	{
@@ -12,7 +13,7 @@ class MenuItem extends FlxSprite
 
 	public var isFlashing(default, set):Bool = false;
 	private var _flashingElapsed:Float = 0;
-	final _flashColor = 0xFF33FFFF;
+	final _flashColor:Int = 0xFF33FFFF;
 	final flashes_ps:Int = 6;
 
 	public function set_isFlashing(value:Bool = true):Bool
@@ -23,11 +24,25 @@ class MenuItem extends FlxSprite
 		return isFlashing;
 	}
 
+	var lerpX:Float = 0;
 	override function update(elapsed:Float)
 	{
 		super.update(elapsed);
 
-		x = FlxMath.lerp(targetX * FlxG.width, x, Math.exp(-elapsed * 10.2));
+		if (centerInScreen)
+		{
+			var center:Float = (FlxG.width - width) / 2;
+			var intendedX:Float = targetX * FlxG.width;
+			lerpX = FlxMath.lerp(intendedX, lerpX, Math.exp(-elapsed * 10.2));
+			x = lerpX + center;
+		}
+		else
+		{
+			var intendedX:Float = targetX * FlxG.width;
+			lerpX = FlxMath.lerp(intendedX, lerpX, Math.exp(-elapsed * 10.2));
+			x = lerpX;
+		}
+
 		if (isFlashing)
 		{
 			_flashingElapsed += elapsed;

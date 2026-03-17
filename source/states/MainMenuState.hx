@@ -67,12 +67,31 @@ class MainMenuState extends MusicBeatState
 		green.y = FlxG.height - green.height + 175;
 		add(green);
 
+		var logo:FlxSprite = new FlxSprite(0, 10).loadGraphic(Paths.image('title/logo'));
+		logo.antialiasing = false;
+		logo.scale.set(0.8, 0.8);
+		logo.updateHitbox();
+		logo.screenCenter(X);
+		add(logo);
+
 		menuItems = new FlxTypedGroup<FlxSprite>();
 		add(menuItems);
 
+		var j:Int = 0;
 		for (i in 0...optionShit.length)
 		{
-			var menuItem:FlxSprite = new FlxSprite(0, 275 + (i * 112.5));
+			var xPos:Float = FlxG.width / 2;
+			var yPos:Float = 275 + (i * 120);
+
+			#if mobile
+			xPos = i % 2 == 0 ? (FlxG.width / 3) : FlxG.width - (FlxG.width / 3);
+			yPos = 310 + (j * 130);
+
+			if (optionShit[i] == 'options')
+				xPos = FlxG.width / 2;
+			#end
+
+			var menuItem:FlxSprite = new FlxSprite(xPos, yPos);
 			menuItem.frames = Paths.getSparrowAtlas('mainmenu/menu');
 			menuItem.animation.addByPrefix('idle', optionShit[i], 24);
 			menuItem.animation.addByPrefix('selected', "sel_" + optionShit[i], 24);
@@ -80,17 +99,13 @@ class MainMenuState extends MusicBeatState
 			menuItem.antialiasing = false;
 			menuItem.scale.x = menuItem.scale.y = 0.55;
 			menuItem.updateHitbox();
-			menuItem.screenCenter(X);
+			menuItem.x = xPos - menuItem.width / 2;
 			menuItem.alpha = 0.5;
 			menuItems.add(menuItem);
-		}
 
-		var logo:FlxSprite = new FlxSprite(0, 10).loadGraphic(Paths.image('title/logo'));
-		logo.antialiasing = false;
-		logo.scale.set(0.8, 0.8);
-		logo.updateHitbox();
-		logo.screenCenter(X);
-		add(logo);
+			if (i % 2 == 1)
+				j++;
+		}
 
 		var fnfVer:FlxText = new FlxText(12, FlxG.height - 24, 0, "Vs. Impostor: Lite", 12);
 		fnfVer.scrollFactor.set();
@@ -159,13 +174,15 @@ class MainMenuState extends MusicBeatState
 
 					item.animation.play('selected');
 					item.alpha = 1;
-					item.screenCenter(X);
+
+					item.scale.x = item.scale.y = 0.65;
 				}
 				else
 				{
 					item.animation.play('idle');
 					item.alpha = 0.5;
-					item.screenCenter(X);
+
+					item.scale.x = item.scale.y = 0.55;
 				}
 			}
 
@@ -176,7 +193,10 @@ class MainMenuState extends MusicBeatState
 
 		#if android
 		if (FlxG.android.justReleased.BACK)
+		{
+			selectedSomethin = true;
 			FlxG.switchState(() -> new TitleState());
+		}
 		#end
 	}
 	#else
@@ -312,13 +332,15 @@ class MainMenuState extends MusicBeatState
 			{
 				item.animation.play('selected');
 				item.alpha = 1;
-				item.screenCenter(X);
+
+				item.scale.x = item.scale.y = 0.65;
 			}
 			else
 			{
 				item.animation.play('idle');
 				item.alpha = 0.5;
-				item.screenCenter(X);
+
+				item.scale.x = item.scale.y = 0.55;
 			}
 		}
 	}
@@ -361,7 +383,7 @@ class MainMenuState extends MusicBeatState
 
 		for (i in 0...menuItems.members.length)
 		{
-			if (i == curSelected) continue;
+			if (i == sus) continue;
 
 			FlxTween.tween(menuItems.members[i], {alpha: 0}, 0.4, {
 				ease: FlxEase.quadOut,

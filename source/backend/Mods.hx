@@ -61,7 +61,7 @@ class Mods
 		#end
 		return list;
 	}
-	
+
 	inline public static function mergeAllTextsNamed(path:String, defaultDirectory:String = null, allowDuplicates:Bool = false)
 	{
 		if(defaultDirectory == null) defaultDirectory = Paths.getLitePath();
@@ -169,7 +169,7 @@ class Mods
 		#end
 		return list;
 	}
-	
+
 	private static function updateModList()
 	{
 		#if MODS_ALLOWED
@@ -190,7 +190,7 @@ class Mods
 		} catch(e) {
 			trace(e);
 		}
-		
+
 		// Scan for folders that aren't on modsList.txt yet
 		for (folder in getModDirectories())
 		{

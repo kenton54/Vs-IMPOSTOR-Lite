@@ -21,7 +21,10 @@ class SelectCreditsState extends MusicBeatState
 		#end
 
 		persistentUpdate = persistentDraw = true;
+
+        #if !mobile
         FlxG.mouse.visible = true;
+        #end
 
 		var bg:FlxSprite = new FlxSprite().loadGraphic(Paths.image('storymode/bg'));
 		bg.antialiasing = false;
@@ -54,39 +57,39 @@ class SelectCreditsState extends MusicBeatState
     var selected:Bool = false;
     override function update(elapsed:Float)
     {
-        if(!selected)
+        if (!selected)
         {
             if(controls.UI_LEFT_P)
 				changeItem(-1);
 			if(controls.UI_RIGHT_P)
 				changeItem(1);
 
-            if(FlxG.mouse.justMoved) {
+            #if !mobile
+            if (FlxG.mouse.justMoved)
                 FlxG.mouse.visible = true;
-            }
+            #end
 
             logosGrp.forEach(function(spr:FlxSprite) {
-                if(FlxG.mouse.overlaps(spr) && FlxG.mouse.visible)
+                #if mobile
+                for (touch in FlxG.touches.list)
+                {
+                    if (touch.overlaps(spr))
+                    {
+						prevCurCredit = curCredit;
+						curCredit = spr.ID;
+						if (prevCurCredit != curCredit) FlxG.sound.play(Paths.sound('scrollMenu'));
+						if (touch.justReleased) enterCredits();
+                    }
+                }
+                #else
+                if (FlxG.mouse.overlaps(spr) && FlxG.mouse.visible)
                 {
                     prevCurCredit = curCredit;
                     curCredit = spr.ID;
-                    if(prevCurCredit != curCredit) FlxG.sound.play(Paths.sound('scrollMenu'));
-                    if(FlxG.mouse.justPressed) enterCredits();
+                    if (prevCurCredit != curCredit) FlxG.sound.play(Paths.sound('scrollMenu'));
+                    if (FlxG.mouse.justPressed) enterCredits();
                 }
-            });
-
-            logosGrp.forEach(function(spr:FlxSprite) 
-            {
-                if(spr.ID == curCredit) {
-                    spr.scale.x = FlxMath.lerp(spr.scale.x, teamsList[curCredit][2][0] + 0.1, FlxMath.bound(elapsed * 12, 0, 1));
-                    spr.scale.y = FlxMath.lerp(spr.scale.y, teamsList[curCredit][2][1] + 0.1, FlxMath.bound(elapsed * 12, 0, 1));
-                    spr.alpha = FlxMath.lerp(spr.alpha, 1, FlxMath.bound(elapsed * 10, 0, 1));
-                }
-                else {
-                    spr.scale.x = FlxMath.lerp(spr.scale.x, teamsList[spr.ID][2][0], FlxMath.bound(elapsed * 12, 0, 1));
-                    spr.scale.y = FlxMath.lerp(spr.scale.y, teamsList[spr.ID][2][1], FlxMath.bound(elapsed * 12, 0, 1));
-                    spr.alpha = FlxMath.lerp(spr.alpha, 0.8, FlxMath.bound(elapsed * 10, 0, 1));
-                }
+                #end
             });
 
             if (controls.ACCEPT)
@@ -101,6 +104,27 @@ class SelectCreditsState extends MusicBeatState
             }
         }
 
+		#if android
+		if (FlxG.android.justReleased.BACK)
+			FlxG.switchState(() -> new MainMenuState());
+		#end
+
+		logosGrp.forEach(function(spr:FlxSprite)
+		{
+			if (spr.ID == curCredit)
+			{
+				spr.scale.x = FlxMath.lerp(spr.scale.x, teamsList[curCredit][2][0] + 0.1, FlxMath.bound(elapsed * 12, 0, 1));
+				spr.scale.y = FlxMath.lerp(spr.scale.y, teamsList[curCredit][2][1] + 0.1, FlxMath.bound(elapsed * 12, 0, 1));
+				spr.alpha = FlxMath.lerp(spr.alpha, 1, FlxMath.bound(elapsed * 10, 0, 1));
+			}
+			else
+			{
+				spr.scale.x = FlxMath.lerp(spr.scale.x, teamsList[spr.ID][2][0], FlxMath.bound(elapsed * 12, 0, 1));
+				spr.scale.y = FlxMath.lerp(spr.scale.y, teamsList[spr.ID][2][1], FlxMath.bound(elapsed * 12, 0, 1));
+				spr.alpha = FlxMath.lerp(spr.alpha, 0.8, FlxMath.bound(elapsed * 10, 0, 1));
+			}
+		});
+
         super.update(elapsed);
     }    
 
@@ -108,7 +132,11 @@ class SelectCreditsState extends MusicBeatState
     {
         FlxG.sound.play(Paths.sound('confirmMenu'));
         selected = true;
+
+        #if desktop
         FlxG.mouse.visible = false;
+        #end
+
         FlxFlicker.flicker(logosGrp.members[curCredit], 1, 0.06, false, false, _ -> FlxG.switchState(() -> new CreditsState(teamsList[curCredit][0], teamsList[curCredit][3])));
     }
 

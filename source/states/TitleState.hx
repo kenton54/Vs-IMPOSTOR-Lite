@@ -97,12 +97,7 @@ class TitleState extends MusicBeatState
 
 	function getIntroTextShit():Array<Array<String>>
 	{
-		#if MODS_ALLOWED
-		var firstArray:Array<String> = Mods.mergeAllTextsNamed('data/introTexts.txt', Paths.getLitePath());
-		#else
-		var fullText:String = Assets.getText(Paths.txt('introTexts'));
-		var firstArray:Array<String> = fullText.split('\n');
-		#end
+		var firstArray:Array<String> = Assets.getText(Paths.txt('introTexts')).split('\n');
 		var swagGoodArray:Array<Array<String>> = [];
 
 		for (i in firstArray)
@@ -126,11 +121,12 @@ class TitleState extends MusicBeatState
 		var mult:Float = FlxMath.lerp(0.8, logo.scale.x, Math.exp(-elapsed * 9 * 1));
 		logo.scale.set(mult, mult);
 
-		if (!selected)
+		if (!selected && pressedEnter)
 		{
-			if (pressedEnter && skippedIntro)
+			if (skippedIntro)
 			{
 				selected = true;
+				FlxG.camera.stopFlash();
 				FlxG.camera.flash(FlxColor.WHITE, 1);
 				FlxG.sound.play(Paths.sound('confirmMenu'), 0.7);
 				for(item in titleStuff.members) 
@@ -140,7 +136,7 @@ class TitleState extends MusicBeatState
 					FlxG.switchState(() -> new MainMenuState());
 				});
 			}
-			else if (pressedEnter && !skippedIntro)
+			else
 			{
 				finishIntro();
 				return; // just making sure
@@ -214,22 +210,24 @@ class TitleState extends MusicBeatState
 		}
 	}
 
+	var textPos:Float = #if mobile 180 #else 260 #end;
+
 	function makeIntroArrText(hand:Array<String>, ?offsetY:Float = 0)
 	{
 		for (i in 0...hand.length)
 		{
 			var text:Alphabet = new Alphabet(0, 0, hand[i], false);
 			text.screenCenter(X);
-			text.y = (260 + (i * 70)) + offsetY;
+			text.y = textPos + (i * 70) + offsetY;
 			textsGrp.add(text);
 		}
-	}	
+	}
 
 	function makeIntroText(hand:String = '', ?offsetY:Float = 0)
 	{
 		var text:Alphabet = new Alphabet(0, 0, hand, false);
 		text.screenCenter(X);
-		text.y = 260 + (textsGrp.length * 70) + offsetY;
+		text.y = textPos + (textsGrp.length * 70) + offsetY;
 		textsGrp.add(text);
 
 		return text;

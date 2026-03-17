@@ -1,5 +1,6 @@
 package;
 
+import backend.CrashHandler;
 import debug.FPSCounter;
 
 import flixel.FlxGame;
@@ -12,12 +13,6 @@ import openfl.events.Event;
 
 import states.InitState;
 
-//crash handler stuff
-#if CRASH_HANDLER
-import openfl.events.UncaughtErrorEvent;
-import haxe.CallStack;
-#end
-
 #if android
 import extension.androidtools.content.Context;
 #end
@@ -29,6 +24,8 @@ import hxgamemode.GamemodeClient;
 class Main extends Sprite
 {
 	var gameData = {
+		width: #if mobile 0 #else 1200 #end, // WINDOW width
+		height: #if mobile 0 #else 900 #end, // WINDOW height
 		initialState: InitState, // initial game state
 		framerate: 60, // default framerate
 		skipSplash: true, // if the default flixel splash screen should be skipped
@@ -48,7 +45,7 @@ class Main extends Sprite
 		#end
 
 		#if CRASH_HANDLER
-		Lib.current.loaderInfo.uncaughtErrorEvents.addEventListener(UncaughtErrorEvent.UNCAUGHT_ERROR, onCrash);
+		CrashHandler.init();
 		#end
 
 		Lib.current.addChild(new Main());
@@ -114,7 +111,7 @@ class Main extends Sprite
 		Achievements.load();
 		#end
 
-		addChild(new FlxGame(0, 0, gameData.initialState, gameData.framerate, gameData.framerate, gameData.skipSplash, gameData.startFullscreen));
+		addChild(new FlxGame(gameData.width, gameData.height, gameData.initialState, gameData.framerate, gameData.framerate, gameData.skipSplash, gameData.startFullscreen));
 
 		#if !mobile
 		fpsCounter = new FPSCounter(0, 0, 0xFFFFFF);
@@ -160,48 +157,4 @@ class Main extends Sprite
 	{
 		return fpsCounter.memoryMegas;
 	}
-
-	// Code was entirely made by sqirra-rng for their fnf engine named "Izzy Engine", big props to them!!!
-	// very cool person for real they don't get enough credit for their work
-	#if CRASH_HANDLER
-	static function onCrash(e:UncaughtErrorEvent):Void
-	{
-		var errMsg:String = "";
-		var path:String;
-		var callStack:Array<StackItem> = CallStack.exceptionStack(true);
-		var dateNow:String = Date.now().toString();
-
-		dateNow = dateNow.replace(" ", "_");
-		dateNow = dateNow.replace(":", "'");
-
-		path = "./crash/" + "PsychEngine_" + dateNow + ".txt";
-
-		for (stackItem in callStack)
-		{
-			switch (stackItem)
-			{
-				case FilePos(s, file, line, column):
-					errMsg += file + " (line " + line + ")\n";
-				default:
-					Sys.println(stackItem);
-			}
-		}
-
-		errMsg += "\nUncaught Error: " + e.error + "\nPlease report this error to the GitHub page: https://github.com/ShadowMario/FNF-PsychEngine\n\n> Crash Handler written by: sqirra-rng";
-
-		if (!FileSystem.exists("./crash/"))
-			FileSystem.createDirectory("./crash/");
-
-		File.saveContent(path, errMsg + "\n");
-
-		Sys.println(errMsg);
-		Sys.println("Crash dump saved in " + Path.normalize(path));
-
-		CoolUtil.popupWarning(errMsg, "Error!");
-		#if DISCORD_ALLOWED
-		DiscordClient.shutdown();
-		#end
-		Sys.exit(1);
-	}
-	#end
 }

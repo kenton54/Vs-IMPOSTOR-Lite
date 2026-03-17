@@ -31,13 +31,13 @@ class BaseOptionsMenu extends MusicBeatSubstate
 	{
 		super();
 
-		if(title == null) title = 'Options';
-		if(rpcTitle == null) rpcTitle = 'Looking at the options menu';
-		
+		if (title == null) title = 'Options';
+		if (rpcTitle == null) rpcTitle = 'Looking at the options menu';
+
 		#if DISCORD_ALLOWED
 		DiscordClient.changePresence(rpcTitle, null);
 		#end
-		
+
 		bg = new FlxSprite().loadGraphic(Paths.image('sketch2'));
 		bg.color = 0xFFea71fd;
 		bg.screenCenter();
@@ -124,7 +124,7 @@ class BaseOptionsMenu extends MusicBeatSubstate
 	{
 		super.update(elapsed);
 
-		if(bindingKey)
+		if (bindingKey)
 		{
 			bindingKeyUpdate(elapsed);
 			return;
@@ -455,7 +455,8 @@ class BaseOptionsMenu extends MusicBeatSubstate
 		ClientPrefs.toggleVolumeKeys(true);
 	}
 
-	function updateTextFrom(option:Option) {
+	function updateTextFrom(option:Option)
+	{
 		if(option.type == 'keybind')
 		{
 			updateBind(option);
@@ -468,14 +469,10 @@ class BaseOptionsMenu extends MusicBeatSubstate
 		var def:Dynamic = option.defaultValue;
 		option.text = text.replace('%v', val).replace('%d', def);
 	}
-	
+
 	function changeSelection(change:Int = 0)
 	{
-		curSelected += change;
-		if (curSelected < 0)
-			curSelected = optionsArray.length - 1;
-		else if (curSelected >= optionsArray.length)
-			curSelected = 0;
+		curSelected = FlxMath.wrap(curSelected + change, 0, optionsArray.length - 1);
 
 		descText.text = optionsArray[curSelected].description;
 		descText.screenCenter(Y);

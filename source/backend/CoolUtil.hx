@@ -125,15 +125,6 @@ class CoolUtil
 		#end
 	}
 
-	public static function popupWarning(message:String, title:String)
-	{
-		#if windows
-		backend.native.Windows.showMessageBoxPopUp(message, title, OK, WARNING);
-		#else
-		lime.app.Application.current.window.alert(message, title);
-		#end
-	}
-
 	/**
 		Helper Function to Fix Save Files for Flixel 5
 

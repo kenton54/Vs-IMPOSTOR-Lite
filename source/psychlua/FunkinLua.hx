@@ -1572,7 +1572,7 @@ class FunkinLua
 			var resultStr:String = Lua.tostring(lua, result);
 			if(resultStr != null && result != 0) {
 				trace(resultStr);
-				CoolUtil.popupWarning(resultStr, 'Error on lua script!');
+				lime.app.Application.current.window.alert(resultStr, 'Error on lua script!');
 				lua = null;
 				return;
 			}
