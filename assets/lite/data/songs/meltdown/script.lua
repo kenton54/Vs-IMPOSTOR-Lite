@@ -1,5 +1,5 @@
 function onCreatePost()
-	makeAnimatedLuaSprite("cheese", "bg/polus/Mrcheese", -680, 500)
+	makeAnimatedLuaSprite("cheese", "bg/polus/Mrcheese", -60, 500)
 	addAnimationByPrefix("cheese", "idle", "MrcheeseLook", 8, true)
 	addAnimationByIndices("cheese", "walk", "MrcheeseWalk", { 1, 2, 3, 2 }, 8, true)
 	playAnim("cheese", "idle")
@@ -7,7 +7,7 @@ function onCreatePost()
 	setProperty("cheese.visible", false)
 	addLuaSprite("cheese")
 
-	makeAnimatedLuaSprite("rose", "bg/polus/Rose", -940, 550)
+	makeAnimatedLuaSprite("rose", "bg/polus/Rose", -370, 550)
 	addAnimationByPrefix("rose", "idle", "RoseLook", 8, true)
 	addAnimationByIndices("rose", "walk", "RoseRun", { 1, 2, 3, 2 }, 8, true)
 	playAnim("rose", "idle")
@@ -30,7 +30,7 @@ function onCreatePost()
 	setProperty("cyanGhost.alpha", 0.7)
 	addLuaSprite("cyanGhost")
 
-	makeAnimatedLuaSprite("green", "bg/polus/Greenbg", 800, 420)
+	makeAnimatedLuaSprite("green", "bg/polus/Greenbg", 580, 420)
 	addAnimationByPrefix("green", "idle", "GreenLook", 8, true)
 	addAnimationByPrefix("green", "knife", "GreenKnife", 8, true)
 	addAnimationByIndices("green", "walk", "GreenRun", { 1, 2, 3, 2 }, 8, true)
@@ -39,7 +39,7 @@ function onCreatePost()
 	setProperty("green.visible", false)
 	addLuaSprite("green")
 
-	makeAnimatedLuaSprite("coral", "bg/polus/Coral", 1080, 480)
+	makeAnimatedLuaSprite("coral", "bg/polus/Coral", 880, 480)
 	addAnimationByPrefix("coral", "idle", "CoralLook", 8, true)
 	addAnimationByIndices("coral", "walk", "CoralRun", { 1, 2, 3, 2 }, 8, true)
 	playAnim("coral", "idle")
@@ -47,7 +47,7 @@ function onCreatePost()
 	setProperty("coral.visible", false)
 	addLuaSprite("coral")
 
-	makeAnimatedLuaSprite("pink", "bg/polus/Pink", 1140, 720)
+	makeAnimatedLuaSprite("pink", "bg/polus/Pink", 940, 720)
 	addAnimationByPrefix("pink", "idle", "PinkSleep", 8, true)
 	addAnimationByPrefix("pink", "crawl", "PinkCrawl", 8, true)
 	playAnim("pink", "idle")
@@ -55,7 +55,7 @@ function onCreatePost()
 	setProperty("pink.visible", false)
 	addLuaSprite("pink")
 
-	makeAnimatedLuaSprite("poop", "bg/polus/Poopyfarts", -240, 380)
+	makeAnimatedLuaSprite("poop", "bg/polus/Poopyfarts", -1800, 380)
 	addAnimationByIndices("poop", "megaphone", "Poopymegaphone", { 2, 1, 2 }, 8, false)
 	addAnimationByIndices("poop", "walk", "Poopyrun", { 1, 2, 3, 2 }, 10, true)
 	playAnim("poop", "walk")
@@ -63,7 +63,7 @@ function onCreatePost()
 	setProperty("poop.visible", false)
 	addLuaSprite("poop", true)
 
-	makeAnimatedLuaSprite("brown", "bg/polus/Brown", -1740, 480)
+	makeAnimatedLuaSprite("brown", "bg/polus/Brown", -1900, 488)
 	addAnimationByPrefix("brown", "idle", "brown", 8, true)
 	playAnim("brown", "idle")
 	scaleObject("brown", 3.1, 3.1)
@@ -72,7 +72,7 @@ function onCreatePost()
 	setProperty("brown.alpha", 0.7)
 	addLuaSprite("brown", true)
 
-	makeAnimatedLuaSprite("detective", "bg/polus/Detective", 1000, 370)
+	makeAnimatedLuaSprite("detective", "bg/polus/Detective", 1080, 370)
 	addAnimationByPrefix("detective", "idle", "detective", 8, true)
 	playAnim("detective", "idle")
 	scaleObject("detective", 3.1, 3.1)
@@ -81,7 +81,7 @@ function onCreatePost()
 	setProperty("detective.alpha", 0.7)
 	addLuaSprite("detective", true)
 
-	makeAnimatedLuaSprite("detectiveAmused", "bg/polus/Detectiveamused", 840, 460)
+	makeAnimatedLuaSprite("detectiveAmused", "bg/polus/Detectiveamused", 830, 460)
 	addAnimationByPrefix("detectiveAmused", "idle", "Detectiveamused", 8, true)
 	playAnim("detectiveAmused", "idle")
 	scaleObject("detectiveAmused", 3.1, 3.1)
@@ -286,8 +286,8 @@ local events = {
 			setProperty("comicBG.alpha", 0.35)
 
 			local position = getProperty("comicBF.x")
-			setProperty("comicBF.x", position + getProperty("comicBF.width"))
-			doTweenX("bfComicAppear", "comicBF", position, (stepCrochet / 1000) * 4, "expoOut")
+			setProperty("comicBF.x", position + 600)
+			doTweenX("bfComicAppear", "comicBF", position - 600, (stepCrochet / 1000) * 4, "expoOut")
 		end,
 		executed = false
 	},
@@ -299,8 +299,8 @@ local events = {
 			setProperty("comicBG.alpha", 0.6)
 
 			local position = getProperty("comicRed.x")
-			setProperty("comicRed.x", position - getProperty("comicRed.width"))
-			doTweenX("redComicAppear", "comicRed", position, (stepCrochet / 1000) * 4, "expoOut")
+			setProperty("comicRed.x", position - 600)
+			doTweenX("redComicAppear", "comicRed", position + 600, (stepCrochet / 1000) * 4, "expoOut")
 		end,
 		executed = false
 	},
@@ -375,7 +375,7 @@ local events = {
 			setProperty("poop.visible", true)
 
 			local position = getProperty("poop.x")
-			setProperty("poop.x", position + 1400)
+			setProperty("poop.x", position + 1600)
 			doTweenX("poopEntrance", "poop", position, (stepCrochet / 1000) * 6)
 		end,
 		executed = false

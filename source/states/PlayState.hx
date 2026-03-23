@@ -1314,11 +1314,8 @@ class PlayState extends MusicBeatState
 	{
 		startingSong = false;
 
-		inst.volume = 1;
-		inst.looped = false;
-		inst.play();
-
-		FlxG.sound.music = inst;
+		@:privateAccess
+		FlxG.sound.playMusic(inst._sound, 1, false);
 
 		#if FLX_PITCH
 		FlxG.sound.music.pitch = playbackRate;
