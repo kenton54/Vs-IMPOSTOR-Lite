@@ -19,6 +19,11 @@ import psychlua.FunkinLua;
 
 import haxe.ValueException;
 
+#if sys
+import sys.io.File;
+import sys.FileSystem;
+#end
+
 typedef HScriptInfos =
 {
 	> haxe.PosInfos,
@@ -103,23 +108,20 @@ class HScript extends Iris
 			#end
 		}
 
-		var scriptThing:String = file;
-		var scriptName:String = null;
-		if (parent == null)
+		var scriptRaw:String = file;
+		var scriptName:Null<String> = null;
+		if (parent == null && file != null)
 		{
 			var filee:String = file.replace('\\', '/');
-			if (filee.contains('/') && !filee.contains('\n'))
-			{
-				scriptThing = Assets.getText(filee);
-				scriptName = filee;
-			}
+			scriptRaw = #if MODS_ALLOWED File.getContent(filee) #else Assets.getText(filee) #end;
+			scriptName = filee;
 		}
 
 		#if LUA_ALLOWED
 		if (scriptName == null && parent != null) scriptName = parent.scriptName;
 		#end
 	
-		super(scriptThing, new IrisConfig(scriptName, !manualRun, false));
+		super(scriptRaw, new IrisConfig(scriptName, false, false));
 
 		var customInterp:PsychInterp = new PsychInterp();
 		customInterp.parentInstance = FlxG.state;
@@ -374,7 +376,7 @@ class HScript extends Iris
 		set('Function_StopLua', LuaUtils.Function_StopLua); //doesnt do much cuz HScript has a lower priority than Lua
 		set('Function_StopHScript', LuaUtils.Function_StopHScript);
 		set('Function_StopAll', LuaUtils.Function_StopAll);
-		
+
 		set('add', FlxG.state.add);
 		set('insert', FlxG.state.insert);
 		set('remove', FlxG.state.remove);
@@ -400,7 +402,7 @@ class HScript extends Iris
 			}
 			return null;
 		});
-		
+
 		funk.addLocalCallback("runHaxeFunction", function(funcToRun:String, ?funcArgs:Array<Dynamic> = null) {
 			if (funk.hscript != null)
 			{
@@ -455,8 +457,7 @@ class HScript extends Iris
 
 	override function call(funcToRun:String, ?args:Array<Dynamic>):IrisCall
 	{
-		if (funcToRun == null || interp == null)
-			return null;
+		if (funcToRun == null || interp == null) return null;
 
 		if (!exists(funcToRun))
 		{
@@ -474,6 +475,7 @@ class HScript extends Iris
 		{
 			var pos:HScriptInfos = cast this.interp.posInfos();
 			pos.functionName = funcToRun;
+
 			#if LUA_ALLOWED
 			if (parentLua != null)
 			{
@@ -482,6 +484,7 @@ class HScript extends Iris
 					pos.functionName = parentLua.lastCalledFunction;
 			}
 			#end
+
 			Iris.error(Printer.errorToString(e, false), pos);
 		}
 		catch (e:ValueException)

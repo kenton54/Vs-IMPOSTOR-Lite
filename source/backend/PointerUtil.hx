@@ -37,6 +37,34 @@ class PointerUtil
 		return object.overlapsPoint(pointer.getWorldPosition(camera), true, camera);
     }
 
+	public static function getWorldPosition(?camera:FlxCamera, ?point:FlxPoint):FlxPoint
+	{
+		if (pointer == null) return null;
+
+		return pointer.getWorldPosition(camera, point);
+	}
+
+	public static function getGamePosition(?point:FlxPoint):FlxPoint
+	{
+		if (pointer == null) return null;
+
+		return pointer.getGamePosition(point);
+	}
+
+	public static function getViewPosition(?camera:FlxCamera, ?point:FlxPoint):FlxPoint
+	{
+		if (pointer == null) return null;
+
+		return pointer.getViewPosition(camera, point);
+	}
+
+	public static function getPosition(?point:FlxPoint):FlxPoint
+	{
+		if (pointer == null) return null;
+
+		return pointer.getPosition(point);
+	}
+
 	static inline function get_justPressed():Bool
 		return pointer != null && pointer.justPressed;
 
@@ -57,7 +85,7 @@ class PointerUtil
         #if mobile
         return false;
         #else
-        return pointer.visible;
+		return FlxG.mouse.visible;
         #end
     }
 
@@ -66,7 +94,7 @@ class PointerUtil
 		#if mobile
 		return false;
 		#else
-		return pointer.visible = value;
+		return FlxG.mouse.visible = value;
 		#end
 	}
 

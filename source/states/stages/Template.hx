@@ -1,5 +1,7 @@
 package states.stages;
 
+import backend.BaseStage;
+
 class Template extends BaseStage
 {
 	// If you're moving your stage from PlayState to a stage file,
@@ -11,7 +13,7 @@ class Template extends BaseStage
 		// Characters are not ready yet on this function, so you can't add things above them yet.
 		// Use createPost() if that's what you want to do.
 	}
-	
+
 	override function createPost()
 	{
 		// Use this function to layer things above characters!
@@ -22,8 +24,7 @@ class Template extends BaseStage
 		// Code here
 	}
 
-	
-	override function countdownTick(count:BaseStage.Countdown, num:Int)
+	override function countdownTick(count:Countdown, num:Int)
 	{
 		switch(count)
 		{

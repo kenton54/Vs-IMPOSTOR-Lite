@@ -7,6 +7,10 @@ import flixel.effects.FlxFlicker;
 import states.editors.MasterEditorMenu;
 import options.OptionsState;
 
+#if mobile
+import objects.BackButton;
+#end
+
 class MainMenuState extends MusicBeatState
 {
 	public static var psychEngineVersion:String = '0.7.3'; // This is also used for Discord RPC
@@ -30,7 +34,8 @@ class MainMenuState extends MusicBeatState
 
 	override function create()
 	{
-		FlxG.camera.scroll.y = 0;
+		PointerUtil.visible = false;
+
 		#if MODS_ALLOWED
 		Mods.pushGlobalMods();
 		#end
@@ -43,7 +48,7 @@ class MainMenuState extends MusicBeatState
 
 		transIn = FlxTransitionableState.defaultTransIn;
 		transOut = FlxTransitionableState.defaultTransOut;
-		persistentUpdate = persistentDraw = true;
+		persistentUpdate = true;
 
 		var red:FlxSprite = new FlxSprite();
 		red.frames = Paths.getSparrowAtlas('mainmenu/redmenu');
@@ -131,7 +136,14 @@ class MainMenuState extends MusicBeatState
 
 		#if !mobile
 		changeItem(0);
+		#else
+		var backButton:BackButton = new BackButton(0, 12);
+		backButton.x = FlxG.width - backButton.width - 90;
+		backButton.onConfirmStart.add(() -> selectedSomethin = true);
+		backButton.onConfirmEnd.add(() -> FlxG.switchState(() -> new TitleState()));
+		add(backButton);
 		#end
+
 		super.create();
 	}
 

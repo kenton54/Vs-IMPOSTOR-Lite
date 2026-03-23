@@ -31,6 +31,9 @@ import psychlua.HScript;
 
 import psychlua.ModchartSprite;
 
+import sys.io.File;
+import sys.FileSystem;
+
 class FunkinLua
 {
 	public var lua:State = null;
@@ -366,7 +369,7 @@ class FunkinLua
 			PlayState.SONG = Song.loadFromJson(poop, name);
 			PlayState.storyDifficulty = difficultyNum;
 			FlxG.state.persistentUpdate = false;
-			LoadingState.loadAndSwitchState(() -> new PlayState());
+			LoadingState.loadState(() -> new PlayState(), true);
 
 			FlxG.sound.music.pause();
 			FlxG.sound.music.volume = 0;
@@ -621,7 +624,7 @@ class FunkinLua
 				case 'right':
 					return FlxG.mouse.justPressedRight;
 			}
-			return FlxG.mouse.justPressed;
+			return PointerUtil.justPressed;
 		});
 		Lua_helper.add_callback(lua, "mousePressed", function(button:String) {
 			switch (button.toLowerCase().trim())
@@ -631,7 +634,7 @@ class FunkinLua
 				case 'right':
 					return FlxG.mouse.pressedRight;
 			}
-			return FlxG.mouse.pressed;
+			return PointerUtil.pressed;
 		});
 		Lua_helper.add_callback(lua, "mouseReleased", function(button:String) {
 			switch (button.toLowerCase().trim())
@@ -641,7 +644,7 @@ class FunkinLua
 				case 'right':
 					return FlxG.mouse.justReleasedRight;
 			}
-			return FlxG.mouse.justReleased;
+			return PointerUtil.justReleased;
 		});
 
 		Lua_helper.add_callback(lua, "cancelTween", function(tag:String) {
@@ -850,11 +853,11 @@ class FunkinLua
 		});
 		Lua_helper.add_callback(lua, "getMouseX", function(camera:String) {
 			var cam:FlxCamera = LuaUtils.cameraFromString(camera);
-			return FlxG.mouse.getScreenPosition(cam).x;
+			return PointerUtil.getViewPosition(cam)?.x ?? 0;
 		});
 		Lua_helper.add_callback(lua, "getMouseY", function(camera:String) {
 			var cam:FlxCamera = LuaUtils.cameraFromString(camera);
-			return FlxG.mouse.getScreenPosition(cam).y;
+			return PointerUtil.getViewPosition(cam)?.y ?? 0;
 		});
 
 		Lua_helper.add_callback(lua, "getMidpointX", function(variable:String) {
@@ -1561,23 +1564,28 @@ class FunkinLua
 				Lua_helper.add_callback(lua, name, func);
 		}
 
-		try{
-			var isString:Bool = !FileSystem.exists(scriptName);
-			var result:Dynamic = null;
-			if(!isString)
-				result = LuaL.dofile(lua, scriptName);
+		try
+		{
+			var result:Int = LuaL.dostring(lua, #if MODS_ALLOWED File.getContent(scriptName) #else Assets.getText(scriptName) #end);
+			var resultStr:String = Lua.tostring(lua, result);
+			/*
+			var isString:Bool = #if MODS_ALLOWED !FileSystem.exists(scriptName) #else !Assets.exists(scriptName) #end;
+			var result:Null<Int> = null;
+			if (!isString)
 			else
 				result = LuaL.dostring(lua, scriptName);
 
 			var resultStr:String = Lua.tostring(lua, result);
-			if(resultStr != null && result != 0) {
+			*/
+			if (resultStr != null && result != 0) {
 				trace(resultStr);
 				lime.app.Application.current.window.alert(resultStr, 'Error on lua script!');
 				lua = null;
 				return;
 			}
-			if(isString) scriptName = 'unknown';
-		} catch(e:Dynamic) {
+		}
+		catch(e:Dynamic)
+		{
 			trace(e);
 			return;
 		}
@@ -1589,8 +1597,9 @@ class FunkinLua
 	//main
 	public var lastCalledFunction:String = '';
 	public static var lastCalledScript:FunkinLua = null;
-	public function call(func:String, args:Array<Dynamic>):Dynamic {
-		if(closed) return LuaUtils.Function_Continue;
+	public function call(func:String, args:Array<Dynamic>):Dynamic
+	{
+		if (closed) return LuaUtils.Function_Continue;
 
 		lastCalledFunction = func;
 		lastCalledScript = this;
@@ -1623,7 +1632,7 @@ class FunkinLua
 			if (result == null) result = LuaUtils.Function_Continue;
 
 			Lua.pop(lua, 1);
-			if(closed) stop();
+			if (closed) stop();
 			return result;
 		}
 		catch (e:Dynamic) {
@@ -1639,16 +1648,17 @@ class FunkinLua
 		Lua.setglobal(lua, variable);
 	}
 
-	public function stop() {
+	public function stop()
+	{
 		closed = true;
 
-		if(lua == null) {
-			return;
-		}
+		if (lua == null) return;
+
 		Lua.close(lua);
 		lua = null;
+
 		#if HSCRIPT_ALLOWED
-		if(hscript != null)
+		if (hscript != null)
 		{
 			hscript.destroy();
 			hscript = null;

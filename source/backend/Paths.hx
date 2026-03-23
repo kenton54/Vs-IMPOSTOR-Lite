@@ -5,11 +5,15 @@ import flixel.graphics.FlxGraphic;
 
 import openfl.display.BitmapData;
 import openfl.display3D.textures.RectangleTexture;
+import openfl.media.Sound;
 import openfl.utils.AssetType;
 import openfl.utils.Assets;
 import openfl.system.System;
 
-import flash.media.Sound;
+#if sys
+import sys.io.File;
+import sys.FileSystem;
+#end
 
 #if MODS_ALLOWED
 import backend.Mods;
@@ -100,7 +104,7 @@ class Paths
 				customFile = '$library/$file';
 
 			var modded:String = modFolders(customFile);
-			if(FileSystem.exists(modded)) return modded;
+			if (FileSystem.exists(modded)) return modded;
 		}
 		#end
 
@@ -199,6 +203,18 @@ class Paths
 		return inst;
 	}
 
+	public static inline function voicesPath(song:String):String
+	{
+		var songKey:String = '${formatToSongPath(song)}/Voices';
+		return getPath('data/songs/$songKey.ogg');
+	}
+
+	public static inline function instPath(song:String):String
+	{
+		var songKey:String = '${formatToSongPath(song)}/Inst';
+		return getPath('data/songs/$songKey.ogg');
+	}
+
 	public static var currentTrackedAssets:Map<String, FlxGraphic> = [];
 	static public function image(key:String, ?library:String = null, ?allowGPU:Bool = #if web false #else true #end):FlxGraphic
 	{
@@ -273,11 +289,9 @@ class Paths
 
 	static public function getTextFromFile(key:String, ?ignoreMods:Bool = false):String
 	{
-		#if sys
 		#if MODS_ALLOWED
 		if (!ignoreMods && FileSystem.exists(modFolders(key)))
 			return File.getContent(modFolders(key));
-		#end
 
 		if (FileSystem.exists(getLitePath(key)))
 			return File.getContent(getLitePath(key));
@@ -470,9 +484,19 @@ class Paths
 		return currentTrackedSounds.get(gottenPath);
 	}
 
+	public static function readDirectory(path:String):Array<String>
+	{
+		#if MODS_ALLOWED
+		return FileSystem.readDirectory(path);
+		#else
+		var files:Array<String> = Assets.list().filter(file -> file.startsWith(path));
+		return files.map(file -> file.replace(path, '').replace('/', ''));
+		#end
+	}
+
 	#if MODS_ALLOWED
 	inline static public function mods(key:String = '') {
-		return #if mobile Sys.getCwd() + #end 'mods/' + key;
+		return 'mods/' + key;
 	}
 
 	inline static public function modsFont(key:String) {
@@ -534,7 +558,7 @@ class Paths
 				return fileToCheck;
 		}
 
-		return #if mobile Sys.getCwd() + #end 'mods/' + key;
+		return 'mods/' + key;
 	}
 	#end
 }

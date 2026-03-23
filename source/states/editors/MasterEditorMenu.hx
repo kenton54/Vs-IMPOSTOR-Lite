@@ -104,18 +104,18 @@ class MasterEditorMenu extends MusicBeatState
 			switch (curSelected)
 			{
 				case 0:
-					LoadingState.loadAndSwitchState(() -> new ChartingState(), false);
+					LoadingState.loadState(() -> new ChartingState(), true);
 				case 1:
-					LoadingState.loadAndSwitchState(() -> new CharacterEditorState(Character.DEFAULT_CHARACTER, false));
+					LoadingState.loadState(() -> new CharacterEditorState(Character.DEFAULT_CHARACTER, true));
 				case 2:
-					LoadingState.loadAndSwitchState(() -> new DialogueEditorState(), false);
+					LoadingState.loadState(() -> new DialogueEditorState(), true);
 				case 3:
-					FlxG.switchState(() -> new NoteSplashDebugState());
+					LoadingState.loadState(() -> new NoteSplashDebugState(), true);
 			}
 			FlxG.sound.music.volume = 0;
 			FreeplayState.destroyFreeplayVocals();
 		}
-		
+
 		var bullShit:Int = 0;
 		for (item in grpTexts.members)
 		{
@@ -131,6 +131,7 @@ class MasterEditorMenu extends MusicBeatState
 				// item.setGraphicSize(Std.int(item.width));
 			}
 		}
+
 		super.update(elapsed);
 	}
 
@@ -159,7 +160,7 @@ class MasterEditorMenu extends MusicBeatState
 			curDirectory = 0;
 	
 		WeekData.setDirectoryFromWeek();
-		if(directories[curDirectory] == null || directories[curDirectory].length < 1)
+		if (directories[curDirectory] == null || directories[curDirectory].length < 1)
 			directoryTxt.text = '< No Mod Directory Loaded >';
 		else
 		{

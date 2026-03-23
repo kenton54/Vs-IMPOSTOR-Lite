@@ -13,6 +13,11 @@ import openfl.events.Event;
 
 import states.InitState;
 
+#if HSCRIPT_ALLOWED
+import crowplexus.iris.Iris;
+import psychlua.HScript.HScriptInfos;
+#end
+
 #if android
 import extension.androidtools.content.Context;
 #end
@@ -100,6 +105,78 @@ class Main extends Sprite
 		// we're a pixelated mod
 		FlxSprite.defaultAntialiasing = false;
 
+		#if HSCRIPT_ALLOWED
+		Iris.warn = function(x, ?pos:haxe.PosInfos)
+		{
+			Iris.logLevel(WARN, x, pos);
+			var newPos:HScriptInfos = cast pos;
+			if (newPos.showLine == null) newPos.showLine = true;
+			var msgInfo:String = (newPos.functionName != null ? '(${newPos.functionName}) - ' : '') + '${newPos.fileName}:';
+
+			#if LUA_ALLOWED
+			if (newPos.isLua == true)
+			{
+				msgInfo += 'HScript:';
+				newPos.showLine = false;
+			}
+			#end
+
+			if (newPos.showLine == true)
+			{
+				msgInfo += '${newPos.lineNumber}:';
+			}
+			msgInfo += ' $x';
+			if (PlayState.instance != null)
+				PlayState.instance.addTextToDebug('WARNING: $msgInfo', FlxColor.YELLOW);
+		}
+		Iris.error = function(x, ?pos:haxe.PosInfos)
+		{
+			Iris.logLevel(ERROR, x, pos);
+			var newPos:HScriptInfos = cast pos;
+			if (newPos.showLine == null) newPos.showLine = true;
+			var msgInfo:String = (newPos.functionName != null ? '(${newPos.functionName}) - ' : '') + '${newPos.fileName}:';
+
+			#if LUA_ALLOWED
+			if (newPos.isLua == true)
+			{
+				msgInfo += 'HScript:';
+				newPos.showLine = false;
+			}
+			#end
+
+			if (newPos.showLine == true)
+			{
+				msgInfo += '${newPos.lineNumber}:';
+			}
+			msgInfo += ' $x';
+			if (PlayState.instance != null)
+				PlayState.instance.addTextToDebug('ERROR: $msgInfo', FlxColor.RED);
+		}
+		Iris.fatal = function(x, ?pos:haxe.PosInfos)
+		{
+			Iris.logLevel(FATAL, x, pos);
+			var newPos:HScriptInfos = cast pos;
+			if (newPos.showLine == null) newPos.showLine = true;
+			var msgInfo:String = (newPos.functionName != null ? '(${newPos.functionName}) - ' : '') + '${newPos.fileName}:';
+
+			#if LUA_ALLOWED
+			if (newPos.isLua == true)
+			{
+				msgInfo += 'HScript:';
+				newPos.showLine = false;
+			}
+			#end
+
+			if (newPos.showLine == true)
+			{
+				msgInfo += '${newPos.lineNumber}:';
+			}
+			msgInfo += ' $x';
+			if (PlayState.instance != null)
+				PlayState.instance.addTextToDebug('FATAL: $msgInfo', 0xFFBB0000);
+		}
+		#end
+
 		#if LUA_ALLOWED
 		Lua.set_callbacks_function(cpp.Callable.fromStaticFunction(psychlua.CallbackHandler.call));
 		#end
@@ -113,11 +190,9 @@ class Main extends Sprite
 
 		addChild(new FlxGame(gameData.width, gameData.height, gameData.initialState, gameData.framerate, gameData.framerate, gameData.skipSplash, gameData.startFullscreen));
 
-		#if !mobile
 		fpsCounter = new FPSCounter(0, 0, 0xFFFFFF);
-		fpsCounter.visible = ClientPrefs.data.showFPS;
+		fpsCounter.visible = #if mobile false #else ClientPrefs.data.showFPS #end;
 		addChild(fpsCounter);
-		#end
 
 		#if linux
 		Lib.current.stage.window.setIcon(Image.fromFile("icon.png"));

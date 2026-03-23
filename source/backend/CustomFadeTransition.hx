@@ -1,7 +1,11 @@
 package backend;
 
+import flixel.addons.display.shapes.FlxShapeCircle;
+
 class CustomFadeTransition extends MusicBeatSubstate
 {
+	public static var instance(default, null):CustomFadeTransition;
+
 	public static var finishCallback:Void->Void;
 
 	var isTransIn:Bool = false;
@@ -11,6 +15,7 @@ class CustomFadeTransition extends MusicBeatSubstate
 	static var bf:FlxSprite;
 
 	public var camTrans:FlxCamera;
+
 	public function new(duration:Float, isTransIn:Bool)
 	{
 		this.duration = duration;
@@ -20,16 +25,17 @@ class CustomFadeTransition extends MusicBeatSubstate
 
 	override function create()
 	{
+		instance = this;
+
 		camTrans = new FlxCamera();
 		camTrans.bgColor.alpha = 0;
 		FlxG.cameras.add(camTrans, false);
 
 		cameras = [camTrans];
+
 		whiteCircle = new FlxSprite().loadGraphic(Paths.image('switchState'));
 		whiteCircle.antialiasing = false;
-		whiteCircle.updateHitbox();
 		whiteCircle.screenCenter();
-		whiteCircle.antialiasing = false;
 		add(whiteCircle);
 
 		bf = new FlxSprite();
@@ -44,36 +50,40 @@ class CustomFadeTransition extends MusicBeatSubstate
 		bf.scale.set(1.5, 1.5);
 		add(bf);
 
-		if(!isTransIn) {
+		if (!isTransIn)
+		{
 			bf.x -= bf.width;
 			whiteCircle.scale.set(0, 0);
-		} else {
+		}
+		else
+		{
 			bf.x = (FlxG.width / 2) - (bf.width / 2);
 			whiteCircle.scale.set(7, 7);
 		}
 
-		if(!isTransIn)
+		if (!isTransIn)
 		{
-			FlxTween.tween(bf, {x: (FlxG.width / 2) - (bf.width / 2)}, duration, {ease: FlxEase.quadOut});
-			FlxTween.tween(whiteCircle.scale, {x: 7, y: 7}, duration, {ease: FlxEase.quadOut, onComplete: function (twn:FlxTween)
+			FlxTween.tween(bf, {x: (FlxG.width - bf.width) / 2}, duration, {ease: FlxEase.quadOut});
+			FlxTween.tween(whiteCircle.scale, {x: 7, y: 7}, duration, {ease: FlxEase.quadOut, onComplete: _ ->
 				{
-					if(finishCallback != null) finishCallback();
+					if (finishCallback != null) finishCallback();
 					finishCallback = null;
 				}
 			});
-		} else {
+		}
+		else
+		{
 			FlxTween.tween(bf, {x: FlxG.width}, duration, {ease: FlxEase.quadIn});
-			FlxTween.tween(whiteCircle.scale, {x: 0.001, y: 0.001}, duration, {ease: FlxEase.quadIn, onComplete: function (twn:FlxTween)
-				{
-					close();
-				}
-			});			
+			FlxTween.tween(whiteCircle.scale, {x: 0.001, y: 0.001}, duration, {ease: FlxEase.quadIn, onComplete: _ -> close()});
 		}
 
 		super.create();
 	}
 
-	override function update(elapsed:Float) {
-		super.update(elapsed);
+	override function destroy()
+	{
+		super.destroy();
+
+		instance = null;
 	}
 }

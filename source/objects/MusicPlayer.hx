@@ -233,7 +233,7 @@ class MusicPlayer extends FlxGroup
 
 	public function switchPlayMusic()
 	{
-		FlxG.autoPause = (!playingMusic && ClientPrefs.data.autoPause);
+		FlxG.autoPause = !playingMusic #if !mobile && ClientPrefs.data.autoPause #end;
 		active = visible = playingMusic;
 
 		instance.scoreBG.visible = instance.scoreText.visible = instance.ratingText.visible = !playingMusic; //Hide Freeplay texts and boxes if playingMusic is true
@@ -251,7 +251,7 @@ class MusicPlayer extends FlxGroup
 		{
 			instance.bottomText.text = "SPACE / Pause\nESC / Exit\nR / Reset";
 			positionSong();
-			
+
 			progressBar.setRange(0, FlxG.sound.music.length);
 			progressBar.setParent(FlxG.sound.music, "time");
 			progressBar.numDivisions = 1600;
@@ -264,8 +264,8 @@ class MusicPlayer extends FlxGroup
 			progressBar.setParent(null, "");
 			progressBar.numDivisions = 0;
 
-			instance.bottomText.text = instance.bottomString;
-			instance.positionHighscore();
+			instance.bottomText.text = instance.defaultBottomText;
+			instance.updateScoreTexts();
 		}
 		progressBar.updateBar();
 	}

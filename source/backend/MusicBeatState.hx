@@ -1,5 +1,6 @@
 package backend;
 
+import backend.BaseStage;
 import backend.CustomFadeTransition;
 import flixel.addons.ui.FlxUIState;
 import flixel.addons.transition.FlxTransitionableState;
@@ -38,20 +39,24 @@ class MusicBeatState extends FlxUIState
 
 		var cursorSprite:FlxSprite = new FlxSprite().loadGraphic(Paths.image('cursor'));
 		FlxG.mouse.load(cursorSprite.pixels);
-		FlxG.mouse.cursor.pixelSnapping = "always";
+		FlxG.mouse.cursor.pixelSnapping = ALWAYS;
 		FlxG.mouse.cursor.smoothing = false;
+		FlxG.mouse.visible = false;
 
 		var skip:Bool = FlxTransitionableState.skipNextTransOut;
-		#if MODS_ALLOWED Mods.updatedOnState = false; #end
+		#if MODS_ALLOWED
+		Mods.updatedOnState = false;
+		#end
 		if (!_psychCameraInitialized) initPsychCamera();
 
 		super.create();
 
-		if(!skip) {
-			openSubState(new CustomFadeTransition(0.6, true));
-		}
+		if (!skip) openSubState(new CustomFadeTransition(0.6, true));
 		FlxTransitionableState.skipNextTransOut = false;
 		timePassedOnState = 0;
+
+		if (FlxG.save.data != null)
+			FlxG.save.data.fullscreen = FlxG.fullscreen;
 	}
 
 	public function initPsychCamera()
@@ -80,8 +85,7 @@ class MusicBeatState extends FlxUIState
 					rollbackSection();
 			}
 		}
-		if(FlxG.save.data != null) FlxG.save.data.fullscreen = FlxG.fullscreen;
-		
+
 		stagesFunc(function(stage:BaseStage) {
 			stage.update(elapsed);
 		});

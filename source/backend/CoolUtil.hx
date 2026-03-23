@@ -1,13 +1,13 @@
 package backend;
 
 import openfl.utils.Assets;
+import openfl.Lib;
 
 class CoolUtil
 {
 	inline public static function quantize(f:Float, snap:Float){
 		// changed so this actually works lol
 		var m:Float = Math.fround(f * snap);
-		//trace(snap);
 		return (m / snap);
 	}
 
@@ -96,6 +96,11 @@ class CoolUtil
 		for (i in min...max) dumbArray.push(i);
 
 		return dumbArray;
+	}
+
+	public inline static function boundInt(value:Int, min:Int, max:Int):Int
+	{
+		return value < min ? min : (value > max ? max : value);
 	}
 
 	inline public static function browserLoad(site:String) {

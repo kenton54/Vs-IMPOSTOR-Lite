@@ -24,12 +24,11 @@ class TitleState extends MusicBeatState
 	override function create():Void
 	{
 		Paths.clearStoredMemory();
-		FlxG.mouse.visible = false;
+		PointerUtil.visible = false;
 
 		curWacky = FlxG.random.getObject(getIntroTextShit());
 
-		//persistentUpdate = true;
-		//persistentDraw = true;
+		persistentUpdate = true;
 
 		if (FlxG.sound.music == null)
 		{
@@ -48,7 +47,7 @@ class TitleState extends MusicBeatState
 		red.y = FlxG.height - red.height - #if mobile 100 #else 125 #end;
 		titleStuff.add(red);
 
-		var enter:FlxSprite = new FlxSprite().loadGraphic(Paths.image('title/press'));
+		var enter:FlxSprite = new FlxSprite().loadGraphic(#if mobile Paths.image('title/touch') #else Paths.image('title/press') #end);
 		enter.antialiasing = false;
 		enter.screenCenter(X);
 		enter.y = (FlxG.height * 0.95) - enter.height;
@@ -97,7 +96,7 @@ class TitleState extends MusicBeatState
 
 	function getIntroTextShit():Array<Array<String>>
 	{
-		var firstArray:Array<String> = Assets.getText(Paths.txt('introTexts')).split('\n');
+		var firstArray:Array<String> = Mods.mergeAllTextsNamed('data/introTexts.txt', Paths.getLitePath());
 		var swagGoodArray:Array<Array<String>> = [];
 
 		for (i in firstArray)
@@ -116,7 +115,7 @@ class TitleState extends MusicBeatState
 
 		if (FlxG.sound.music != null) Conductor.songPosition = FlxG.sound.music.time;
 
-		var pressedEnter:Bool = FlxG.keys.justPressed.ENTER #if mobile || (PointerUtil.justReleased && !SwipeUtil.justSwipedAny) #end;
+		var pressedEnter:Bool = (PointerUtil.justReleased && !SwipeUtil.justSwipedAny) || FlxG.keys.justPressed.ENTER;
 
 		var mult:Float = FlxMath.lerp(0.8, logo.scale.x, Math.exp(-elapsed * 9 * 1));
 		logo.scale.set(mult, mult);

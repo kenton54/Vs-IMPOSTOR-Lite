@@ -5,6 +5,10 @@ import objects.AttachedSprite;
 import objects.CreditsList;
 import objects.MenuItem;
 
+#if mobile
+import objects.BackButton;
+#end
+
 class CreditsState extends MusicBeatState
 {
 	var curSelected:Int = 0;
@@ -147,47 +151,61 @@ class CreditsState extends MusicBeatState
 			}
 		}
 
+		#if mobile
+		var backButton:BackButton = new BackButton();
+		backButton.x = FlxG.width - backButton.width - 60;
+		backButton.y = FlxG.height - backButton.height - 28;
+		backButton.onConfirmStart.add(() -> quitting = true);
+		backButton.onConfirmEnd.add(() -> FlxG.switchState(() -> new SelectCreditsState()));
+		add(backButton);
+		#end
+
 		super.create();
 
-		changeSelection();
+		changeSelection(0, "", true);
 	}
 
 	var quitting:Bool = false;
 	var holdTime:Float = 0;
-	var isSwiping:Bool = false;
+	#if mobile
+	var swiping:Bool = false;
 	var moveLength:Float = 0;
+	#end
 	override function update(elapsed:Float)
 	{
 		#if mobile
 		var overlapLeft:Bool = false;
 		var overlapRight:Bool = false;
-		if (PointerUtil.overlaps(leftArrow))
+		if (!quitting)
 		{
-			overlapLeft = true;
-			leftArrow.color = PointerUtil.pressed ? FlxColor.GRAY : FlxColor.WHITE;
+			if (PointerUtil.overlaps(leftArrow) && !swiping)
+			{
+				overlapLeft = true;
+				leftArrow.color = PointerUtil.pressed ? FlxColor.GRAY : FlxColor.WHITE;
 
-			if (PointerUtil.justPressed)
-				changeSelection(-1);
+				if (PointerUtil.justPressed)
+					changeSelection(-1);
+			}
+
+			if (PointerUtil.overlaps(rightArrow) && !swiping)
+			{
+				overlapRight = true;
+				rightArrow.color = PointerUtil.pressed ? FlxColor.GRAY : FlxColor.WHITE;
+
+				if (PointerUtil.justPressed)
+					changeSelection(1);
+			}
+
+			if (PointerUtil.justPressed && !(overlapLeft || overlapRight))
+				swiping = true;
 		}
 
-		if (PointerUtil.overlaps(rightArrow))
+		final fpsMult:Float = FlxG.updateFramerate / 60;
+		if (PointerUtil.pressed && swiping)
 		{
-			overlapRight = true;
-			rightArrow.color = PointerUtil.pressed ? FlxColor.GRAY : FlxColor.WHITE;
-
-			if (PointerUtil.justPressed)
-				changeSelection(1);
-		}
-
-		if (PointerUtil.justPressed && !(overlapLeft || overlapRight))
-			isSwiping = true;
-
-		if (PointerUtil.pressed && isSwiping)
-		{
-			final fpsMult:Float = FlxG.updateFramerate / 60;
 			final delta:Float = PointerUtil.pointer.deltaViewX * fpsMult;
 
-			if (Math.abs(delta) >= 2)
+			if (Math.isFinite(delta) && Math.abs(delta) >= 2)
 			{
 				var dpiScale:Float = FlxG.stage.window.display.dpi / 160;
 				dpiScale = FlxMath.bound(dpiScale, 0.5, #if android 1 #else 2 #end);
@@ -205,8 +223,8 @@ class CreditsState extends MusicBeatState
 			changeSelection();
 		}
 
-		if (PointerUtil.justReleased)
-			isSwiping = false;
+		curSelectedFloat = FlxMath.bound(curSelectedFloat, 0, creditsList.length - 1);
+		curSelected = Math.round(curSelectedFloat);
 
 		if ((overlapLeft || overlapRight) && !(overlapLeft && overlapRight))
 		{
@@ -219,9 +237,12 @@ class CreditsState extends MusicBeatState
 		}
 		else
 			holdTime = 0;
-			
-		if (PointerUtil.overlaps(grpOptions.members[curSelected]) && !(overlapLeft || overlapRight) && !isSwiping && PointerUtil.justReleased)
+
+		if (PointerUtil.overlaps(grpOptions.members[curSelected]) && !(overlapLeft || overlapRight) && !swiping && !SwipeUtil.justSwipedAny && PointerUtil.justReleased)
 			checkSelection();
+
+		if (PointerUtil.justReleased)
+			swiping = false;
 
 		#if android
 		if (FlxG.android.justReleased.BACK)
@@ -283,9 +304,11 @@ class CreditsState extends MusicBeatState
 	}
 
 	var moveTween:FlxTween = null;
-	public function changeSelection(change:Int = 0, description:String = "")
+	public function changeSelection(change:Int = 0, description:String = "", force:Bool = false)
 	{
+		var lastSelected:Int = curSelected;
 		curSelected = FlxMath.wrap(curSelected + change, 0, creditsList.length - 1);
+		curSelectedFloat = curSelected;
 
 		if (unselectableCheck(curSelected))
 		{
@@ -293,13 +316,16 @@ class CreditsState extends MusicBeatState
 			return;
 		}
 
-		if (change != 0) FlxG.sound.play(Paths.sound('scrollMenu'));
+		if (curSelected != lastSelected || force)
+		{
+			FlxG.sound.play(Paths.sound('scrollMenu'));
 
-		var descTxt:String = description != "" ? description : (curCredits[2] != null ? curCredits[2] : "");
-		this.description = descTxt;
+			var descTxt:String = description != "" ? description : (curCredits[2] != null ? curCredits[2] : "");
+			this.description = descTxt;
 
-		var newColor:FlxColor = CoolUtil.colorFromString(curCredits[4] ?? "FFFFFF");
-		color = newColor;
+			var newColor:FlxColor = CoolUtil.colorFromString(curCredits[4] ?? "FFFFFF");
+			color = newColor;
+		}
 
 		// can the haxe compiler stfu
 		for (i => item in grpOptions.members)
@@ -321,7 +347,7 @@ class CreditsState extends MusicBeatState
 	function updateScroll()
 	{
 		var lastSelected:Int = curSelected;
-		curSelected = Math.round(curSelectedFloat);
+		curSelected = CoolUtil.boundInt(Math.round(curSelectedFloat), 0, creditsList.length - 1);
 
 		if (curSelected != lastSelected)
 		{

@@ -4,6 +4,8 @@ package psychlua;
 import flixel.util.FlxSave;
 import openfl.utils.Assets;
 
+import sys.FileSystem;
+
 //
 // Things to trivialize some dumb stuff like splitting strings on older Lua
 //
@@ -13,7 +15,7 @@ class ExtraFunctions
 	public static function implement(funk:FunkinLua)
 	{
 		var lua:State = funk.lua;
-		
+
 		// Keyboard & Gamepads
 		Lua_helper.add_callback(lua, "keyboardJustPressed", function(name:String) return Reflect.getProperty(FlxG.keys.justPressed, name));
 		Lua_helper.add_callback(lua, "keyboardPressed", function(name:String) return Reflect.getProperty(FlxG.keys.pressed, name));
@@ -175,10 +177,10 @@ class ExtraFunctions
 			try {
 				#if MODS_ALLOWED
 				if(!absolute)
-					File.saveContent(Paths.mods(path), content);
+					sys.io.File.saveContent(Paths.mods(path), content);
 				else
 				#end
-					File.saveContent(path, content);
+					sys.io.File.saveContent(path, content);
 
 				return true;
 			} catch (e:Dynamic) {
@@ -193,7 +195,7 @@ class ExtraFunctions
 				if(!ignoreModFolders)
 				{
 					var lePath:String = Paths.modFolders(path);
-					if(FileSystem.exists(lePath))
+					if (FileSystem.exists(lePath))
 					{
 						FileSystem.deleteFile(lePath);
 						return true;
@@ -202,7 +204,7 @@ class ExtraFunctions
 				#end
 
 				var lePath:String = Paths.getPath(path, TEXT);
-				if(Assets.exists(lePath))
+				if (Assets.exists(lePath))
 				{
 					FileSystem.deleteFile(lePath);
 					return true;
@@ -216,17 +218,7 @@ class ExtraFunctions
 			return Paths.getTextFromFile(path, ignoreModFolders);
 		});
 		Lua_helper.add_callback(lua, "directoryFileList", function(folder:String) {
-			var list:Array<String> = [];
-			#if sys
-			if(FileSystem.exists(folder)) {
-				for (folder in FileSystem.readDirectory(folder)) {
-					if (!list.contains(folder)) {
-						list.push(folder);
-					}
-				}
-			}
-			#end
-			return list;
+			return Paths.readDirectory(folder);
 		});
 
 		// String tools

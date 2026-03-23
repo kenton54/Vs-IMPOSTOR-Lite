@@ -36,8 +36,8 @@ class SwipeUtil
 
     public static inline function resetVelocity()
     {
-		FlxG.mouse.flickManager.destroy();
         FlxG.touches.flickManager.destroy();
+		FlxG.mouse.flickManager.destroy();
     }
 
     static inline function get_swipeLeft():Bool

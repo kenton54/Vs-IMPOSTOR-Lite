@@ -1,5 +1,8 @@
 package states.stages;
 
+import backend.BaseStage;
+import objects.BGSprite;
+
 class StageWeek1 extends BaseStage
 {
 	override function create()

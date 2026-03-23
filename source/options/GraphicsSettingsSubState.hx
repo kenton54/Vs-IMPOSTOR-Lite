@@ -8,27 +8,19 @@ class GraphicsSettingsSubState extends BaseOptionsMenu
 	var boyfriend:Character = null;
 	public function new()
 	{
-		title = 'Graphics';
-		rpcTitle = 'Editing Graphics'; //for Discord Rich Presence
-
-		boyfriend = new Character(840, 350, 'bf', true);
-		boyfriend.setGraphicSize(Std.int(boyfriend.width * 0.75));
-		boyfriend.updateHitbox();
-		boyfriend.dance();
-		boyfriend.animation.finishCallback = function (name:String) boyfriend.dance();
-		boyfriend.visible = false;
+		super('Graphics', 'Editing Graphics');
 
 		//I'd suggest using "Low Quality" as an example for making your own option since it is the simplest here
 		var option:Option = new Option('Low Quality', //Name
 			'If checked, disables some background details,\ndecreases loading times and improves performance.', //Description
 			'lowQuality', //Save data variable name
-			'bool'); //Variable type
+			Boolean); //Variable type
 		addOption(option);
 
 		var option:Option = new Option('Anti-Aliasing',
-			'If unchecked, disables anti-aliasing, increases performance.\nIf enabled, it will ruin the aesthetic of the mod and you\'ll be sent to jail for life.',
+			'If unchecked, disables anti-aliasing, increases performance.\nIf checked, it will ruin the aesthetic of the mod and you\'ll be sent to jail for life.',
 			'antialiasing',
-			'bool');
+			Boolean);
 		option.onChange = onChangeAntiAliasing; //Changing onChange is only needed if you want to make a special interaction after it changes the value
 		addOption(option);
 		antialiasingOption = optionsArray.length-1;
@@ -36,20 +28,20 @@ class GraphicsSettingsSubState extends BaseOptionsMenu
 		var option:Option = new Option('Shaders', //Name
 			"If unchecked, disables shaders.\nIt's used for some visual effects, and also CPU intensive for weaker PCs.", //Description
 			'shaders',
-			'bool');
+			Boolean);
 		addOption(option);
 
 		var option:Option = new Option('GPU Caching', //Name
 			"If checked, allows the GPU to be used for caching textures, decreasing RAM usage.\nDon't turn this on if you have a shitty Graphics Card.", //Description
 			'cacheOnGPU',
-			'bool');
+			Boolean);
 		addOption(option);
 
-		#if !html5 //Apparently other framerates isn't correctly supported on Browser? Probably it has some V-Sync shit enabled by default, idk
+		#if !(html5 || mobile)
 		var option:Option = new Option('Framerate',
 			"Pretty self explanatory, isn't it?",
 			'framerate',
-			'int');
+			Number);
 		addOption(option);
 
 		final refreshRate:Int = FlxG.stage.application.window.displayMode.refreshRate;
@@ -59,9 +51,26 @@ class GraphicsSettingsSubState extends BaseOptionsMenu
 		option.displayFormat = '%v FPS';
 		option.onChange = onChangeFramerate;
 		#end
+	}
 
-		super();
+	override function create()
+	{
+		super.create();
+
+		boyfriend = new Character(0, 0, 'bf', true);
+		boyfriend.setGraphicSize(Std.int(boyfriend.width * 0.75));
+		boyfriend.updateHitbox();
+		boyfriend.x = FlxG.width * 0.6;
+		boyfriend.y = FlxG.height / 2 - boyfriend.height / 3;
+		boyfriend.dance();
+		boyfriend.visible = false;
 		insert(1, boyfriend);
+	}
+
+	override function beatHit()
+	{
+		super.beatHit();
+		boyfriend.dance();
 	}
 
 	function onChangeAntiAliasing()
@@ -77,7 +86,7 @@ class GraphicsSettingsSubState extends BaseOptionsMenu
 
 	function onChangeFramerate()
 	{
-		if(ClientPrefs.data.framerate > FlxG.drawFramerate)
+		if (ClientPrefs.data.framerate > FlxG.drawFramerate)
 		{
 			FlxG.updateFramerate = ClientPrefs.data.framerate;
 			FlxG.drawFramerate = ClientPrefs.data.framerate;
@@ -92,6 +101,18 @@ class GraphicsSettingsSubState extends BaseOptionsMenu
 	override function changeSelection(change:Int = 0)
 	{
 		super.changeSelection(change);
-		boyfriend.visible = (antialiasingOption == curSelected);
+
+		if (boyfriend != null)
+			boyfriend.visible = (antialiasingOption == curSelected);
 	}
+
+	#if mobile
+	override function updateScroll()
+	{
+		super.updateScroll();
+
+		if (boyfriend != null)
+			boyfriend.visible = (antialiasingOption == curSelected);
+	}
+	#end
 }

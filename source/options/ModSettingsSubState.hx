@@ -1,5 +1,6 @@
 package options;
 
+#if MODS_ALLOWED
 import flixel.input.keyboard.FlxKey;
 import flixel.input.gamepad.FlxGamepadInputID;
 
@@ -10,15 +11,15 @@ class ModSettingsSubState extends BaseOptionsMenu
 	var save:Map<String, Dynamic> = new Map<String, Dynamic>();
 	var folder:String;
 	private var _crashed:Bool = false;
+
 	public function new(options:Array<Dynamic>, folder:String, name:String)
 	{
+		super('', 'Mod Settings ($name)');
+
 		this.folder = folder;
 
-		title = '';
-		//title = name;
-		rpcTitle = 'Mod Settings ($name)'; //for Discord Rich Presence
-
-		if(FlxG.save.data.modSettings == null) FlxG.save.data.modSettings = new Map<String, Dynamic>();
+		if (FlxG.save.data.modSettings == null)
+			FlxG.save.data.modSettings = new Map<String, Dynamic>();
 		else
 		{
 			var saveMap:Map<String, Dynamic> = FlxG.save.data.modSettings;
@@ -40,12 +41,12 @@ class ModSettingsSubState extends BaseOptionsMenu
 
 				switch(newOption.type)
 				{
-					case 'keybind':
+					case Keybind:
 						//Defaulting and error checking
 						var keyboardStr:String = option.keyboard;
 						var gamepadStr:String = option.gamepad;
-						if(keyboardStr == null) keyboardStr = 'NONE';
-						if(gamepadStr == null) gamepadStr = 'NONE';
+						if (keyboardStr == null) keyboardStr = 'NONE';
+						if (gamepadStr == null) gamepadStr = 'NONE';
 
 						newOption.defaultKeys.keyboard = keyboardStr;
 						newOption.defaultKeys.gamepad = gamepadStr;
@@ -89,34 +90,36 @@ class ModSettingsSubState extends BaseOptionsMenu
 						}
 				}
 
-				if(option.type != 'keybind')
+				if (option.type != 'keybind')
 				{
-					if(option.format != null) newOption.displayFormat = option.format;
-					if(option.min != null) newOption.minValue = option.min;
-					if(option.max != null) newOption.maxValue = option.max;
-					if(option.step != null) newOption.changeValue = option.step;
+					if (option.format != null) newOption.displayFormat = option.format;
+					if (option.min != null) newOption.minValue = option.min;
+					if (option.max != null) newOption.maxValue = option.max;
+					if (option.step != null) newOption.changeValue = option.step;
 
-					if(option.scroll != null) newOption.scrollSpeed = option.scroll;
-					if(option.decimals != null) newOption.decimals = option.decimals;
+					if (option.scroll != null) newOption.scrollSpeed = option.scroll;
+					if (option.decimals != null) newOption.decimals = option.decimals;
 
 					var myValue:Dynamic = null;
-					if(save.get(option.save) != null)
+					if (save.get(option.save) != null)
 					{
 						myValue = save.get(option.save);
-						if(newOption.type != 'keybind') newOption.setValue(myValue);
+						if (newOption.type != Keybind) newOption.setValue(myValue);
 						else newOption.setValue(!Controls.instance.controllerMode ? myValue.keyboard : myValue.gamepad);
 					}
 					else
 					{
 						myValue = newOption.getValue();
-						if(myValue == null) myValue = newOption.defaultValue;
+						if (myValue == null) myValue = newOption.defaultValue;
 					}
 	
 					switch(newOption.type)
 					{
-						case 'string':
+						case Choice:
 							var num:Int = newOption.options.indexOf(myValue);
 							if(num > -1) newOption.curOption = num;
+
+						default:
 					}
 	
 					save.set(option.save, myValue);
@@ -136,8 +139,11 @@ class ModSettingsSubState extends BaseOptionsMenu
 			close();
 			return;
 		}
+	}
 
-		super();
+	override function create()
+	{
+		super.create();
 
 		bg.alpha = 0.75;
 		bg.color = FlxColor.WHITE;
@@ -161,3 +167,4 @@ class ModSettingsSubState extends BaseOptionsMenu
 		super.close();
 	}
 }
+#end

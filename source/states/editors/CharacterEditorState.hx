@@ -16,9 +16,13 @@ import openfl.events.IOErrorEvent;
 import openfl.utils.Assets;
 import lime.system.Clipboard;
 
+import objects.BGSprite;
 import objects.Character;
 import objects.HealthIcon;
 import objects.Bar;
+
+import sys.io.File;
+import sys.FileSystem;
 
 class CharacterEditorState extends MusicBeatState
 {

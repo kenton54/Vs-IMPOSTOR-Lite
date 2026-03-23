@@ -2,7 +2,7 @@
 <!--
 Created with Funkin Packer v0.1.3 https://neeeoo.github.io/funkin-packer/
 -->
-<TextureAtlas imagePath="Cyanghost.png" width="99" height="257">
-	<SubTexture name="Cyanghost1" x="1" y="134" width="94" height="122" frameX="-1" frameY="-1" frameWidth="97" frameHeight="130"/>
-	<SubTexture name="Cyanghost2" x="1" y="1" width="97" height="130" frameX="-0" frameY="-0" frameWidth="97" frameHeight="130"/>
+<TextureAtlas imagePath="bandanacyan.png" width="99" height="257">
+	<SubTexture name="bandanacyan1" x="1" y="134" width="94" height="122" frameX="-1" frameY="-1" frameWidth="97" frameHeight="130"/>
+	<SubTexture name="bandanacyan2" x="1" y="1" width="97" height="130" frameX="-0" frameY="-0" frameWidth="97" frameHeight="130"/>
 </TextureAtlas>

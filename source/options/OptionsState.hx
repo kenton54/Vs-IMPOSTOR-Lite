@@ -3,6 +3,10 @@ package options;
 import states.MainMenuState;
 import backend.StageData;
 
+#if mobile
+import objects.BackButton;
+#end
+
 class OptionsState extends MusicBeatState
 {
 	var options:Array<String> = ['Note Colors', 'Controls', 'Adjust Delay', 'Graphics', 'Visuals and UI', 'Gameplay'];
@@ -13,19 +17,21 @@ class OptionsState extends MusicBeatState
 
 	function openSelectedSubstate(label:String)
 	{
+		selectedSomethin = true;
+
 		switch(label) {
 			case 'Note Colors':
-				openSubState(new options.NotesSubState());
+				openSubState(new NotesColorSubState());
 			case 'Controls':
-				openSubState(new options.ControlsSubState());
+				openSubState(#if mobile new MobileControlsSubState() #else new ControlsSubState() #end);
 			case 'Graphics':
-				openSubState(new options.GraphicsSettingsSubState());
+				openSubState(new GraphicsSettingsSubState());
 			case 'Visuals and UI':
-				openSubState(new options.VisualsUISubState());
+				openSubState(new VisualsUISubState());
 			case 'Gameplay':
-				openSubState(new options.GameplaySettingsSubState());
+				openSubState(new GameplaySettingsSubState());
 			case 'Adjust Delay':
-				FlxG.switchState(() -> new options.NoteOffsetState());
+				FlxG.switchState(() -> new NoteOffsetState());
 		}
 	}
 
@@ -63,79 +69,97 @@ class OptionsState extends MusicBeatState
 		selectorRight = new Alphabet(0, 0, '<', true);
 		add(selectorRight);
 
-		changeSelection();
-		ClientPrefs.saveSettings();
+		#if mobile
+		var backButton:BackButton = new BackButton();
+		backButton.x = FlxG.width - backButton.width - 60;
+		backButton.y = FlxG.height - backButton.height - 28;
+		backButton.onConfirmStart.add(() -> selectedSomethin = true);
+		backButton.onConfirmEnd.add(() -> FlxG.switchState(() -> new MainMenuState()));
+		add(backButton);
+		#end
 
 		super.create();
+
+		changeSelection();
+		ClientPrefs.saveSettings();
 	}
 
 	override function closeSubState()
 	{
 		super.closeSubState();
 		ClientPrefs.saveSettings();
+
 		#if DISCORD_ALLOWED
 		DiscordClient.changePresence("Looking at the options menu", null);
 		#end
-		FlxG.camera.scroll.x = 0;
+
+		FlxG.camera.scroll.set();
+
+		selectedSomethin = false;
 	}
 
+	var selectedSomethin:Bool = false;
 	override function update(elapsed:Float)
 	{
-		super.update(elapsed);
-
-		#if mobile
-		var overlap:Bool = false;
-		grpOptions.forEach(function(spr) {
-			for (touch in FlxG.touches.list)
-			{
-				if (touch.overlaps(spr))
-				{
-					overlap = true;
-
-					var lastSelect:Int = curSelected;
-					curSelected = spr.ID;
-					if (lastSelect != curSelected) FlxG.sound.play(Paths.sound('scrollMenu'));
-
-					updateOptions();
-
-					if (touch.justReleased)
-						openSelectedSubstate(options[curSelected]);
-				}
-			}
-		});
-
-		if (!overlap)
+		if (!selectedSomethin)
 		{
-			curSelected = -1;
-			updateOptions();
-		}
+			#if mobile
+			var overlap:Bool = false;
+			grpOptions.forEach(function(spr) {
+				for (touch in FlxG.touches.list)
+				{
+					if (touch.overlaps(spr))
+					{
+						overlap = true;
 
-		#if android
-		if (FlxG.android.justReleased.BACK)
-			FlxG.switchState(() -> new MainMenuState());
-		#end
-		#else
-		if (controls.UI_UP_P) {
-			changeSelection(-1);
-		}
-		if (controls.UI_DOWN_P) {
-			changeSelection(1);
-		}
+						var lastSelect:Int = curSelected;
+						curSelected = spr.ID;
+						if (lastSelect != curSelected) FlxG.sound.play(Paths.sound('scrollMenu'));
 
-		if (controls.BACK) {
-			FlxG.sound.play(Paths.sound('cancelMenu'));
-			if(onPlayState)
+						updateOptions();
+
+						if (touch.justReleased)
+							openSelectedSubstate(options[curSelected]);
+					}
+				}
+			});
+
+			if (!overlap)
 			{
-				StageData.loadDirectory(PlayState.SONG);
-				LoadingState.loadAndSwitchState(() -> new PlayState());
-				FlxG.sound.music.volume = 0;
+				curSelected = -1;
+				updateOptions();
 			}
-			else FlxG.switchState(() -> new MainMenuState());
+
+			#if android
+			if (FlxG.android.justReleased.BACK)
+				FlxG.switchState(() -> new MainMenuState());
+			#end
+			#end
+
+			if (controls.UI_UP_P) {
+				changeSelection(-1);
+			}
+			if (controls.UI_DOWN_P) {
+				changeSelection(1);
+			}
+
+			if (controls.BACK)
+			{
+				FlxG.sound.play(Paths.sound('cancelMenu'));
+				if (onPlayState)
+				{
+					StageData.loadDirectory(PlayState.SONG);
+					LoadingState.loadState(() -> new PlayState(), true);
+					FlxG.sound.music.volume = 0;
+				}
+				else FlxG.switchState(() -> new MainMenuState());
+			}
+
+			if (controls.ACCEPT)
+				openSelectedSubstate(options[curSelected]);
 		}
 
-		if (controls.ACCEPT)
-			openSelectedSubstate(options[curSelected]);
-		#end
+		super.update(elapsed);
 	}
 
 	function changeSelection(change:Int = 0)

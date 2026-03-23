@@ -23,7 +23,7 @@ function onCreatePost()
 	addLuaSprite("cyanDead")
 
 	makeAnimatedLuaSprite("cyanGhost", "bg/polus/Cyanghost", -1180, 300)
-	addAnimationByPrefix("cyanGhost", "idle", "Cyanghost", 8, true)
+	addAnimationByPrefix("cyanGhost", "idle", "bandanacyan", 8, true)
 	playAnim("cyanGhost", "idle")
 	scaleObject("cyanGhost", 3, 3)
 	setProperty("cyanGhost.visible", false)

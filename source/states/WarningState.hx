@@ -47,9 +47,8 @@ class WarningState extends MusicBeatState
 		disclaimerTxtEnter.setFormat(Paths.font("vcr.ttf"), 20, FlxColor.WHITE, CENTER);
 
 		// FlxG.camera.bgColor = 0xFF030317;
-		persistentUpdate = persistentDraw = true;
-		FlxG.mouse.visible = true;
-		Lib.application.window.resizable = false;
+		persistentUpdate = true;
+		FlxG.stage.color = stageColor;
 
 		#if DISCORD_ALLOWED
         DiscordClient.changePresence("Warning Screen", null);
@@ -63,7 +62,7 @@ class WarningState extends MusicBeatState
 			]
 		);
 
-		for(txt in [disclaimerTxtTitle, disclaimerTxt, disclaimerTxtEnter]) {
+		for (txt in [disclaimerTxtTitle, disclaimerTxt, disclaimerTxtEnter]) {
 			txtsSpr.add(txt);
 			txt.screenCenter(X);
 			txt.scrollFactor.y = 1.25;
@@ -92,6 +91,8 @@ class WarningState extends MusicBeatState
 		super.create();
 	}
 
+	var stageColor:FlxColor = 0x2A2140;
+	var targetColor:FlxColor = 0x2A2140;
 	override function update(elapsed:Float)
 	{
 		whiteTransitionTail.x = whiteTransition.x;
@@ -99,29 +100,41 @@ class WarningState extends MusicBeatState
 
 		if (actuallyAllowed)
 		{
-			if ((FlxG.keys.justPressed.ENTER || FlxG.mouse.justPressed #if mobile || FlxG.touches.getFirst() != null && FlxG.touches.getFirst().justPressed #end) && !leftState)
+			if (PointerUtil.justPressed || FlxG.keys.justPressed.ENTER)
 			{
+				leftState = true;
+				actuallyAllowed = false;
+
+				targetColor = 0xFFFFFF;
+
             	FlxTransitionableState.skipNextTransOut = true;
             	FlxTransitionableState.skipNextTransIn = true;
-				leftState = true;
-				FlxG.mouse.visible = false;
+
 				ClientPrefs.saveSettings();
 				FlxG.sound.play(Paths.sound('confirmMenu'));
+
 				FlxFlicker.flicker(disclaimerTxtEnter, 1.4, 0.1, false, true, function(_) {
-					new FlxTimer().start(1.4, function (_) {
-						Lib.application.window.resizable = true;
-						FlxG.switchState(() -> new TitleState());
-					});
+					new FlxTimer().start(1.4, _ -> FlxG.switchState(() -> new TitleState()));
 				});
 
 				new FlxTimer().start(0.6, function(_) {
 					FlxTween.cancelTweensOf(FlxG.camera);
-					FlxTween.tween(FlxG.camera, {"scroll.y": FlxG.height*2}, 1, {ease: FlxEase.smootherStepIn});
+					FlxTween.tween(FlxG.camera, {"scroll.y": FlxG.height * 2}, 1, {ease: FlxEase.smootherStepIn});
 				});
 
 				FlxG.save.data.seenWarning = true;
 			}
 		}
+
+		stageColor = FlxColor.interpolate(stageColor, targetColor, 0.05);
+		FlxG.stage.color = stageColor.rgb;
+
 		super.update(elapsed);
+	}
+
+	override function destroy()
+	{
+		super.destroy();
+		FlxG.stage.color = 0xFFFFFF;
 	}
 }

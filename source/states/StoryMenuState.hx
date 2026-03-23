@@ -13,6 +13,10 @@ import objects.MenuItem;
 import substates.GameplayChangersSubstate;
 import substates.ResetScoreSubState;
 
+#if mobile
+import objects.BackButton;
+#end
+
 class StoryMenuState extends MusicBeatState
 {
 	public static var weekCompleted:Map<String, Bool> = new Map<String, Bool>();
@@ -42,10 +46,11 @@ class StoryMenuState extends MusicBeatState
 		Paths.clearStoredMemory();
 		Paths.clearUnusedMemory();
 
+		persistentUpdate = true;
+
 		PlayState.isStoryMode = true;
 		WeekData.reloadWeekFiles(true);
-		if(curWeek >= WeekData.weeksList.length) curWeek = 0;
-		persistentUpdate = persistentDraw = true;
+		if (curWeek >= WeekData.weeksList.length) curWeek = 0;
 
 		scoreText = new FlxText(10, 10, 0, "SCORE: 49324858", 36);
 		scoreText.setFormat(Paths.font("vcr.ttf"), 32, FlxColor.BLACK);
@@ -171,18 +176,32 @@ class StoryMenuState extends MusicBeatState
 		add(leftArrow);
 		add(rightArrow);
 
-		changeWeek();
+		#if mobile
+		var backButton:BackButton = new BackButton();
+		backButton.x = FlxG.width - backButton.width - 60;
+		backButton.y = FlxG.height - backButton.height - 28;
+		backButton.onConfirmStart.add(() -> movedBack = true);
+		backButton.onConfirmEnd.add(() -> FlxG.switchState(() -> new MainMenuState()));
+		add(backButton);
+		#end
+
 		super.create();
+		changeWeek();
 	}
 
-	override function closeSubState() {
-		persistentUpdate = true;
+	override function closeSubState()
+	{
 		changeWeek();
 		super.closeSubState();
+
+		persistentUpdate = true;
 	}
 
-	var isSwiping:Bool = false;
+	#if mobile
+	var swiping:Bool = false;
 	var moveLength:Float = 0;
+	#end
+	var usingControls:Bool = true;
 	override function update(elapsed:Float)
 	{
 		lerpScore = Math.floor(FlxMath.lerp(intendedScore, lerpScore, Math.exp(-elapsed * 30)));
@@ -190,50 +209,54 @@ class StoryMenuState extends MusicBeatState
 
 		scoreText.text = "WEEK SCORE: " + lerpScore;
 
+		if (FlxG.keys.justPressed.ANY || FlxG.gamepads.anyInput())
+			usingControls = true;
+
 		#if mobile
+		if (PointerUtil.justPressed || PointerUtil.justMoved)
+			usingControls = false;
+
 		var overlapLeft:Bool = false;
 		var overlapRight:Bool = false;
-		if (PointerUtil.overlaps(leftArrow))
+		if (!selectedWeek && !movedBack)
 		{
-			overlapLeft = true;
-			leftArrow.color = PointerUtil.pressed ? FlxColor.GRAY : FlxColor.WHITE;
+			if (PointerUtil.overlaps(leftArrow) && !swiping)
+			{
+				overlapLeft = true;
+				leftArrow.color = PointerUtil.pressed ? FlxColor.GRAY : FlxColor.WHITE;
 
-			if (PointerUtil.justPressed)
-				changeWeek(-1);
+				if (PointerUtil.justPressed)
+					changeWeek(-1);
+			}
+
+			if (PointerUtil.overlaps(rightArrow) && !swiping)
+			{
+				overlapRight = true;
+				rightArrow.color = PointerUtil.pressed ? FlxColor.GRAY : FlxColor.WHITE;
+
+				if (PointerUtil.justPressed)
+					changeWeek(1);
+			}
+
+			if (PointerUtil.justPressed && !(overlapLeft || overlapRight))
+				swiping = true;
 		}
 
-		if (PointerUtil.overlaps(rightArrow))
+		final fpsMult:Float = FlxG.updateFramerate / 60;
+		if (PointerUtil.pressed && swiping)
 		{
-			overlapRight = true;
-			rightArrow.color = PointerUtil.pressed ? FlxColor.GRAY : FlxColor.WHITE;
-
-			if (PointerUtil.justPressed)
-				changeWeek(1);
-		}
-
-		if (PointerUtil.justPressed && !(overlapLeft || overlapRight))
-			isSwiping = true;
-
-		if (PointerUtil.pressed && isSwiping)
-		{
-			final fpsMult:Float = FlxG.updateFramerate / 60;
 			final delta:Float = PointerUtil.pointer.deltaViewX * fpsMult;
 
-			if (Math.abs(delta) >= 2)
+			if (Math.isFinite(delta) && Math.abs(delta) >= 2)
 			{
 				var dpiScale:Float = FlxG.stage.window.display.dpi / 160;
 				dpiScale = FlxMath.bound(dpiScale, 0.5, #if android 1 #else 2 #end);
 
-				var _moveLength:Float = delta / FlxG.updateFramerate / dpiScale;
+				var _moveLength:Float = delta / FlxG.updateFramerate / dpiScale / 2;
 				moveLength += Math.abs(_moveLength);
 				curWeekFloat -= _moveLength;
 
-				var bullShit:Int = 0;
-				for (item in grpWeekOptions.members)
-				{
-					item.targetX = bullShit - curWeekFloat;
-					bullShit++;
-				}
+				updateScroll();
 			}
 		}
 		else if (moveLength > 0)
@@ -242,41 +265,39 @@ class StoryMenuState extends MusicBeatState
 			changeWeek();
 		}
 
-		if (PointerUtil.justReleased)
-			isSwiping = false;
+		curWeekFloat = FlxMath.bound(curWeekFloat, 0, loadedWeeks.length - 1);
+		curWeek = Math.round(curWeekFloat);
 
-		if (PointerUtil.overlaps(grpWeekOptions.members[curWeek]) && !(overlapLeft || overlapRight) && !isSwiping && PointerUtil.justReleased)
+		if (PointerUtil.overlaps(grpWeekOptions.members[curWeek]) && !(overlapLeft || overlapRight) && !swiping && !SwipeUtil.justSwipedAny && PointerUtil.justReleased)
 			selectWeek();
+
+		if (PointerUtil.justReleased)
+			swiping = false;
 
 		#if android
 		if (FlxG.android.justReleased.BACK)
 		{
 			movedBack = true;
+			FlxG.sound.play(Paths.sound('cancelMenu'));
 			FlxG.switchState(() -> new MainMenuState());
+			return;
 		}
 		#end
-		#else
-		if (!movedBack && !selectedWeek)
+		#end
+
+		if ((!movedBack || !selectedWeek) && usingControls)
 		{
 			var rightP = controls.UI_RIGHT_P;
 			var leftP = controls.UI_LEFT_P;
+
 			if (leftP)
-			{
 				changeWeek(-1);
-				FlxG.sound.play(Paths.sound('scrollMenu'));
-			}
 
 			if (rightP)
-			{
 				changeWeek(1);
-				FlxG.sound.play(Paths.sound('scrollMenu'));
-			}
 
 			if (FlxG.mouse.wheel != 0)
-			{
-				FlxG.sound.play(Paths.sound('scrollMenu'), 0.4);
 				changeWeek(-FlxG.mouse.wheel);
-			}
 
 			rightArrow.color = controls.UI_RIGHT ? FlxColor.GRAY : FlxColor.WHITE;
 			leftArrow.color = controls.UI_LEFT ? FlxColor.GRAY : FlxColor.WHITE;
@@ -300,11 +321,10 @@ class StoryMenuState extends MusicBeatState
 
 		if (controls.BACK && !movedBack && !selectedWeek)
 		{
-			FlxG.sound.play(Paths.sound('cancelMenu'));
 			movedBack = true;
+			FlxG.sound.play(Paths.sound('cancelMenu'));
 			FlxG.switchState(() -> new MainMenuState());
 		}
-		#end
 
 		super.update(elapsed);
 
@@ -361,7 +381,7 @@ class StoryMenuState extends MusicBeatState
 					return;
 				}
 
-				LoadingState.loadAndSwitchState(() -> new PlayState(), true);
+				LoadingState.loadState(() -> new PlayState(), true);
 				FreeplayState.destroyFreeplayVocals();
 
 				#if (MODS_ALLOWED && DISCORD_ALLOWED)
@@ -378,6 +398,8 @@ class StoryMenuState extends MusicBeatState
 	function changeWeek(change:Int = 0):Void
 	{
 		curWeek = FlxMath.wrap(curWeek + change, 0, loadedWeeks.length - 1);
+
+		if (change != 0) FlxG.sound.play(Paths.sound('scrollMenu'));
 
 		var leWeek:WeekData = loadedWeeks[curWeek];
 		WeekData.setDirectoryFromWeek(leWeek);
@@ -419,6 +441,59 @@ class StoryMenuState extends MusicBeatState
 		#end
 
 		updateText();
+	}
+
+	function updateScroll()
+	{
+		var lastWeek:Int = curWeek;
+		curWeek = CoolUtil.boundInt(Math.round(curWeekFloat), 0, loadedWeeks.length - 1);
+
+		if (curWeek != lastWeek)
+		{
+			FlxG.sound.play(Paths.sound('scrollMenu'));
+
+			var leWeek:WeekData = loadedWeeks[curWeek];
+			WeekData.setDirectoryFromWeek(leWeek);
+
+			var leName:String = leWeek.storyName;
+			txtWeekTitle.text = leName.toUpperCase();
+			txtWeekTitle.x = FlxG.width - (txtWeekTitle.width + 10);
+
+			PlayState.storyWeek = curWeek;
+
+			if (loadedWeeks[curWeek].fileName == 'soon')
+			{
+				intendedScore = 0;
+				updateText();
+				return;
+			}
+
+			Difficulty.loadFromWeek();
+			if (Difficulty.list.contains(Difficulty.getDefault()))
+				curDifficulty = Math.round(Math.max(0, Difficulty.defaultList.indexOf(Difficulty.getDefault())));
+			else
+				curDifficulty = 0;
+
+			var newPos:Int = Difficulty.list.indexOf(lastDifficultyName);
+			// trace('Pos of ' + lastDifficultyName + ' is ' + newPos);
+			if (newPos > -1)
+			{
+				curDifficulty = newPos;
+			}
+
+			#if !switch
+			intendedScore = Highscore.getWeekScore(loadedWeeks[curWeek].fileName, curDifficulty);
+			#end
+
+			updateText();
+		}
+
+		var bullShit:Int = 0;
+		for (item in grpWeekOptions.members)
+		{
+			item.targetX = bullShit - curWeekFloat;
+			bullShit++;
+		}
 	}
 
 	function weekIsLocked(name:String):Bool {

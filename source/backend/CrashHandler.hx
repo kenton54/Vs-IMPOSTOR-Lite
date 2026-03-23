@@ -7,6 +7,11 @@ import openfl.events.ErrorEvent;
 import openfl.events.UncaughtErrorEvent;
 import openfl.Lib;
 
+#if sys
+import sys.io.File;
+import sys.FileSystem;
+#end
+
 #if hl
 import hl.Api;
 #end

@@ -39,10 +39,8 @@ import objects.AttachedSprite;
 import objects.Character;
 import substates.Prompt;
 
-
-#if sys
-import flash.media.Sound;
-#end
+import sys.io.File;
+import sys.FileSystem;
 
 @:access(flixel.sound.FlxSound._sound)
 @:access(openfl.media.Sound.__buffer)
@@ -1851,27 +1849,24 @@ class ChartingState extends MusicBeatState
 				FlxG.mouse.visible = false;
 				PlayState.SONG = _song;
 				FlxG.sound.music.stop();
-				if(vocals != null) vocals.stop();
-				if(opponentVocals != null) opponentVocals.stop();
+				if (vocals != null) vocals.stop();
+				if (opponentVocals != null) opponentVocals.stop();
 
 				//if(_song.stage == null) _song.stage = stageDropDown.selectedLabel;
 				StageData.loadDirectory(_song);
-				LoadingState.loadAndSwitchState(() -> new PlayState());
+				LoadingState.loadState(() -> new PlayState());
 			}
 
-			if(curSelectedNote != null && curSelectedNote[1] > -1) {
+			if (curSelectedNote != null && curSelectedNote[1] > -1)
+			{
 				if (FlxG.keys.justPressed.E)
-				{
 					changeNoteSustain(Conductor.stepCrochet);
-				}
 				if (FlxG.keys.justPressed.Q)
-				{
 					changeNoteSustain(-Conductor.stepCrochet);
-				}
 			}
 
-
-			if (FlxG.keys.justPressed.BACKSPACE) {
+			if (FlxG.keys.justPressed.BACKSPACE)
+			{
 				// Protect against lost data when quickly leaving the chart editor.
 				autosaveSong();
 				PlayState.chartingMode = false;

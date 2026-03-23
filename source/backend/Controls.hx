@@ -71,7 +71,6 @@ class Controls
 	private function get_NOTE_LEFT_R() return justReleased('note_left');
 	private function get_NOTE_RIGHT_R() return justReleased('note_right');
 
-
 	// Pressed buttons (others)
 	public var ACCEPT(get, never):Bool;
 	public var BACK(get, never):Bool;
@@ -85,34 +84,36 @@ class Controls
 	//Gamepad & Keyboard stuff
 	public var keyboardBinds:Map<String, Array<FlxKey>>;
 	public var gamepadBinds:Map<String, Array<FlxGamepadInputID>>;
+
+	public var controllerMode(default, null):Bool = false;
+
 	public function justPressed(key:String)
 	{
-		var result:Bool = (FlxG.keys.anyJustPressed(keyboardBinds[key]) == true);
-		if(result) controllerMode = false;
+		var result:Bool = FlxG.keys.anyJustPressed(keyboardBinds[key]) == true;
+		if (result) controllerMode = false;
 
 		return result || _myGamepadJustPressed(gamepadBinds[key]) == true;
 	}
 
 	public function pressed(key:String)
 	{
-		var result:Bool = (FlxG.keys.anyPressed(keyboardBinds[key]) == true);
-		if(result) controllerMode = false;
+		var result:Bool = FlxG.keys.anyPressed(keyboardBinds[key]) == true;
+		if (result) controllerMode = false;
 
 		return result || _myGamepadPressed(gamepadBinds[key]) == true;
 	}
 
 	public function justReleased(key:String)
 	{
-		var result:Bool = (FlxG.keys.anyJustReleased(keyboardBinds[key]) == true);
+		var result:Bool = FlxG.keys.anyJustReleased(keyboardBinds[key]) == true;
 		if(result) controllerMode = false;
 
 		return result || _myGamepadJustReleased(gamepadBinds[key]) == true;
 	}
 
-	public var controllerMode:Bool = false;
 	private function _myGamepadJustPressed(keys:Array<FlxGamepadInputID>):Bool
 	{
-		if(keys != null)
+		if (keys != null)
 		{
 			for (key in keys)
 			{
@@ -127,7 +128,7 @@ class Controls
 	}
 	private function _myGamepadPressed(keys:Array<FlxGamepadInputID>):Bool
 	{
-		if(keys != null)
+		if (keys != null)
 		{
 			for (key in keys)
 			{
@@ -142,7 +143,7 @@ class Controls
 	}
 	private function _myGamepadJustReleased(keys:Array<FlxGamepadInputID>):Bool
 	{
-		if(keys != null)
+		if (keys != null)
 		{
 			for (key in keys)
 			{
@@ -158,6 +159,7 @@ class Controls
 
 	// IGNORE THESE
 	public static var instance:Controls;
+
 	public function new()
 	{
 		keyboardBinds = ClientPrefs.keyBinds;

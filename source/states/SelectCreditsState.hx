@@ -3,6 +3,10 @@ package states;
 import openfl.utils.Assets;
 import flixel.effects.FlxFlicker;
 
+#if mobile
+import objects.BackButton;
+#end
+
 class SelectCreditsState extends MusicBeatState
 {
     public static var prevCurCredit:Int = 0;
@@ -20,10 +24,10 @@ class SelectCreditsState extends MusicBeatState
 		DiscordClient.changePresence("Choosing a team...", null);
 		#end
 
-		persistentUpdate = persistentDraw = true;
+		persistentUpdate = true;
 
         #if !mobile
-        FlxG.mouse.visible = true;
+        PointerUtil.visible = true;
         #end
 
 		var bg:FlxSprite = new FlxSprite().loadGraphic(Paths.image('storymode/bg'));
@@ -51,6 +55,15 @@ class SelectCreditsState extends MusicBeatState
             logosGrp.add(logo);
         }
 
+		#if mobile
+		var backButton:BackButton = new BackButton();
+		backButton.x = (FlxG.width - backButton.width) / 2;
+		backButton.y = FlxG.height - backButton.height - 28;
+		backButton.onConfirmStart.add(() -> selected = true);
+		backButton.onConfirmEnd.add(() -> FlxG.switchState(() -> new MainMenuState()));
+		add(backButton);
+		#end
+
         super.create();
     }
 
@@ -59,9 +72,9 @@ class SelectCreditsState extends MusicBeatState
     {
         if (!selected)
         {
-            if(controls.UI_LEFT_P)
+            if (controls.UI_LEFT_P)
 				changeItem(-1);
-			if(controls.UI_RIGHT_P)
+			if (controls.UI_RIGHT_P)
 				changeItem(1);
 
             if (PointerUtil.justMoved)
@@ -92,10 +105,10 @@ class SelectCreditsState extends MusicBeatState
 
             if (controls.ACCEPT)
                 enterCredits();
-            
-            if (controls.BACK || FlxG.mouse.justPressedRight)
+
+            if (controls.BACK)
             {
-                FlxG.mouse.visible = false;
+                PointerUtil.visible = false;
                 FlxG.sound.play(Paths.sound('cancelMenu'));
                 FlxG.switchState(() -> new MainMenuState());
                 selected = true;

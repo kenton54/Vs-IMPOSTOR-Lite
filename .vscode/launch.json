@@ -5,9 +5,27 @@
     "version": "0.2.0",
     "configurations": [
         {
-            "name": "Lime",
+            "name": "Lime Compile System",
             "type": "lime",
             "request": "launch"
+        },
+        {
+            "name": "Lime Compile Browser",
+            "type": "editor-browser",
+            "request": "launch",
+            "url": "http://localhost:3000",
+            "webRoot": "${workspaceFolder}",
+            "preLaunchTask": "lime: test html5 -nolaunch",
+            "postDebugTask": "Stop Server",
+        },
+        {
+            "name": "Lime Compile Browser (Debug)",
+            "type": "editor-browser",
+            "request": "launch",
+            "url": "http://localhost:3000",
+            "webRoot": "${workspaceFolder}",
+            "preLaunchTask": "lime: test html5 -debug -nolaunch",
+            "postDebugTask": "Stop Server",
         }
     ]
 }

@@ -165,7 +165,7 @@ jobs:
           haxelib git hxcpp https://github.com/HaxeFoundation/hxcpp master
           chmod +x ./setup/setup.sh
           sh ./setup/setup.sh
-          
+
       - name: Setup HXCPP
         run: |
           cd ~/haxelib/hxcpp/git/tools/hxcpp/
@@ -296,3 +296,68 @@ jobs:
             .haxelib/
             export/release/android/haxe/
             export/release/android/obj/
+
+  buildiOS:
+    name: iOS Build
+    runs-on: macos-latest
+    permissions: write-all
+    steps:
+      - name: Pulling new Commit
+        uses: actions/checkout@v6
+
+      - name: Install Haxe
+        uses: krdlab/setup-haxe@v2
+        with:
+          haxe-version: 4.3.7
+
+      - name: Restore Cache
+        id: cache-restore
+        uses: actions/cache/restore@v5
+        with:
+          key: cache_ios
+          path: |
+            .haxelib/
+            export/release/ios/haxe/
+            export/release/ios/obj/
+
+      - name: Install Haxelib and Libraries
+        run: |
+          haxelib setup ~/haxelib
+          haxelib git hxcpp https://github.com/HaxeFoundation/hxcpp master
+          chmod +x ./setup/setup.sh
+          sh ./setup/setup.sh
+
+      - name: Setup HXCPP
+        run: |
+          cd ~/haxelib/hxcpp/git/tools/hxcpp/
+          haxe compile.hxml
+          cd ~/
+
+      - name: Build Game
+        run: haxelib run lime build ios
+
+      - name: Publish Artifact
+        uses: actions/upload-artifact@v6
+        with:
+          name: Impostor Lite (iOS XCode Project)
+          path: export/release/ios/bin
+
+      - name: Clear old Cache
+        uses: actions/github-script@v8
+        if: ${{ steps.cache-restore.outputs.cache-hit == 'true' }}
+        with:
+          script: |
+            const caches = github.rest.actions.deleteActionsCacheByKey({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              key: "cache_ios"
+            });
+
+      - name: Save new Cache
+        uses: actions/cache/save@v5
+        with:
+          key: cache_ios
+          path: |
+            .haxelib/
+            export/release/ios/haxe/
+            export/release/ios/obj/

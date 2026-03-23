@@ -14,11 +14,6 @@ import llua.Lua;
 import backend.Achievements;
 #end
 
-#if sys
-import sys.*;
-import sys.io.*;
-#end
-
 import backend.Paths;
 import backend.Controls;
 import backend.PointerUtil;
@@ -28,17 +23,13 @@ import backend.MusicBeatState;
 import backend.MusicBeatSubstate;
 import backend.ClientPrefs;
 import backend.Conductor;
-import backend.BaseStage;
 import backend.Difficulty;
 import backend.Mods;
 
 import objects.Alphabet;
-import objects.BGSprite;
 
 import states.PlayState;
 import states.LoadingState;
-
-import openfl.Lib;
 
 //Flixel
 import flixel.sound.FlxSound;
@@ -53,7 +44,7 @@ import flixel.text.FlxText;
 import flixel.tweens.FlxEase;
 import flixel.tweens.FlxTween;
 import flixel.group.FlxSpriteGroup;
-import flixel.group.FlxGroup.FlxTypedGroup;
+import flixel.group.FlxGroup;
 
 using StringTools;
 #end

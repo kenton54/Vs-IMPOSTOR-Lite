@@ -7,8 +7,14 @@ import flixel.addons.display.shapes.FlxShapeCircle;
 
 import states.stages.StageWeek1 as BackgroundStage;
 
+#if mobile
+import objects.BackButton;
+#end
+
 class NoteOffsetState extends MusicBeatState
 {
+	static inline final DELAY_MAX:Int = 500;
+
 	var stageDirectory:String = '';
 	var boyfriend:Character;
 	var gf:Character;
@@ -23,17 +29,12 @@ class NoteOffsetState extends MusicBeatState
 	var dumbTexts:FlxTypedGroup<FlxText>;
 
 	var barPercent:Float = 0;
-	var delayMin:Int = -500;
-	var delayMax:Int = 500;
 	var timeBar:Bar;
 	var timeTxt:FlxText;
 	var beatText:Alphabet;
 	var beatTween:FlxTween;
 
 	var changeModeText:FlxText;
-
-	var controllerPointer:FlxSprite;
-	var _lastControllerMode:Bool = false;
 
 	override public function create()
 	{
@@ -80,23 +81,22 @@ class NoteOffsetState extends MusicBeatState
 		beatText.x -= 400;
 		beatText.alpha = 0;
 		beatText.acceleration.y = 250;
-		beatText.visible = false;
 		add(beatText);
-		
-		timeTxt = new FlxText(0, 800, FlxG.width, "", 32);
+
+		timeTxt = new FlxText(0, FlxG.height, FlxG.width, "", 32);
 		timeTxt.setFormat(Paths.font("vcr.ttf"), 32, FlxColor.WHITE, CENTER, FlxTextBorderStyle.OUTLINE, FlxColor.BLACK);
 		timeTxt.scrollFactor.set();
 		timeTxt.borderSize = 2;
-		timeTxt.visible = false;
 		timeTxt.cameras = [camHUD];
+		timeTxt.y -= timeTxt.height + 100;
 
 		barPercent = ClientPrefs.data.noteOffset;
 		updateNoteDelay();
-		
-		timeBar = new Bar(0, timeTxt.y + (timeTxt.height / 3), 'healthBar', function() return barPercent, delayMin, delayMax);
+
+		timeBar = new Bar(0, timeTxt.y + timeTxt.height / 2, 'healthBar', function() return barPercent, -DELAY_MAX, DELAY_MAX);
 		timeBar.scrollFactor.set();
 		timeBar.screenCenter(X);
-		timeBar.visible = false;
+		timeBar.y -= timeBar.height / 2;
 		timeBar.cameras = [camHUD];
 		timeBar.leftBar.color = 0xFF43e390;
 
@@ -110,21 +110,20 @@ class NoteOffsetState extends MusicBeatState
 		blackBox.cameras = [camHUD];
 		add(blackBox);
 
-		changeModeText = new FlxText(0, 1, FlxG.width, "", 32);
+		changeModeText = new FlxText(0, 1, FlxG.width, "Note / Beat Delay", 32);
 		changeModeText.setFormat(Paths.font("vcr.ttf"), 32, FlxColor.WHITE, CENTER);
 		changeModeText.scrollFactor.set();
 		changeModeText.cameras = [camHUD];
 		add(changeModeText);
-		
-		controllerPointer = new FlxShapeCircle(0, 0, 20, {thickness: 0}, FlxColor.WHITE);
-		controllerPointer.offset.set(20, 20);
-		controllerPointer.screenCenter();
-		controllerPointer.alpha = 0.6;
-		controllerPointer.cameras = [camHUD];
-		add(controllerPointer);
-		
-		updateMode();
-		_lastControllerMode = true;
+
+		#if mobile
+		var backButton:BackButton = new BackButton(0, 0, FlxColor.WHITE);
+		backButton.x = FlxG.width - backButton.width - 60;
+		backButton.y = FlxG.height - backButton.height - 28;
+		backButton.onConfirmEnd.add(exitMenu);
+		backButton.cameras = [camHUD];
+		add(backButton);
+		#end
 
 		Conductor.bpm = 128.0;
 		FlxG.sound.playMusic(Paths.music('offsetSong'), 1, true);
@@ -136,91 +135,75 @@ class NoteOffsetState extends MusicBeatState
 	}
 
 	var holdTime:Float = 0;
-	var onComboMenu:Bool = false;
-
+	#if mobile
+	var moveLength:Float = 0;
+	#end
 	override public function update(elapsed:Float)
 	{
+		#if mobile
+		if (PointerUtil.pressed)
+		{
+			final fpsMult:Float = FlxG.updateFramerate / 60;
+			final delta:Float = PointerUtil.pointer.deltaViewX * fpsMult;
+
+			if (Math.isFinite(delta) && Math.abs(delta) >= 2)
+			{
+				var dpiScale:Float = FlxG.stage.window.display.dpi / 160;
+				dpiScale = FlxMath.bound(dpiScale, 0.5, #if android 1 #else 2 #end);
+
+				var _moveLength:Float = delta / FlxG.updateFramerate / dpiScale * 2;
+				moveLength += Math.abs(_moveLength);
+				barPercent -= FlxMath.bound(_moveLength, -DELAY_MAX, DELAY_MAX);
+				updateNoteDelay();
+			}
+		}
+		#end
+
 		var addNum:Int = 1;
-		if(FlxG.keys.pressed.SHIFT || FlxG.gamepads.anyPressed(LEFT_SHOULDER))
+		if (FlxG.keys.pressed.SHIFT || FlxG.gamepads.anyPressed(LEFT_SHOULDER))
+			addNum = 3;
+
+		if (controls.UI_LEFT_P)
 		{
-			if(!onComboMenu)
-				addNum = 3;
+			barPercent = FlxMath.bound(ClientPrefs.data.noteOffset - 1, -DELAY_MAX, DELAY_MAX);
+			updateNoteDelay();
+		}
+		else if (controls.UI_RIGHT_P)
+		{
+			barPercent = FlxMath.bound(ClientPrefs.data.noteOffset + 1, -DELAY_MAX, DELAY_MAX);
+			updateNoteDelay();
 		}
 
-		if(FlxG.gamepads.anyJustPressed(ANY)) controls.controllerMode = true;
-		else if(FlxG.mouse.justPressed) controls.controllerMode = false;
-
-		if(controls.controllerMode != _lastControllerMode)
+		var mult:Int = 1;
+		if (controls.UI_LEFT || controls.UI_RIGHT)
 		{
-			//trace('changed controller mode');
-			FlxG.mouse.visible = !controls.controllerMode;
-			controllerPointer.visible = controls.controllerMode;
-
-			// changed to controller mid state
-			if(controls.controllerMode)
-			{
-				var mousePos = FlxG.mouse.getScreenPosition(camHUD);
-				controllerPointer.x = mousePos.x;
-				controllerPointer.y = mousePos.y;
-			}
-			updateMode();
-			_lastControllerMode = controls.controllerMode;
+			holdTime += elapsed;
+			if(controls.UI_LEFT) mult = -1;
 		}
 
-		if(!onComboMenu)
+		if (controls.UI_LEFT_R || controls.UI_RIGHT_R) holdTime = 0;
+
+		if (holdTime > 0.5)
 		{
-			if(controls.UI_LEFT_P)
-			{
-				barPercent = Math.max(delayMin, Math.min(ClientPrefs.data.noteOffset - 1, delayMax));
-				updateNoteDelay();
-			}
-			else if(controls.UI_RIGHT_P)
-			{
-				barPercent = Math.max(delayMin, Math.min(ClientPrefs.data.noteOffset + 1, delayMax));
-				updateNoteDelay();
-			}
-
-			var mult:Int = 1;
-			if(controls.UI_LEFT || controls.UI_RIGHT)
-			{
-				holdTime += elapsed;
-				if(controls.UI_LEFT) mult = -1;
-			}
-
-			if(controls.UI_LEFT_R || controls.UI_RIGHT_R) holdTime = 0;
-
-			if(holdTime > 0.5)
-			{
-				barPercent += 100 * addNum * elapsed * mult;
-				barPercent = Math.max(delayMin, Math.min(barPercent, delayMax));
-				updateNoteDelay();
-			}
-
-			if(controls.RESET)
-			{
-				holdTime = 0;
-				barPercent = 0;
-				updateNoteDelay();
-			}
+			barPercent += 100 * addNum * elapsed * mult;
+			barPercent = FlxMath.bound(barPercent, -DELAY_MAX, DELAY_MAX);
+			updateNoteDelay();
 		}
 
-		if(controls.BACK)
+		if (controls.RESET)
 		{
-			if(zoomTween != null) zoomTween.cancel();
-			if(beatTween != null) beatTween.cancel();
-
-			persistentUpdate = false;
-			FlxG.switchState(() -> new options.OptionsState());
-			if(OptionsState.onPlayState)
-			{
-				if(ClientPrefs.data.pauseMusic != 'None')
-					FlxG.sound.playMusic(Paths.music(Paths.formatToSongPath(ClientPrefs.data.pauseMusic)));
-				else
-					FlxG.sound.music.volume = 0;
-			}
-			else FlxG.sound.playMusic(Paths.music('freakyMenu'));
-			FlxG.mouse.visible = false;
+			holdTime = 0;
+			barPercent = 0;
+			updateNoteDelay();
 		}
+
+		if (controls.BACK)
+			exitMenu();
+
+		#if android
+		if (FlxG.android.justReleased.BACK)
+			exitMenu();
+		#end
 
 		Conductor.songPosition = FlxG.sound.music.time;
 		super.update(elapsed);
@@ -232,17 +215,17 @@ class NoteOffsetState extends MusicBeatState
 	{
 		super.beatHit();
 
-		if(lastBeatHit == curBeat)
+		if (lastBeatHit == curBeat)
 		{
 			return;
 		}
 
-		if(curBeat % 2 == 0)
+		if (curBeat % 2 == 0)
 			boyfriend.dance();
-		if(curBeat % 1 == 0)
+		if (curBeat % 1 == 0)
 			gf.dance();
 		
-		if(curBeat % 4 == 2)
+		if (curBeat % 4 == 2)
 		{
 			// FlxG.camera.zoom = 1.15;
 			FlxTween.cancelTweensOf(FlxG.camera);
@@ -270,29 +253,25 @@ class NoteOffsetState extends MusicBeatState
 		timeTxt.text = 'Current offset: ' + Math.floor(barPercent) + ' ms';
 	}
 
-	function updateMode()
+	function exitMenu()
 	{
-		timeBar.visible = !onComboMenu;
-		timeTxt.visible = !onComboMenu;
-		beatText.visible = !onComboMenu;
+		if (zoomTween != null) zoomTween.cancel();
+		if (beatTween != null) beatTween.cancel();
 
-		controllerPointer.visible = false;
-		FlxG.mouse.visible = false;
-		if(onComboMenu)
+		persistentUpdate = false;
+		FlxG.switchState(() -> new options.OptionsState());
+
+		if (OptionsState.onPlayState)
 		{
-			FlxG.mouse.visible = !controls.controllerMode;
-			controllerPointer.visible = controls.controllerMode;
+			if (ClientPrefs.data.pauseMusic != 'None')
+				FlxG.sound.playMusic(Paths.music(Paths.formatToSongPath(ClientPrefs.data.pauseMusic)));
+			else
+				FlxG.sound.music.volume = 0;
 		}
-
-		var str:String = 'Note / Beat Delay';
-		var str2:String = '';
-
-		if(!controls.controllerMode)
-			str2 = '(Press Accept to Switch)';
 		else
-			str2 = '(Press Start to Switch)';
+			FlxG.sound.playMusic(Paths.music('freakyMenu'));
 
-		changeModeText.text = '${str.toUpperCase()}';
+		PointerUtil.visible = false;
 	}
 
 	override function destroy()

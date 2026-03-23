@@ -132,7 +132,7 @@ class PauseSubState extends MusicBeatSubstate
 		missingTextBG.alpha = 0.6;
 		missingTextBG.visible = false;
 		add(missingTextBG);
-		
+
 		missingText = new FlxText(50, 0, FlxG.width - 100, '', 24);
 		missingText.setFormat(Paths.font("vcr.ttf"), 24, FlxColor.WHITE, CENTER, FlxTextBorderStyle.OUTLINE, FlxColor.BLACK);
 		missingText.scrollFactor.set();
@@ -140,18 +140,19 @@ class PauseSubState extends MusicBeatSubstate
 		add(missingText);
 
 		regenMenu();
-		cameras = [FlxG.cameras.list[FlxG.cameras.list.length - 1]];
+
+		cameras = [PlayState.instance.camOther];
 
 		super.create();
 	}
-	
+
 	function getPauseSong()
 	{
-		var formattedSongName:String = (songName != null ? Paths.formatToSongPath(songName) : '');
+		var formattedSongName:String = songName != null ? Paths.formatToSongPath(songName) : '';
 		var formattedPauseMusic:String = Paths.formatToSongPath(ClientPrefs.data.pauseMusic);
-		if(formattedSongName == 'none' || (formattedSongName != 'none' && formattedPauseMusic == 'none')) return null;
+		if (formattedSongName == 'none') return null;
 
-		return (formattedSongName != '') ? formattedSongName : formattedPauseMusic;
+		return formattedSongName != '' ? formattedSongName : formattedPauseMusic;
 	}
 
 	var holdTime:Float = 0;
@@ -159,26 +160,30 @@ class PauseSubState extends MusicBeatSubstate
 	override function update(elapsed:Float)
 	{
 		cantUnpause -= elapsed;
+
 		if (pauseMusic.volume < 0.5)
 			pauseMusic.volume += 0.01 * elapsed;
 
-		super.update(elapsed);
+		#if mobile
+		#if android
+		if (FlxG.android.justReleased.BACK)
+		{
+			close();
+			return;
+		}
+		#end
+		#end
 
-		if(controls.BACK)
+		if (controls.BACK)
 		{
 			close();
 			return;
 		}
 
-		updateSkipTextStuff();
 		if (controls.UI_UP_P)
-		{
 			changeSelection(-1);
-		}
 		if (controls.UI_DOWN_P)
-		{
 			changeSelection(1);
-		}
 
 		var daSelected:String = menuItems[curSelected];
 		switch (daSelected)
@@ -197,7 +202,7 @@ class PauseSubState extends MusicBeatSubstate
 					holdTime = 0;
 				}
 
-				if(controls.UI_LEFT || controls.UI_RIGHT)
+				if (controls.UI_LEFT || controls.UI_RIGHT)
 				{
 					holdTime += elapsed;
 					if(holdTime > 0.5)
@@ -320,6 +325,9 @@ class PauseSubState extends MusicBeatSubstate
 					if (PlayState.instance.cameraTween != null) PlayState.instance.cameraTween.active = false;
 			}
 		}
+
+		updateSkipTextStuff();
+		super.update(elapsed);
 	}
 
 	function deleteSkipTimeText()

@@ -8,20 +8,27 @@ import flixel.util.FlxColor;
 import states.TitleState;
 
 // Add a variable here and it will get automatically saved
-@:structInit class SaveVariables {
+@:structInit class SaveVariables
+{
 	public var downScroll:Bool = false;
 	public var middleScroll:Bool = false;
 	public var opponentStrums:Bool = true;
 	public var showFPS:Bool = true;
 	public var flashing:Bool = true;
+
+	#if mobile
+	public var screenTimeout:Bool = false;
+	#else
 	public var autoPause:Bool = true;
+	#end
+
 	public var antialiasing:Bool = false;
 	public var noteSkin:String = 'Default';
 	public var splashSkin:String = 'Psych';
 	public var splashAlpha:Float = 0.6;
 	public var lowQuality:Bool = false;
 	public var shaders:Bool = true;
-	public var cacheOnGPU:Bool = #if !switch true #else true #end; // From Stilic
+	public var cacheOnGPU:Bool = true; // From Stilic
 	public var framerate:Int = 60;
 	public var camZooms:Bool = true;
 	public var hideHud:Bool = false;
@@ -40,7 +47,7 @@ import states.TitleState;
 	];
 
 	public var ghostTapping:Bool = true;
-	public var timeBarType:String = 'Time Left';
+	public var timeBarType:TimeBarType = TimeLeft;
 	public var scoreZoom:Bool = true;
 	public var noReset:Bool = false;
 	public var healthBarAlpha:Float = 1;
@@ -78,6 +85,11 @@ import states.TitleState;
 	public var safeFrames:Float = 10;
 	public var guitarHeroSustains:Bool = true;
 	public var discordRPC:Bool = true;
+
+	#if mobile
+	public var mobileControlStyle:MobileControlStyle = DoubleThumbs;
+	public var controlsAlpha:Float = 0.5;
+	#end
 }
 
 class ClientPrefs {
@@ -130,14 +142,14 @@ class ClientPrefs {
 
 	public static function resetKeys(controller:Null<Bool> = null) //Null = both, False = Keyboard, True = Controller
 	{
-		if(controller != true)
+		if (controller != true)
 			for (key in keyBinds.keys())
 				if(defaultKeys.exists(key))
 					keyBinds.set(key, defaultKeys.get(key).copy());
 
-		if(controller != false)
+		if (controller != false)
 			for (button in gamepadBinds.keys())
-				if(defaultButtons.exists(button))
+				if (defaultButtons.exists(button))
 					gamepadBinds.set(button, defaultButtons.get(button).copy());
 	}
 
@@ -155,11 +167,14 @@ class ClientPrefs {
 		defaultButtons = gamepadBinds.copy();
 	}
 
-	public static function saveSettings() {
+	public static function saveSettings()
+	{
 		for (key in Reflect.fields(data))
 			Reflect.setField(FlxG.save.data, key, Reflect.field(data, key));
 
-		#if ACHIEVEMENTS_ALLOWED Achievements.save(); #end
+		#if ACHIEVEMENTS_ALLOWED
+		Achievements.save();
+		#end
 		FlxG.save.flush();
 
 		//Placing this in a separate save so that it can be manually deleted without removing your Score and stuff
@@ -171,26 +186,30 @@ class ClientPrefs {
 		FlxG.log.add("Settings saved!");
 	}
 
-	public static function loadPrefs() {
-		#if ACHIEVEMENTS_ALLOWED Achievements.load(); #end
+	public static function loadPrefs()
+	{
+		#if ACHIEVEMENTS_ALLOWED
+		Achievements.load();
+		#end
 
 		for (key in Reflect.fields(data))
 			if (key != 'gameplaySettings' && Reflect.hasField(FlxG.save.data, key))
 				Reflect.setField(data, key, Reflect.field(FlxG.save.data, key));
 
 		if (Main.fpsCounter != null)
-			Main.fpsCounter.visible = data.showFPS;
+			Main.fpsCounter.visible = #if mobile false #else data.showFPS #end;
 
-		#if (!html5 && !switch)
+		#if !(html5 || switch || mobile)
 		FlxG.autoPause = ClientPrefs.data.autoPause;
 
-		if(FlxG.save.data.framerate == null) {
+		if (FlxG.save.data.framerate == null)
+		{
 			final refreshRate:Int = FlxG.stage.application.window.displayMode.refreshRate;
 			data.framerate = Std.int(FlxMath.bound(refreshRate, 60, 240));
 		}
 		#end
 
-		if(data.framerate > FlxG.drawFramerate)
+		if (data.framerate > FlxG.drawFramerate)
 		{
 			FlxG.updateFramerate = data.framerate;
 			FlxG.drawFramerate = data.framerate;
@@ -201,7 +220,11 @@ class ClientPrefs {
 			FlxG.updateFramerate = data.framerate;
 		}
 
-		if(FlxG.save.data.gameplaySettings != null)
+		#if mobile
+		lime.system.System.allowScreenTimeout = data.screenTimeout;
+		#end
+
+		if (FlxG.save.data.gameplaySettings != null)
 		{
 			var savedMap:Map<String, Dynamic> = FlxG.save.data.gameplaySettings;
 			for (name => value in savedMap)
@@ -256,10 +279,31 @@ class ClientPrefs {
 		defaultVolumeUpKeys = keyBinds.get('volume_up').copy();
 		toggleVolumeKeys(true);
 	}
+
 	public static function toggleVolumeKeys(?turnOn:Bool = true)
 	{
+		#if !mobile
 		FlxG.sound.muteKeys = turnOn ? defaultMuteKeys : [];
 		FlxG.sound.volumeDownKeys = turnOn ? defaultVolumeDownKeys : [];
 		FlxG.sound.volumeUpKeys = turnOn ? defaultVolumeUpKeys : [];
+		#end
 	}
+}
+
+enum abstract TimeBarType(String) from String to String
+{
+	var Disabled = 'Disabled';
+	var TimeLeft = 'Time Left';
+	var TimeElapsed = 'Time Elapsed';
+	var TimeTotal = 'Total Time';
+	var SongName = 'Song Name';
+	var Percentage = 'Percentage';
+	var SongNamePercent = 'Song Name and Percentage';
+}
+
+enum abstract MobileControlStyle(String) from String to String
+{
+	var DoubleThumbs = 'Double Thumbs';
+	var FourLanes = 'Four Lanes';
+	//var FourButtons = 'Four Buttons';
 }

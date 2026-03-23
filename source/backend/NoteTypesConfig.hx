@@ -1,5 +1,6 @@
 package backend;
 
+import openfl.utils.Assets;
 import objects.Note;
 
 typedef NoteTypeProperty = {
@@ -9,16 +10,21 @@ typedef NoteTypeProperty = {
 
 class NoteTypesConfig
 {
-	private static var noteTypesData:Map<String, Array<NoteTypeProperty>> = new Map<String, Array<NoteTypeProperty>>();
+	static var noteTypesData:Map<String, Array<NoteTypeProperty>> = new Map<String, Array<NoteTypeProperty>>();
+
 	public static function clearNoteTypesData()
 		noteTypesData.clear();
 
 	public static function loadNoteTypeData(name:String)
 	{
-		if(noteTypesData.exists(name)) return noteTypesData.get(name);
+		if (noteTypesData.exists(name)) return noteTypesData.get(name);
+
+		if (!Assets.exists(Paths.getPath('notetypes/$name.txt')))
+			return null;
 
 		var str:String = Paths.getTextFromFile('notetypes/$name.txt');
-		if(str == null || !str.contains(':') || !str.contains('=')) noteTypesData.set(name, null);
+		if (str == null || !str.contains(':') || !str.contains('='))
+			noteTypesData.set(name, null);
 
 		var parsed:Array<NoteTypeProperty> = [];
 		var lines:Array<String> = CoolUtil.listFromString(str);
@@ -48,7 +54,7 @@ class NoteTypesConfig
 	public static function applyNoteTypeData(note:Note, name:String)
 	{
 		var data:Array<NoteTypeProperty> = loadNoteTypeData(name);
-		if(data == null || data.length < 1) return;
+		if (data == null || data.length < 1) return;
 		
 		for (line in data) 
 		{
@@ -113,7 +119,7 @@ class NoteTypesConfig
 			//is a string
 			return value.substring(1, value.length-1);
 		}
-		
+
 		switch(value)
 		{
 			case "true":

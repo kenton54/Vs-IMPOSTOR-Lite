@@ -1,5 +1,6 @@
 bf
 bf-ghost
+bf-defeat-legacy
 idkbf
 
 gf
@@ -12,3 +13,6 @@ red-meltdown
 idk
 dave
 dave-angry
+
+black
+black-legacy
