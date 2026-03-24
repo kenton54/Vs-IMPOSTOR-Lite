@@ -2,10 +2,10 @@
 <!--
 Created with Funkin Packer v0.1.3 https://neeeoo.github.io/funkin-packer/
 -->
-<TextureAtlas imagePath="detectivecomic.png" width="4102" height="360">
-	<SubTexture name="detectiveboil1" x="3275" y="1" width="826" height="358" frameX="-0" frameY="-0" frameWidth="849" frameHeight="358"/>
-	<SubTexture name="detectiveboil2" x="2472" y="1" width="800" height="357" frameX="-0" frameY="-1" frameWidth="849" frameHeight="358"/>
-	<SubTexture name="detectivebump1" x="1704" y="1" width="765" height="353" frameX="-0" frameY="-5" frameWidth="849" frameHeight="358"/>
-	<SubTexture name="detectivebump2" x="852" y="1" width="849" height="351" frameX="-0" frameY="-7" frameWidth="849" frameHeight="358"/>
-	<SubTexture name="detectivebump3" x="1" y="1" width="848" height="343" frameX="-0" frameY="-15" frameWidth="849" frameHeight="358"/>
+<TextureAtlas imagePath="detectivecomic.png" width="2393" height="710">
+	<SubTexture name="detectiveboil1" x="1567" y="352" width="826" height="358" frameX="-0" frameY="-542" frameWidth="1200" frameHeight="900"/>
+	<SubTexture name="detectiveboil2" x="766" y="352" width="800" height="357" frameX="-0" frameY="-543" frameWidth="1200" frameHeight="900"/>
+	<SubTexture name="detectivebump1" x="0" y="344" width="765" height="353" frameX="-0" frameY="-547" frameWidth="1200" frameHeight="900"/>
+	<SubTexture name="detectivebump2" x="849" y="0" width="849" height="351" frameX="-0" frameY="-549" frameWidth="1200" frameHeight="900"/>
+	<SubTexture name="detectivebump3" x="0" y="0" width="848" height="343" frameX="-0" frameY="-557" frameWidth="1200" frameHeight="900"/>
 </TextureAtlas>

@@ -32,7 +32,7 @@ function onStepHit()
     if not introPlayed then
         if curStep >= 32 and not tweened then
             tweened = true
-            doTweenY('tweenY', 'camGame.scroll', 0, 9, 'quadInOut')
+            doTweenY('tweenY', 'camGame.scroll', 100, 9, 'quadInOut')
             setProperty('camFollow.y', 0)
         end
         if curStep >= 112 and not hudvisible then

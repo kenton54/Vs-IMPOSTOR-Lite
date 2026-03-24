@@ -7,6 +7,10 @@ function onCreate()
     setObjectOrder("sparky", getObjectOrder("gfGroup"))
 end
 
+function onCreatePost()
+    setProperty("gf.alpha", 0.7)
+end
+
 function onBeatHit()
     playAnim("sparky", "idle", true)
 end

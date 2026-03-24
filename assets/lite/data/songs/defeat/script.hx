@@ -1,5 +1,4 @@
 import backend.CoolUtil;
-import flixel.math.FlxBasePoint;
 import flixel.util.FlxStringUtil;
 import flixel.FlxSprite;
 import lime.app.Application;
@@ -268,7 +267,7 @@ function prepareChangeToLegacy()
 	FlxTween.tween(Main.fpsCounter, {alpha: 0}, sectionDur);
 
 	var window = Application.current.window;
-	var windowMidPoint:FlxBasePoint = FlxBasePoint.get(window.x + window.width / 2, window.y + window.height / 2);
+	var windowMidPoint:FlxPoint = FlxPoint.get(window.x + window.width / 2, window.y + window.height / 2);
 	FlxTween.tween(window, {width: 1280, height: 720}, sectionDur, {
         startDelay: sectionDur,
         ease: FlxEase.quartInOut,
@@ -362,7 +361,7 @@ function prepareChangeToLite()
 	FlxTween.tween(legacyFPSCounter, {alpha: 0}, fadeDur);
 
 	var window = Application.current.window;
-	var windowMidPoint:FlxBasePoint = FlxBasePoint.get(window.x + window.width / 2, window.y + window.height / 2);
+	var windowMidPoint:FlxPoint = FlxPoint.get(window.x + window.width / 2, window.y + window.height / 2);
 	FlxTween.tween(window, {width: 1200, height: 900}, halfSection, {
 		startDelay: halfSection,
 		ease: FlxEase.quartInOut,

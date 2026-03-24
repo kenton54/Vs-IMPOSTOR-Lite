@@ -429,6 +429,19 @@ class LuaUtils
 		#end
 	}
 
+	public static function getPlatformTarget():String
+	{
+		#if desktop
+		return 'desktop';
+		#elseif mobile
+		return 'mobile';
+		#elseif console
+		return 'console';
+		#else
+		return 'unknown';
+		#end
+	}
+
 	//buncho string stuffs
 	public static function getTweenTypeByString(type:String = ''):FlxTweenType
 	{

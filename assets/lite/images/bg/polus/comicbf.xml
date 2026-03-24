@@ -2,7 +2,7 @@
 <!--
 Created with Funkin Packer v0.1.3 https://neeeoo.github.io/funkin-packer/
 -->
-<TextureAtlas imagePath="comicbf.png" width="733" height="1318">
-	<SubTexture name="ComicBf1" x="1" y="669" width="731" height="648" frameX="-0" frameY="-14" frameWidth="731" frameHeight="665"/>
-	<SubTexture name="ComicBf2" x="1" y="1" width="730" height="665" frameX="-1" frameY="-0" frameWidth="731" frameHeight="665"/>
+<TextureAtlas imagePath="comicbf.png" width="731" height="1314">
+	<SubTexture name="ComicBf1" x="0" y="666" width="731" height="648" frameX="-469" frameY="-132" frameWidth="1200" frameHeight="900"/>
+	<SubTexture name="ComicBf2" x="0" y="0" width="730" height="665" frameX="-470" frameY="-118" frameWidth="1200" frameHeight="900"/>
 </TextureAtlas>

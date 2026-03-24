@@ -54,6 +54,8 @@ import sys.io.File;
 import sys.FileSystem;
 #end
 
+import haxe.io.Path;
+
 /**
  * This is where all the Gameplay stuff happens and is managed
  *
@@ -191,6 +193,7 @@ class PlayState extends MusicBeatState
 	public var camHUD:FlxCamera;
 	public var camGame:FlxCamera;
 	public var camOther:FlxCamera;
+	public var camPause:FlxCamera;
 	public var camDialogue:FlxCamera;
 	public var camCountdown:FlxCamera;
 	public var camControls:FlxCamera;
@@ -307,18 +310,21 @@ class PlayState extends MusicBeatState
 		// var gameCam:FlxCamera = FlxG.camera;
 		camGame = initPsychCamera();
 		camHUD = new FlxCamera();
-		camOther = new FlxCamera();
 		camCountdown = new FlxCamera();
 		camDialogue = new FlxCamera();
+		camPause = new FlxCamera();
+		camOther = new FlxCamera();
 		camHUD.bgColor = 0x0;
-		camOther.bgColor = 0x0;
 		camCountdown.bgColor = 0x0;
 		camDialogue.bgColor = 0x0;
+		camPause.bgColor = 0x0;
+		camOther.bgColor = 0x0;
 
 		FlxG.cameras.add(camHUD, false);
-		FlxG.cameras.add(camOther, false);
-		FlxG.cameras.add(camDialogue, false);
 		FlxG.cameras.add(camCountdown, false);
+		FlxG.cameras.add(camDialogue, false);
+		FlxG.cameras.add(camPause, false);
+		FlxG.cameras.add(camOther, false);
 
 		#if mobile
 		camControls = new FlxCamera();
@@ -401,13 +407,13 @@ class PlayState extends MusicBeatState
 			for (file in Paths.readDirectory(folder))
 			{
 				#if LUA_ALLOWED
-				if (file.toLowerCase().endsWith('.lua'))
-					new FunkinLua(folder + file);
+				if (Path.extension(file) == 'lua')
+					startLuasNamed(folder + file, true);
 				#end
 
 				#if HSCRIPT_ALLOWED
-				if (file.toLowerCase().endsWith('.hx'))
-					initHScript(folder + file);
+				if (Path.extension(file) == 'hx')
+					startHScriptsNamed(folder + file, true);
 				#end
 			}
 		}
@@ -618,13 +624,13 @@ class PlayState extends MusicBeatState
 			for (file in Paths.readDirectory(folder))
 			{
 				#if LUA_ALLOWED
-				if (file.toLowerCase().endsWith('.lua'))
-					new FunkinLua(folder + file);
+				if (Path.extension(file) == 'lua')
+					startLuasNamed(folder + file, true);
 				#end
 
 				#if HSCRIPT_ALLOWED
-				if (file.toLowerCase().endsWith('.hx'))
-					initHScript(folder + file);
+				if (Path.extension(file) == 'hx')
+					startHScriptsNamed(folder + file, true);
 				#end
 			}
 		}
@@ -1641,8 +1647,15 @@ class PlayState extends MusicBeatState
 				vocals.pause();
 				opponentVocals.pause();
 			}
+
 			FlxTimer.globalManager.forEach(function(tmr:FlxTimer) if(!tmr.finished) tmr.active = false);
 			FlxTween.globalManager.forEach(function(twn:FlxTween) if(!twn.finished) twn.active = false);
+
+			#if mobile
+			pauseButton.animation.play("confirm");
+			if (pauseTween != null) pauseTween.cancel();
+			pauseTween = FlxTween.tween(pauseButton, {alpha: 0}, 0.25, {ease: FlxEase.quartIn});
+			#end
 		}
 
 		super.openSubState(SubState);
@@ -2065,12 +2078,6 @@ class PlayState extends MusicBeatState
 					note.resetAnim = 0;
 				}
 		}
-
-		#if mobile
-		pauseButton.animation.play("confirm");
-		if (pauseTween != null) pauseTween.cancel();
-		pauseTween = FlxTween.tween(pauseButton, {alpha: 0}, 0.25, {ease: FlxEase.quartIn});
-		#end
 
 		openSubState(new PauseSubState());
 
@@ -3452,21 +3459,21 @@ class PlayState extends MusicBeatState
 	}
 
 	#if LUA_ALLOWED
-	public function startLuasNamed(luaFile:String)
+	public function startLuasNamed(luaFile:String, ?absolutePath:Bool = false):Bool
 	{
 		#if MODS_ALLOWED
-		var luaToLoad:String = Paths.modFolders(luaFile);
+		var luaToLoad:String = absolutePath ? luaFile : Paths.modFolders(luaFile);
 		if (!FileSystem.exists(luaToLoad))
 			luaToLoad = Paths.getPath(luaFile);
 
 		if (FileSystem.exists(luaToLoad))
 		#else
-		var luaToLoad:String = Paths.getPath(luaFile);
+		var luaToLoad:String = absolutePath ? luaFile : Paths.getPath(luaFile);
 		if (Assets.exists(luaToLoad))
 		#end
 		{
 			for (script in luaArray)
-				if(script.scriptName == luaToLoad) return false;
+				if (script.scriptName == luaToLoad) return false;
 
 			new FunkinLua(luaToLoad);
 			return true;
@@ -3477,16 +3484,16 @@ class PlayState extends MusicBeatState
 	#end
 
 	#if HSCRIPT_ALLOWED
-	public function startHScriptsNamed(scriptFile:String)
+	public function startHScriptsNamed(scriptFile:String, ?absolutePath:Bool = false):Bool
 	{
 		#if MODS_ALLOWED
-		var scriptToLoad:String = Paths.modFolders(scriptFile);
+		var scriptToLoad:String = absolutePath ? scriptFile : Paths.modFolders(scriptFile);
 		if (!FileSystem.exists(scriptToLoad))
 			scriptToLoad = Paths.getPath(scriptFile);
 
 		if (FileSystem.exists(scriptToLoad))
 		#else
-		var scriptToLoad:String = Paths.getPath(scriptFile);
+		var scriptToLoad:String = absolutePath ? scriptFile : Paths.getPath(scriptFile);
 		if (Assets.exists(scriptToLoad))
 		#end
 		{

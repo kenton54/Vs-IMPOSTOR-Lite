@@ -196,6 +196,7 @@ class FunkinLua
 
 		// build target (windows, mac, linux, etc.)
 		set('buildTarget', LuaUtils.getBuildTarget());
+		set('platformTarget', LuaUtils.getPlatformTarget());
 
 		//
 		Lua_helper.add_callback(lua, "getRunningScripts", function(){

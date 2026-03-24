@@ -1,5 +1,5 @@
 function onCreate()
-	makeLuaSprite('flash', '', 0, 0);
+	makeLuaSprite('flash', '', 0, 0)
 	makeGraphic('flash', screenWidth, screenHeight, 'fd7f7f')
 	setObjectCamera('flash', 'camHUD')
 	addLuaSprite('flash');

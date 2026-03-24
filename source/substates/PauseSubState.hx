@@ -141,7 +141,7 @@ class PauseSubState extends MusicBeatSubstate
 
 		regenMenu();
 
-		cameras = [PlayState.instance.camOther];
+		cameras = [PlayState.instance.camPause];
 
 		super.create();
 	}

@@ -1,17 +1,12 @@
-local isSongSM = (songName == 'sussus-moongus')
-
 function onCreatePost()
-	if isSongSM then
-		runHaxeCode([[
-			import flixel.addons.display.FlxBackdrop;
+	runHaxeCode([[
+		import flixel.addons.display.FlxBackdrop;
 
-			var spaceInf:FlxBackdrop = new FlxBackdrop(Paths.image("bg/polus/stars"));
-			spaceInf.setPosition(-1460, -1200);
-			spaceInf.scale.set(2.2, 2.2);
-			// spaceInf.scrollFactor.set(0.8, 0.8);
-			addBehindGF(spaceInf);
-		]])
-	end
+		var spaceInf:FlxBackdrop = new FlxBackdrop(Paths.image("bg/polus/stars"));
+		spaceInf.setPosition(-1460, -1200);
+		spaceInf.scale.set(2.2, 2.2);
+		game.addBehindGF(spaceInf);
+	]])
 
 	makeLuaSprite("pbg", "bg/polus/background", -1460, -1200)
 	scaleObject("pbg", 2.2, 2.2)

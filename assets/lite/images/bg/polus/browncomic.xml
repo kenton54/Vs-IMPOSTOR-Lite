@@ -2,7 +2,7 @@
 <!--
 Created with Funkin Packer v0.1.3 https://neeeoo.github.io/funkin-packer/
 -->
-<TextureAtlas imagePath="browncomic.png" width="1563" height="637">
-	<SubTexture name="browncomic1" x="1" y="1" width="782" height="632" frameX="-0" frameY="-0" frameWidth="782" frameHeight="635"/>
-	<SubTexture name="browncomic2" x="786" y="1" width="776" height="635" frameX="-0" frameY="-0" frameWidth="782" frameHeight="635"/>
+<TextureAtlas imagePath="browncomic.png" width="635" height="1559">
+	<SubTexture name="browncomic1" x="0" y="0" width="632" height="782" rotated="true" frameX="-0" frameY="-0" frameWidth="1200" frameHeight="900"/>
+	<SubTexture name="browncomic2" x="0" y="783" width="635" height="776" rotated="true" frameX="-0" frameY="-0" frameWidth="1200" frameHeight="900"/>
 </TextureAtlas>

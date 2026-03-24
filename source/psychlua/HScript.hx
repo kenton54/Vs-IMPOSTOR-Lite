@@ -92,7 +92,7 @@ class HScript extends Iris
 	#end
 
 	public var origin:String;
-	override public function new(?parent:Dynamic, ?file:String, varsToBring:Any = null, manualRun:Bool = false)
+	override public function new(?parent:FunkinLua, ?file:String, varsToBring:Any = null, manualRun:Bool = false)
 	{
 		if (file == null) file = '';
 		filePath = file;
@@ -169,12 +169,15 @@ class HScript extends Iris
 
 		set('FlxG', flixel.FlxG);
 		set('FlxMath', flixel.math.FlxMath);
+		set('FlxPoint', flixel.math.FlxBasePoint);
 		set('FlxSprite', flixel.FlxSprite);
 		set('FlxCamera', flixel.FlxCamera);
 		set('FlxTimer', flixel.util.FlxTimer);
 		set('FlxTween', flixel.tweens.FlxTween);
 		set('FlxEase', flixel.tweens.FlxEase);
 		set('FlxColor', CustomFlxColor);
+		set('FlxEmitter', flixel.effects.particles.FlxEmitter);
+		set('FlxSkewedSprite', flixel.addons.effects.FlxSkewedSprite);
 		set('Countdown', backend.BaseStage.Countdown);
 		set('PlayState', PlayState);
 		set('Paths', Paths);
@@ -368,6 +371,7 @@ class HScript extends Iris
 		set('controls', Controls.instance);
 
 		set('buildTarget', LuaUtils.getBuildTarget());
+		set('platformTarget', LuaUtils.getPlatformTarget());
 		set('customSubstate', CustomSubstate.instance);
 		set('customSubstateName', CustomSubstate.name);
 
