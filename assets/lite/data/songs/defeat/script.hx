@@ -1,3 +1,51 @@
+import objects.VideoSprite;
+
+final MAX_MISSES:Int = 5;
+
+var introVideo:VideoSprite;
+
+function onCreate()
+{
+	introVideo = new VideoSprite(Paths.video("defeatIntro"), true);
+	introVideo.cameras = [game.camHUD];
+	introVideo.finishCallback = introFinished;
+	add(introVideo);
+}
+
+function onCreatePost()
+{
+	game.timeBar.leftBar.color = 0xFFF03636;
+
+	FlxG.camera.snapToTarget();
+}
+
+var introPlayed:Bool = false;
+
+function introFinished()
+{
+	introPlayed = true;
+}
+
+function onKeyPressPre(key)
+{
+	if (!introPlayed)
+		return Function_Stop;
+}
+
+function onUpdate(elapsed:Float)
+{
+	//updateLegacyFPSCounter();
+
+	if (Conductor.songPosition >= -(Conductor.crochet * 1.65) && !introPlayed)
+	{
+		introVideo.play();
+	}
+
+	if (game.songMisses > MAX_MISSES && !isDead)
+		game.health = 0;
+}
+
+/*
 import backend.CoolUtil;
 import flixel.util.FlxStringUtil;
 import flixel.FlxSprite;
@@ -224,12 +272,10 @@ function onSectionHit()
 			var targetAlpha:Float = 1;
 			if (strum.player < 1)
 			{
-				/*
 				if (!ClientPrefs.data.opponentStrums)
 					targetAlpha = 0;
 				else if (ClientPrefs.data.middleScroll)
 					targetAlpha = 0.35;
-				*/
 				targetAlpha = 0;
 			}
 			FlxTween.tween(strum, {alpha: targetAlpha}, tweenDur);
@@ -534,3 +580,4 @@ function onDestroy()
 
 	ClientPrefs.data.middleScroll = oldMiddleScroll;
 }
+*/

@@ -1701,7 +1701,7 @@ class PlayState extends MusicBeatState
 		if (health > 0 && !paused && autoUpdateRPC) DiscordClient.changePresence(detailsPausedText, SONG.song, iconP2.getCharacter());
 		#end
 
-		if (#if mobile true #else ClientPrefs.data.autoPause #end && !paused)
+		if (#if !mobile ClientPrefs.data.autoPause && #end canPause && !paused)
 			openPauseMenu();
 
 		super.onFocusLost();

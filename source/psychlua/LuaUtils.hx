@@ -435,6 +435,8 @@ class LuaUtils
 		return 'desktop';
 		#elseif mobile
 		return 'mobile';
+		#elseif web
+		return 'web';
 		#elseif console
 		return 'console';
 		#else

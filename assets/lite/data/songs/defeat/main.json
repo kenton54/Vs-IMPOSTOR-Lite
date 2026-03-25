@@ -8633,7 +8633,7 @@
 		"player2": "black",
 		"song": "defeat",
 		"needsVoices": true,
-		"stage": "stage",
+		"stage": "defeat",
 		"speed": 3,
 		"bpm": 200
 	}
