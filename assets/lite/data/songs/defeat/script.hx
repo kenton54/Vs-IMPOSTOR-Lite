@@ -1,19 +1,17 @@
 import backend.CoolUtil;
 import objects.StrumNote;
 import objects.VideoSprite;
-
 import flixel.util.FlxSort;
-
 import lime.app.Application;
-
+import openfl.text.TextField;
+import openfl.text.TextFormat;
 import Main;
 
 final MAX_MISSES:Int = 5;
-
 var isLegacy:Bool = false;
-
 var introVideo:VideoSprite;
 var fadeSprite:FlxSprite;
+var legacyFPSCounter:TextField;
 
 function onCreate()
 {
@@ -22,7 +20,8 @@ function onCreate()
 	introVideo.finishCallback = introFinished;
 	add(introVideo);
 
-	fadeSprite = new FlxSprite().makeGraphic(FlxG.width, FlxG.height, FlxColor.WHITE);
+	fadeSprite = new FlxSprite().makeGraphic(FlxG.width + 2, FlxG.height + 2, FlxColor.WHITE);
+	fadeSprite.screenCenter();
 	fadeSprite.cameras = [game.camHUD];
 	fadeSprite.alpha = 0;
 	fadeSprite.visible = false;
@@ -32,6 +31,16 @@ function onCreate()
 	{
 		prepareDesktop();
 	}
+
+	legacyFPSCounter = new TextField();
+	legacyFPSCounter.x = 10;
+	legacyFPSCounter.y = 3;
+	legacyFPSCounter.selectable = legacyFPSCounter.mouseEnabled = false;
+	legacyFPSCounter.defaultTextFormat = new TextFormat("_sans", 12, 0xFFFFFF);
+	legacyFPSCounter.visible = ClientPrefs.data.showFPS;
+	legacyFPSCounter.text = "FPS: 0";
+	legacyFPSCounter.alpha = 0;
+	FlxG.addChildBelowMouse(legacyFPSCounter);
 }
 
 function prepareDesktop()
@@ -43,8 +52,8 @@ function prepareDesktop()
 	window.resizable = false;
 	FlxG.resizeWindow(1200, 900);
 
-	window.x = (window.display.bounds.width - FlxG.stage.stageWidth) / 2;
-	window.y = (window.display.bounds.height - FlxG.stage.stageHeight) / 2;
+	window.x = (window.display.bounds.width - 1200) / 2;
+	window.y = (window.display.bounds.height - 900) / 2;
 }
 
 var events:Array<Dynamic> = [
@@ -100,6 +109,9 @@ var events:Array<Dynamic> = [
 	}
 ];
 
+var bfPosition:FlxPoint;
+var blackPosition:FlxPoint;
+
 function onCreatePost()
 {
 	game.timeBar.leftBar.color = 0xFFF03636;
@@ -114,6 +126,12 @@ function onCreatePost()
 	game.strumLineNotes.visible = false;
 
 	events.sort((a, b) -> FlxSort.byValues(1, a.section, b.section));
+
+	remove(game.dadGroup);
+	insert(game.members.indexOf(game.boyfriendGroup) + 1, game.dadGroup);
+
+	bfPosition = FlxPoint.get(boyfriend.x, boyfriend.y);
+	blackPosition = FlxPoint.get(dad.x, dad.y);
 }
 
 var introPlayed:Bool = false;
@@ -134,17 +152,49 @@ function onKeyPressPre(key)
 		return Function_Stop;
 }
 
+var legacyFPSCount:Int = 0;
+var legacyCacheCount:Int = 0;
+var legacyFPSCurTime:Float = 0;
+var legacyFPSTimes:Array<Float> = [];
+var legacyLastFPSTxt:String = "";
+
+function updateLegacyFPSCounter(elapsed:Float)
+{
+	legacyFPSCurTime += elapsed;
+	legacyFPSTimes.push(legacyFPSCurTime);
+
+	while (legacyFPSTimes[0] < legacyFPSCurTime - 1)
+		legacyFPSTimes.shift();
+
+	var curCount:Int = legacyFPSTimes.length;
+	legacyFPSCount = Std.int((curCount + legacyCacheCount) / 2);
+
+	if (curCount != legacyCacheCount)
+	{
+		var newText:String = "FPS: " + legacyFPSCount;
+
+		if (newText != legacyLastFPSTxt)
+		{
+			legacyFPSCounter.text = newText;
+			legacyLastFPSTxt = newText;
+		}
+	}
+
+	legacyCacheCount = legacyFPSTimes.length;
+}
+
 function onUpdate(elapsed:Float)
 {
-	//updateLegacyFPSCounter();
+	updateLegacyFPSCounter(elapsed);
 
 	if (Conductor.songPosition >= -(Conductor.crochet * 1.65) && !introPlayed)
-	{
 		introVideo.play();
-	}
 
 	if (game.songMisses > MAX_MISSES && !isDead)
 		game.health = 0;
+
+	if (isLegacy)
+		followCharacterMovement();
 }
 
 function preUpdateScore(miss:Bool)
@@ -181,15 +231,26 @@ function defeatIconsPosition()
 
 function defeatIconsAnimation()
 {
-	if (!iconP1.isAnimatedIcon)
-		game.iconP1.animation.curAnim.curFrame = (game.songMisses >= MAX_MISSES) ? 1 : 0;
-	else
-		game.iconP1.animation.play((game.songMisses >= MAX_MISSES) ? 'losing' : (game.songMisses < 1 ? 'winning' : 'normal'));
+	var bfIconAnim:String = game.songMisses >= MAX_MISSES ? 'losing' : (game.songMisses < 1 ? 'winning' : 'normal');
+	var bfAnimIndex:Int = game.songMisses >= MAX_MISSES ? 1 : 0;
+	var dadIconAnim:String = game.songMisses < 1 ? 'losing' : (game.songMisses >= MAX_MISSES ? 'winning' : 'normal');
+	var dadAnimIndex:Int = game.songMisses < 1 ? 1 : 0;
 
-	if (!iconP2.isAnimatedIcon)
-		game.iconP2.animation.curAnim.curFrame = (game.songMisses < MAX_MISSES) ? 1 : 0;
+	if (isLegacy)
+	{
+		bfIconAnim = dadIconAnim = 'normal';
+		bfAnimIndex = dadAnimIndex = 0;
+	}
+
+	if (!game.iconP1.isAnimatedIcon)
+		game.iconP1.animation.curAnim.curFrame = bfAnimIndex;
 	else
-		game.iconP2.animation.play((game.songMisses < 1) ? 'losing' : (game.songMisses >= MAX_MISSES ? 'winning' : 'normal'));
+		game.iconP1.animation.play(bfIconAnim);
+
+	if (!game.iconP2.isAnimatedIcon)
+		game.iconP2.animation.curAnim.curFrame = dadAnimIndex;
+	else
+		game.iconP2.animation.play(dadIconAnim);
 }
 
 function onPause()
@@ -202,6 +263,18 @@ function onResume()
 	introVideo.resume();
 }
 
+function onFocusLost()
+{
+	if (!game.paused)
+		introVideo.pause();
+}
+
+function onFocus()
+{
+	if (!game.paused)
+		introVideo.resume();
+}
+
 function onSectionHit()
 {
 	if (events.length > 0 && curSection >= events[events.length - 1].section)
@@ -210,6 +283,62 @@ function onSectionHit()
 
 		if (data.func != null)
 			data.func();
+	}
+}
+
+var positionFixLol:Array<Float> = [-500, -230];
+var followCameraPos:Array<Float> = [750, 500];
+var followIntensity:Float = 20;
+
+function followCharacterMovement()
+{
+	if (mustHitSection)
+	{
+		switch (boyfriend.animation.curAnim.name)
+		{
+			case "singLEFT":
+				game.camFollow.setPosition(followCameraPos[0] + positionFixLol[0], followCameraPos[1] + positionFixLol[1]);
+				game.camFollow.x -= followIntensity;
+
+			case "singDOWN":
+				game.camFollow.setPosition(followCameraPos[0] + positionFixLol[0], followCameraPos[1] + positionFixLol[1]);
+				game.camFollow.y += followIntensity;
+
+			case "singUP":
+				game.camFollow.setPosition(followCameraPos[0] + positionFixLol[0], followCameraPos[1] + positionFixLol[1]);
+				game.camFollow.y -= followIntensity;
+
+			case "singRIGHT":
+				game.camFollow.setPosition(followCameraPos[0] + positionFixLol[0], followCameraPos[1] + positionFixLol[1]);
+				game.camFollow.x += followIntensity;
+
+			default:
+				game.camFollow.setPosition(followCameraPos[0] + positionFixLol[0], followCameraPos[1] + positionFixLol[1]);
+		}
+	}
+	else
+	{
+		switch (dad.animation.curAnim.name)
+		{
+			case "singLEFT":
+				game.camFollow.setPosition(followCameraPos[0] + positionFixLol[0], followCameraPos[1] + positionFixLol[1]);
+				game.camFollow.x -= followIntensity;
+
+			case "singDOWN":
+				game.camFollow.setPosition(followCameraPos[0] + positionFixLol[0], followCameraPos[1] + positionFixLol[1]);
+				game.camFollow.y += followIntensity;
+
+			case "singUP":
+				game.camFollow.setPosition(followCameraPos[0] + positionFixLol[0], followCameraPos[1] + positionFixLol[1]);
+				game.camFollow.y -= followIntensity;
+
+			case "singRIGHT":
+				game.camFollow.setPosition(followCameraPos[0] + positionFixLol[0], followCameraPos[1] + positionFixLol[1]);
+				game.camFollow.x += followIntensity;
+
+			default:
+				game.camFollow.setPosition(followCameraPos[0] + positionFixLol[0], followCameraPos[1] + positionFixLol[1]);
+		}
 	}
 }
 
@@ -225,15 +354,8 @@ function fadeInGameplay()
 	}
 
 	game.scoreTxt.visible = !ClientPrefs.data.hideHud;
-
-	for (sprite in [game.timeBar, game.timeTxt])
-		sprite.visible = true;
-
-	for (sprite in [game.scoreTxt, game.timeBar, game.timeTxt])
-	{
-		sprite.alpha = 0;
-		FlxTween.tween(sprite, {alpha: 1}, tweenDur);
-	}
+	game.scoreTxt.alpha = 0;
+	FlxTween.tween(game.scoreTxt, {alpha: 1}, tweenDur);
 
 	game.strumLineNotes.visible = true;
 
@@ -243,15 +365,12 @@ function fadeInGameplay()
 		var targetAlpha:Float = 1;
 
 		if (strum.player < 1)
-		{
-			if (!ClientPrefs.data.opponentStrums)
-				targetAlpha = 0;
-			else if (ClientPrefs.data.middleScroll)
-				targetAlpha = 0.35;
-		}
+			targetAlpha = 0;
 
 		FlxTween.tween(strum, {alpha: targetAlpha}, tweenDur);
 	}
+
+	repositionNotes();
 }
 
 function fadeInBackground()
@@ -276,8 +395,10 @@ function fadeToLegacy()
 	var sectionDur:Float = (Conductor.stepCrochet / 1000) * 16;
 	FlxTween.tween(fadeSprite, {alpha: 1}, sectionDur);
 
-	//Main.fpsCounter.alpha = 1;
-	//FlxTween.tween(Main.fpsCounter, {alpha: 0}, sectionDur);
+	Main.fpsCounter.text.alpha = 1;
+	Main.fpsCounter.underlay.alpha = 0x6F / 0xFF;
+	FlxTween.tween(Main.fpsCounter.text, {alpha: 0}, sectionDur);
+	FlxTween.tween(Main.fpsCounter.underlay, {alpha: 0}, sectionDur);
 
 	if (platformTarget == "desktop")
 	{
@@ -334,7 +455,7 @@ function setUpLegacy()
 	game.iconP1.y = game.iconP2.y = game.healthBar.y - 70;
 	game.scoreTxt.y = game.healthBar.y + 40;
 
-	fadeSprite.setGraphicSize(FlxG.width, FlxG.height);
+	fadeSprite.setGraphicSize(FlxG.width + 2, FlxG.height + 2);
 	fadeSprite.updateHitbox();
 	fadeSprite.screenCenter();
 
@@ -346,6 +467,7 @@ function setUpLegacy()
 	game.botplayTxt.y = ClientPrefs.data.downScroll ? timeBar.y - 78 : timeBar.y + 55;
 	game.botplayTxt.fieldWidth = FlxG.width;
 	game.botplayTxt.text = "BOTPLAY";
+	game.botplayTxt.size = 32;
 	game.botplayTxt.font = Paths.font("vcr-real.ttf");
 
 	game.timeTxt.fieldWidth = FlxG.width;
@@ -357,27 +479,24 @@ function setUpLegacy()
 
 function repositionNotes()
 {
-	var strumX:Float = ClientPrefs.data.middleScroll ? (isLegacy ? -278 : PlayState.STRUM_X_MIDDLESCROLL) : PlayState.STRUM_X;
+	var strumX:Float = isLegacy ? -278 : PlayState.STRUM_X_MIDDLESCROLL;
 	var strumY:Float = ClientPrefs.data.downScroll ? (FlxG.height - 150) : 50;
 
 	var strumIndex:Int = 0;
-	for (strum in strumLineNotes.members)
+	for (strum in game.strumLineNotes.members)
 	{
 		strum.x = strumX;
 		strum.y = strumY;
 
 		if (strumIndex <= 3) // opponent
 		{
-			if (ClientPrefs.data.middleScroll)
-			{
-				strum.x += 310;
-				if (strumIndex > 1)
-					strum.x += FlxG.width / 2 + 25;
-			}
+			strum.x += 310;
+			if (strumIndex > 1)
+				strum.x += FlxG.width / 2 + 25;
 		}
 
 		postPositionStrum(strum);
-		strumIndex++;
+		strumIndex += 1;
 	}
 }
 
@@ -394,16 +513,29 @@ function fadeIntoLegacy()
 	game.doIconScale = true;
 	game.dynamicScoreColors = false;
 
-	game.scoreTxt.color = FlxColor.RED;
+	changeBackground(true);
+	FlxG.camera.zoom = game.defaultCamZoom = 0.5;
 
-	//Application.current.window.title = "Impostor Legacy";
-	//Main.fpsCounter.visible = false;
-	//legacyFPSCounter.visible = true;
+	game.camFollow.setPosition(followCameraPos[0] + positionFixLol[0], followCameraPos[1] + positionFixLol[1]);
+	snapCameraToTarget();
+	game.isCameraOnForcedPos = true;
+
+	game.scoreTxt.color = FlxColor.RED;
 
 	FlxTween.tween(fadeSprite, {alpha: 0}, 1);
 
-	//legacyFPSCounter.alpha = 0;
-	//FlxTween.tween(legacyFPSCounter, {alpha: 1}, 1);
+	Main.fpsCounter.text.alpha = 0;
+	Main.fpsCounter.underlay.alpha = 0;
+	legacyFPSCounter.alpha = 0;
+	FlxTween.tween(legacyFPSCounter, {alpha: 1}, 1);
+
+	boyfriend.setPosition(1000 + positionFixLol[0], 100 + positionFixLol[1]);
+	boyfriend.x += boyfriend.positionArray[0];
+	boyfriend.y += boyfriend.positionArray[1];
+
+	dad.setPosition(210 + positionFixLol[0], 100 + positionFixLol[1]);
+	dad.x += dad.positionArray[0];
+	dad.y += dad.positionArray[1];
 }
 
 function fadeToLite()
@@ -414,8 +546,8 @@ function fadeToLite()
 	var halfSection:Float = (Conductor.stepCrochet / 1000) * 8;
 	FlxTween.tween(fadeSprite, {alpha: 1}, fadeDur);
 
-	//legacyFPSCounter.alpha = 1;
-	//FlxTween.tween(legacyFPSCounter, {alpha: 0}, fadeDur);
+	legacyFPSCounter.alpha = 1;
+	FlxTween.tween(legacyFPSCounter, {alpha: 0}, fadeDur);
 
 	if (platformTarget == "desktop")
 	{
@@ -432,26 +564,26 @@ function fadeToLite()
 				game.camGame.setSize(window.width, window.height);
 				game.camHUD.setSize(window.width, window.height);
 				game.camOther.setSize(window.width, window.height);
-	
+
 				repositionNotes();
-	
-				fadeSprite.setGraphicSize(FlxG.width, FlxG.height);
+
+				fadeSprite.setGraphicSize(FlxG.width + 2, FlxG.height + 2);
 				fadeSprite.updateHitbox();
 				fadeSprite.screenCenter();
-	
+
 				game.healthBar.screenCenter(0x01);
 				game.healthBar.y = FlxG.height * (!ClientPrefs.data.downScroll ? 0.89 : 0.11);
 				game.iconP1.y = game.iconP2.y = game.healthBar.y - 70;
 				game.scoreTxt.y = game.healthBar.y + 40;
-	
+
 				scoreTxt.fieldWidth = FlxG.width;
-	
+
 				game.botplayTxt.y = ClientPrefs.data.downScroll ? game.timeBar.y - 78 : game.timeBar.y + 55;
 				game.botplayTxt.fieldWidth = FlxG.width;
-	
+
 				game.timeTxt.fieldWidth = FlxG.width;
 				game.timeBar.screenCenter(0x01);
-	
+
 				window.x = windowMidPoint.x - window.width / 2;
 				window.y = windowMidPoint.y - window.height / 2;
 			},
@@ -488,7 +620,7 @@ function setUpLite()
 	game.iconP1.y = game.iconP2.y = game.healthBar.y - 70;
 	game.scoreTxt.y = game.healthBar.y + 40;
 
-	fadeSprite.setGraphicSize(FlxG.width, FlxG.height);
+	fadeSprite.setGraphicSize(FlxG.width + 2, FlxG.height + 2);
 	fadeSprite.updateHitbox();
 	fadeSprite.screenCenter();
 
@@ -530,19 +662,77 @@ function fadeIntoLite()
 	game.doIconScale = false;
 	game.dynamicScoreColors = true;
 
-	//Application.current.window.title = "Vs. Impostor: Lite";
-	//Main.fpsCounter.visible = true;
-	//legacyFPSCounter.visible = false;
+	changeBackground(false);
+	FlxG.camera.zoom = game.defaultCamZoom = 0.5;
+	game.isCameraOnForcedPos = false;
 
 	FlxTween.tween(fadeSprite, {alpha: 0}, 1);
 
-	//Main.fpsCounter.alpha = 0;
-	//FlxTween.tween(Main.fpsCounter, {alpha: 1}, 1);
+	Main.fpsCounter.text.alpha = 0;
+	Main.fpsCounter.underlay.alpha = 0;
+	legacyFPSCounter.alpha = 0;
+	FlxTween.tween(Main.fpsCounter.text, {alpha: 1}, 1);
+	FlxTween.tween(Main.fpsCounter.underlay, {alpha: 0x6F / 0xFF}, 1);
+
+	boyfriend.setPosition(bfPosition.x, bfPosition.y);
+	dad.setPosition(blackPosition.x, blackPosition.y);
+}
+
+function snapCameraToTarget()
+{
+	var camera:FlxCamera = FlxG.camera;
+
+	var targetX:Float = game.camFollow.x;
+	var targetY:Float = game.camFollow.y;
+	var targetWidth:Float = game.camFollow.width;
+	var targetHeight:Float = game.camFollow.height;
+
+	if (camera.deadzone == null)
+	{
+		camera._scrollTarget.x = targetX + targetWidth * 0.5;
+		camera._scrollTarget.y = targetY + targetHeight * 0.5;
+	}
+	else
+	{
+		var edgeL:Float = targetX - camera.deadzone.x;
+		var edgeR:Float = targetX + targetWidth - camera.deadzone.x - camera.deadzone.width;
+		var edgeU:Float = targetY - camera.deadzone.y;
+		var edgeD:Float = targetY + targetHeight - camera.deadzone.x - camera.deadzone.width;
+
+		if (camera._scrollTarget.x > edgeL)
+			camera._scrollTarget.x = edgeL;
+
+		if (camera._scrollTarget.x < edgeR)
+			camera._scrollTarget.x = edgeR;
+
+		if (camera._scrollTarget.y > edgeU)
+			camera._scrollTarget.y = edgeU;
+
+		if (camera._scrollTarget.y < edgeD)
+			camera._scrollTarget.y = edgeD;
+	}
+}
+
+function changeBackground(toLegacy:Bool)
+{
+	game.getLuaObject("mainBG").visible = !toLegacy;
+	game.getLuaObject("bgCorpses").visible = !toLegacy;
+	game.getLuaObject("light").visible = !toLegacy;
+	game.getLuaObject("leftCorpses").visible = !toLegacy;
+	game.getLuaObject("rightCorpses").visible = !toLegacy;
+	game.getLuaObject("vignette").visible = !toLegacy;
+
+	game.getLuaObject("legacyBG").visible = toLegacy;
+	game.getLuaObject("legacyBGCorpses").visible = toLegacy;
+	game.getLuaObject("legacyBackCorpses").visible = toLegacy;
+	game.getLuaObject("legacyFrontCorpses").visible = toLegacy;
+	game.getLuaObject("legacyLight").visible = toLegacy;
 }
 
 function onDestroy()
 {
-	Main.fpsCounter.visible = true;
+	Main.fpsCounter.text.alpha = 1;
+	Main.fpsCounter.underlay.alpha = 0x6F / 0xFF;
 
 	if (platformTarget == 'desktop')
 	{
@@ -550,6 +740,9 @@ function onDestroy()
 	}
 
 	Note.swagWidth = 160 * 0.75;
+
+	legacyFPSCounter = null;
+	FlxG.removeChild(legacyFPSCounter);
 }
 
 function restoreDesktop()
@@ -570,6 +763,6 @@ function restoreDesktop()
 	game.camCountdown.setSize(1200, 900);
 	game.camDialogue.setSize(1200, 900);
 
-	window.x = (window.display.bounds.width - FlxG.stage.stageWidth) / 2;
-	window.y = (window.display.bounds.height - FlxG.stage.stageHeight) / 2;
+	window.x = (window.display.bounds.width - 1200) / 2;
+	window.y = (window.display.bounds.height - 900) / 2;
 }

@@ -13,7 +13,7 @@ import states.TitleState;
 	public var downScroll:Bool = false;
 	public var middleScroll:Bool = false;
 	public var opponentStrums:Bool = true;
-	public var showFPS:Bool = true;
+	public var showFPS:Bool = #if mobile false #else true #end;
 	public var flashing:Bool = true;
 
 	#if mobile

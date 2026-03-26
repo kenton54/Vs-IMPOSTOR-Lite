@@ -1691,6 +1691,7 @@ class PlayState extends MusicBeatState
 
 	override public function onFocus():Void
 	{
+		callOnScripts('onFocus');
 		if (health > 0 && !paused) resetRPC(Conductor.songPosition > 0.0);
 		super.onFocus();
 	}
@@ -1700,6 +1701,8 @@ class PlayState extends MusicBeatState
 		#if DISCORD_ALLOWED
 		if (health > 0 && !paused && autoUpdateRPC) DiscordClient.changePresence(detailsPausedText, SONG.song, iconP2.getCharacter());
 		#end
+
+		callOnScripts('onFocusLost');
 
 		if (#if !mobile ClientPrefs.data.autoPause && #end canPause && !paused)
 			openPauseMenu();
@@ -1790,7 +1793,11 @@ class PlayState extends MusicBeatState
 		}
 		else
 		{
-			if (cameraTween != null) cameraTween.active = false;
+			if (cameraTween != null)
+				cameraTween.active = false;
+
+			if (legacyCameraMove)
+				FlxG.camera.followLerp = 0;
 		}
 
 		callOnScripts('onUpdate', [elapsed]);
