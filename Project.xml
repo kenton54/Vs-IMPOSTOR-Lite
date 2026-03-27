@@ -21,7 +21,7 @@
 	<!-- ______________________ PSYCH ENGINE CUSTOMIZATION ______________________ -->
 
 	<define name="CRASH_HANDLER" />
-	<define name="EDITORS_ALLOWED" if="desktop" />
+	<define name="EDITORS_ALLOWED" if="desktop || web" />
 	<!--define name="MODS_ALLOWED" if="desktop || mobile" /-->
 	<define name="HSCRIPT_ALLOWED" if="desktop || mobile" />
 	<define name="LUA_ALLOWED" if="desktop || mobile" />

@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<TextureAtlas imagePath="davelite.png">
+	<!-- Created using the Spritesheet and XML generator -->
+	<!-- https://uncertainprod.github.io/FNF-Spritesheet-XML-generator-Web -->
+	<SubTexture name="idle0000" x="280" y="213" width="272" height="199" frameX="-201" frameY="-630" frameWidth="1701" frameHeight="1206"/>
+	<SubTexture name="idle0001" x="291" y="0" width="296" height="209" frameX="-193" frameY="-633" frameWidth="1701" frameHeight="1206"/>
+	<SubTexture name="idle0002" x="0" y="0" width="291" height="213" frameX="-196" frameY="-628" frameWidth="1701" frameHeight="1206"/>
+	<SubTexture name="idle0003" x="0" y="213" width="280" height="205" frameX="-199" frameY="-628" frameWidth="1701" frameHeight="1206"/>
+	<SubTexture name="down0000" x="642" y="608" width="197" height="179" frameX="-258" frameY="-636" frameWidth="1701" frameHeight="1206"/>
+	<SubTexture name="down0001" x="275" y="418" width="216" height="177" frameX="-259" frameY="-636" frameWidth="1701" frameHeight="1206"/>
+	<SubTexture name="left0000" x="0" y="418" width="275" height="190" frameX="-180" frameY="-623" frameWidth="1701" frameHeight="1206"/>
+	<SubTexture name="left0001" x="587" y="0" width="273" height="194" frameX="-187" frameY="-618" frameWidth="1701" frameHeight="1206"/>
+	<SubTexture name="right0000" x="246" y="608" width="198" height="194" frameX="-268" frameY="-623" frameWidth="1701" frameHeight="1206"/>
+	<SubTexture name="right0001" x="444" y="608" width="198" height="191" frameX="-265" frameY="-626" frameWidth="1701" frameHeight="1206"/>
+	<SubTexture name="up0000" x="587" y="194" width="247" height="210" frameX="-201" frameY="-626" frameWidth="1701" frameHeight="1206"/>
+	<SubTexture name="up0001" x="0" y="608" width="246" height="206" frameX="-201" frameY="-624" frameWidth="1701" frameHeight="1206"/>
+</TextureAtlas>

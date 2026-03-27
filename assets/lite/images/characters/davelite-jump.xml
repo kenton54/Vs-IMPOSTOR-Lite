@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<TextureAtlas imagePath="davelite-jump.png">
+	<!-- Created using the Spritesheet and XML generator -->
+	<!-- https://uncertainprod.github.io/FNF-Spritesheet-XML-generator-Web -->
+	<SubTexture name="jump0000" x="507" y="522" width="251" height="200" frameX="-207" frameY="-626" frameWidth="1701" frameHeight="1206"/>
+	<SubTexture name="jump0001" x="865" y="0" width="248" height="205" frameX="-200" frameY="-627" frameWidth="1701" frameHeight="1206"/>
+	<SubTexture name="jump0002" x="865" y="205" width="243" height="209" frameX="-198" frameY="-625" frameWidth="1701" frameHeight="1206"/>
+	<SubTexture name="jump0003" x="0" y="522" width="253" height="205" frameX="-201" frameY="-623" frameWidth="1701" frameHeight="1206"/>
+	<SubTexture name="jump0004" x="294" y="0" width="290" height="198" frameX="-203" frameY="-625" frameWidth="1701" frameHeight="1206"/>
+	<SubTexture name="jump0005" x="584" y="0" width="281" height="200" frameX="-207" frameY="-626" frameWidth="1701" frameHeight="1206"/>
+	<SubTexture name="jump0006" x="294" y="198" width="283" height="201" frameX="-205" frameY="-625" frameWidth="1701" frameHeight="1206"/>
+	<SubTexture name="jump0007" x="253" y="522" width="254" height="204" frameX="-200" frameY="-627" frameWidth="1701" frameHeight="1206"/>
+	<SubTexture name="jump0008" x="584" y="200" width="257" height="202" frameX="-199" frameY="-633" frameWidth="1701" frameHeight="1206"/>
+	<SubTexture name="jump0009" x="0" y="0" width="294" height="257" frameX="-107" frameY="-563" frameWidth="1701" frameHeight="1206"/>
+	<SubTexture name="jump0010" x="0" y="257" width="268" height="265" frameX="-41" frameY="-482" frameWidth="1701" frameHeight="1206"/>
+</TextureAtlas>
