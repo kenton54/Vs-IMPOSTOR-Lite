@@ -1,24 +1,25 @@
 {
 	"animations": [
 		{
+			"loop": false,
 			"offsets": [
 				0,
 				0
 			],
-			"loop": false,
-			"fps": 24,
 			"anim": "idle",
-			"indices": [],
-			"name": "BF idle dance afraid"
+			"fps": 24,
+			"name": "BF idle dance afraid",
+			"indices": []
 		},
 		{
+			"loop": true,
 			"offsets": [
 				0,
 				0
 			],
-			"loop": true,
-			"fps": 24,
 			"anim": "idle-loop",
+			"fps": 24,
+			"name": "BF idle dance afraid",
 			"indices": [
 				9,
 				10,
@@ -27,101 +28,166 @@
 				13,
 				14,
 				15
-			],
-			"name": "BF idle dance afraid"
+			]
 		},
 		{
+			"loop": false,
 			"offsets": [
 				-6,
 				4
 			],
-			"loop": false,
-			"fps": 24,
 			"anim": "singLEFTmiss",
-			"indices": [],
-			"name": "miss"
+			"fps": 24,
+			"name": "miss",
+			"indices": []
 		},
 		{
+			"loop": false,
 			"offsets": [
 				-6,
 				4
 			],
-			"loop": false,
-			"fps": 24,
 			"anim": "singRIGHTmiss",
-			"indices": [],
-			"name": "miss"
+			"fps": 24,
+			"name": "miss",
+			"indices": []
 		},
 		{
+			"loop": false,
 			"offsets": [
 				-6,
 				4
 			],
-			"loop": false,
-			"fps": 24,
 			"anim": "singUPmiss",
-			"indices": [],
-			"name": "miss"
+			"fps": 24,
+			"name": "miss",
+			"indices": []
 		},
 		{
+			"loop": false,
 			"offsets": [
 				-6,
 				4
 			],
-			"loop": false,
-			"fps": 24,
 			"anim": "singDOWNmiss",
-			"indices": [],
-			"name": "miss"
+			"fps": 24,
+			"name": "miss",
+			"indices": []
 		},
 		{
+			"loop": false,
 			"offsets": [
 				11,
 				0
 			],
-			"loop": false,
-			"fps": 24,
 			"anim": "singLEFT",
-			"indices": [],
-			"name": "left"
+			"fps": 24,
+			"name": "left",
+			"indices": []
 		},
 		{
+			"loop": false,
 			"offsets": [
 				-28,
 				-46
 			],
-			"loop": false,
-			"fps": 24,
 			"anim": "singDOWN",
-			"indices": [],
-			"name": "down"
+			"fps": 24,
+			"name": "down",
+			"indices": []
 		},
 		{
+			"loop": false,
 			"offsets": [
 				-17,
 				74
 			],
-			"loop": false,
-			"fps": 24,
 			"anim": "singUP",
-			"indices": [],
-			"name": "up"
+			"fps": 24,
+			"name": "up",
+			"indices": []
 		},
 		{
+			"loop": false,
 			"offsets": [
 				-72,
 				-17
 			],
-			"loop": false,
-			"fps": 25,
 			"anim": "singRIGHT",
-			"indices": [],
-			"name": "right"
+			"fps": 25,
+			"name": "right",
+			"indices": []
+		},
+		{
+			"loop": false,
+			"offsets": [
+				110,
+				7
+			],
+			"anim": "firstDeath",
+			"fps": 25,
+			"name": "BF dies knife",
+			"indices": []
+		},
+		{
+			"loop": true,
+			"offsets": [
+				110,
+				7
+			],
+			"anim": "deathLoop",
+			"fps": 25,
+			"name": "BF Dead Loop knife",
+			"indices": []
+		},
+		{
+			"loop": false,
+			"offsets": [
+				110,
+				55
+			],
+			"anim": "deathConfirm",
+			"fps": 25,
+			"name": "BF Dead confirm knife",
+			"indices": []
+		},
+		{
+			"loop": false,
+			"offsets": [
+				813,
+				17
+			],
+			"anim": "firstDeath-balls",
+			"fps": 25,
+			"name": "BF dies balls",
+			"indices": []
+		},
+		{
+			"loop": true,
+			"offsets": [
+				27,
+				-9
+			],
+			"anim": "deathLoop-balls",
+			"fps": 25,
+			"name": "BF Dead Loop balls",
+			"indices": []
+		},
+		{
+			"loop": false,
+			"offsets": [
+				27,
+				55
+			],
+			"anim": "deathConfirm-balls",
+			"fps": 25,
+			"name": "BF Dead confirm balls",
+			"indices": []
 		}
 	],
 	"vocals_file": "",
 	"no_antialiasing": false,
-	"image": "characters/bf-defeat-legacy",
+	"image": "characters/bf-defeat-legacy,characters/bf-defeat-legacy-death,characters/bf-defeat-legacy-deathballs",
 	"position": [
 		0,
 		350

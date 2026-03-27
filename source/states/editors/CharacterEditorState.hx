@@ -164,6 +164,8 @@ class CharacterEditorState extends MusicBeatState
 		if (ClientPrefs.data.cacheOnGPU) Paths.clearUnusedMemory();
 
 		super.create();
+
+		FlxG.mouse.visible = true;
 	}
 
 	function addHelpScreen()

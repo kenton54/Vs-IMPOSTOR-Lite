@@ -377,6 +377,9 @@ class ChartingState extends MusicBeatState
 
 		updateGrid();
 		super.create();
+
+		FlxG.mouse.visible = true;
+		PlayState.chartingMode = true;
 	}
 
 	var check_mute_inst:FlxUICheckBox = null;

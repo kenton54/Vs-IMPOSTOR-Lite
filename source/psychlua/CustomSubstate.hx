@@ -16,48 +16,55 @@ class CustomSubstate extends MusicBeatSubstate
 		Lua_helper.add_callback(lua, "insertToCustomSubstate", insertToCustomSubstate);
 	}
 	#end
-	
+
 	public static function openCustomSubstate(name:String, ?pauseGame:Bool = false)
 	{
-		if(pauseGame)
+		if (pauseGame)
 		{
 			FlxG.camera.followLerp = 0;
 			if (PlayState.instance.cameraTween != null) PlayState.instance.cameraTween.active = false;
 			PlayState.instance.persistentUpdate = false;
 			PlayState.instance.persistentDraw = true;
 			PlayState.instance.paused = true;
-			if(FlxG.sound.music != null)
+
+			if (FlxG.sound.music != null)
 			{
 				FlxG.sound.music.pause();
 				PlayState.instance.vocals.pause();
 			}
 		}
+
 		PlayState.instance.openSubState(new CustomSubstate(name));
 	}
 
-	public static function closeCustomSubstate()
+	public static function closeCustomSubstate():Bool
 	{
 		if (instance != null)
 		{
 			PlayState.instance.closeSubState();
 			return true;
 		}
+
 		return false;
 	}
 
-	public static function insertToCustomSubstate(tag:String, ?pos:Int = -1)
+	public static function insertToCustomSubstate(tag:String, ?pos:Int = -1):Bool
 	{
-		if(instance != null)
+		if (instance != null)
 		{
 			var tagObject:FlxObject = cast(MusicBeatState.getVariables().get(tag), FlxObject);
 
-			if(tagObject != null)
+			if (tagObject != null)
 			{
-				if(pos < 0) instance.add(tagObject);
-				else instance.insert(pos, tagObject);
+				if (pos < 0)
+					instance.add(tagObject);
+				else
+					instance.insert(pos, tagObject);
+
 				return true;
 			}
 		}
+
 		return false;
 	}
 
@@ -69,15 +76,16 @@ class CustomSubstate extends MusicBeatSubstate
 		super.create();
 		PlayState.instance.callOnScripts('onCustomSubstateCreatePost', [name]);
 	}
-	
+
 	public function new(name:String)
 	{
 		CustomSubstate.name = name;
 		PlayState.instance.setOnHScript('customSubstateName', name);
+
 		super();
-		camera = FlxG.cameras.list[FlxG.cameras.list.length - 1];
+		cameras = [PlayState.instance.camOther];
 	}
-	
+
 	override function update(elapsed:Float)
 	{
 		PlayState.instance.callOnScripts('onCustomSubstateUpdate', [name, elapsed]);

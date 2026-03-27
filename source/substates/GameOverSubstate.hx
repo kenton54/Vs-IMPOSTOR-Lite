@@ -37,7 +37,7 @@ class GameOverSubstate extends MusicBeatSubstate
 	var charY:Float = 0;
 	var bfLose:FlxSprite;
 	var bgDarkS:FlxSprite;
-	
+
 	override function create()
 	{
 		instance = this;
@@ -55,6 +55,9 @@ class GameOverSubstate extends MusicBeatSubstate
 		add(bgDarkS);
 
 		bfLose = new FlxSprite().loadGraphic(Paths.image('ingame/gameover'));
+		bfLose.setGraphicSize(0, FlxG.height);
+		bfLose.updateHitbox();
+		bfLose.screenCenter();
 		bfLose.antialiasing = ClientPrefs.data.antialiasing;
 		bfLose.y -= bfLose.height;
 		bfLose.cameras = [camGameover];

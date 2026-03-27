@@ -106,7 +106,7 @@ class MasterEditorMenu extends MusicBeatState
 				case 0:
 					LoadingState.loadState(() -> new ChartingState(), true);
 				case 1:
-					LoadingState.loadState(() -> new CharacterEditorState(Character.DEFAULT_CHARACTER, true));
+					LoadingState.loadState(() -> new CharacterEditorState(Character.DEFAULT_CHARACTER, false));
 				case 2:
 					LoadingState.loadState(() -> new DialogueEditorState(), true);
 				case 3:

@@ -183,6 +183,7 @@ class HScript extends Iris
 		set('Paths', Paths);
 		set('Conductor', Conductor);
 		set('ClientPrefs', ClientPrefs);
+		set('CoolUtil', CoolUtil);
 
 		#if ACHIEVEMENTS_ALLOWED
 		set('Achievements', Achievements);
@@ -193,7 +194,7 @@ class HScript extends Iris
 		set('Note', objects.Note);
 		set('CustomSubstate', CustomSubstate);
 
-		#if (!flash && sys)
+		#if !flash
 		set('FlxRuntimeShader', flixel.addons.display.FlxRuntimeShader);
 		#end
 

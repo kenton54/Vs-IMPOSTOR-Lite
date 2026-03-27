@@ -12,6 +12,10 @@ import substates.ResetScoreSubState;
 
 import flixel.math.FlxMath;
 
+#if EDITORS_ALLOWED
+import states.editors.ChartingState;
+#end
+
 #if mobile
 import objects.BackButton;
 #end
@@ -437,6 +441,46 @@ class FreeplayState extends MusicBeatState
 		{
 			chooseSong();
 		}
+		#if EDITORS_ALLOWED
+		else if (controls.justPressed("debug_1") && !player.playingMusic)
+		{
+			var songLowercase:String = Paths.formatToSongPath(songs[curSelected].songName);
+			var poop:String = Highscore.formatSong(songLowercase, 1);
+
+			try
+			{
+				PlayState.SONG = Song.loadFromJson(poop, songLowercase);
+				PlayState.isStoryMode = false;
+				PlayState.storyDifficulty = 1;
+
+				trace("LOADING SONG CHART: [" + poop + "]");
+
+				if (colorTween != null)
+				{
+					colorTween.cancel();
+				}
+			}
+			catch (e:Dynamic)
+			{
+				trace('ERROR! $e');
+
+				var errorStr:String = e.toString();
+				if (errorStr.startsWith('[file_contents,assets/data/'))
+					errorStr = 'Missing file: ' + errorStr.substring(34, errorStr.length - 1); // Missing chart
+				missingText.text = 'ERROR WHILE LOADING CHART:\n$errorStr';
+				missingText.screenCenter(Y);
+				missingText.visible = true;
+				missingTextBG.visible = true;
+				FlxG.sound.play(Paths.sound('cancelMenu'));
+				return;
+			}
+
+			LoadingState.loadState(() -> new ChartingState());
+
+			FlxG.sound.music.stop();
+			destroyFreeplayVocals();
+		}
+		#end
 		else if (controls.RESET && !player.playingMusic)
 		{
 			persistentUpdate = false;
@@ -626,6 +670,7 @@ class FreeplayState extends MusicBeatState
 
 			trace("PLAYING SONG: [" + poop + "]");
 			trace('PLAYING SONG FROM WEEK: [' + WeekData.getWeekFileName() + ']');
+
 			if (colorTween != null)
 			{
 				colorTween.cancel();

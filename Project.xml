@@ -2,7 +2,7 @@
 <project>
 	<!-- _________________________ Application Settings _________________________ -->
 
-	<app title="Vs. Impostor: Lite" file="Vs-Impostor-Lite" package="com.gtm.impostorlite" packageName="com.gtm.impostorlite" main="Main" version="1.0" build-number="1" company="GTM" />
+	<app title="VS IMPOSTOR: Lite" file="ImpostorLite" package="com.gtm.impostorlite" packageName="com.gtm.impostorlite" main="Main" version="1.0" build-number="1" company="GTM" />
 
 	<!--Switch Export with Unique ApplicationID and Icon-->
 	<set name="APP_ID" value="0x0100f6c013bbc000" />

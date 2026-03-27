@@ -1,0 +1,189 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TextureAtlas imagePath="bf_defeat_death_balls.png">
+	<!-- Created with Adobe Animate version 21.0.5.40714 -->
+	<!-- http://www.adobe.com/products/animate.html -->
+	<SubTexture name="BF Dead Loop balls0000" x="6848" y="4394" width="439" height="435"/>
+	<SubTexture name="BF Dead Loop balls0001" x="0" y="4440" width="439" height="435"/>
+	<SubTexture name="BF Dead Loop balls0002" x="0" y="4440" width="439" height="435"/>
+	<SubTexture name="BF Dead Loop balls0003" x="449" y="4440" width="439" height="435"/>
+	<SubTexture name="BF Dead Loop balls0004" x="449" y="4440" width="439" height="435"/>
+	<SubTexture name="BF Dead Loop balls0005" x="898" y="4440" width="439" height="435"/>
+	<SubTexture name="BF Dead Loop balls0006" x="898" y="4440" width="439" height="435"/>
+	<SubTexture name="BF Dead Loop balls0007" x="1347" y="4440" width="439" height="435"/>
+	<SubTexture name="BF Dead Loop balls0008" x="1347" y="4440" width="439" height="435"/>
+	<SubTexture name="BF Dead Loop balls0009" x="1347" y="4440" width="439" height="435"/>
+	<SubTexture name="BF Dead Loop balls0010" x="1347" y="4440" width="439" height="435"/>
+	<SubTexture name="BF Dead Loop balls0011" x="1347" y="4440" width="439" height="435"/>
+	<SubTexture name="BF Dead Loop balls0012" x="1347" y="4440" width="439" height="435"/>
+	<SubTexture name="BF Dead Loop balls0013" x="1347" y="4440" width="439" height="435"/>
+	<SubTexture name="BF Dead Loop balls0014" x="1347" y="4440" width="439" height="435"/>
+	<SubTexture name="BF Dead Loop balls0015" x="1347" y="4440" width="439" height="435"/>
+	<SubTexture name="BF Dead Loop balls0016" x="1347" y="4440" width="439" height="435"/>
+	<SubTexture name="BF Dead Loop balls0017" x="6848" y="4394" width="439" height="435"/>
+	<SubTexture name="BF Dead Loop balls0018" x="0" y="4440" width="439" height="435"/>
+	<SubTexture name="BF Dead Loop balls0019" x="0" y="4440" width="439" height="435"/>
+	<SubTexture name="BF Dead Loop balls0020" x="449" y="4440" width="439" height="435"/>
+	<SubTexture name="BF Dead Loop balls0021" x="449" y="4440" width="439" height="435"/>
+	<SubTexture name="BF Dead Loop balls0022" x="898" y="4440" width="439" height="435"/>
+	<SubTexture name="BF Dead Loop balls0023" x="898" y="4440" width="439" height="435"/>
+	<SubTexture name="BF Dead Loop balls0024" x="1347" y="4440" width="439" height="435"/>
+	<SubTexture name="BF Dead Loop balls0025" x="1347" y="4440" width="439" height="435"/>
+	<SubTexture name="BF Dead Loop balls0026" x="1347" y="4440" width="439" height="435"/>
+	<SubTexture name="BF Dead Loop balls0027" x="1347" y="4440" width="439" height="435"/>
+	<SubTexture name="BF Dead Loop balls0028" x="1347" y="4440" width="439" height="435"/>
+	<SubTexture name="BF Dead Loop balls0029" x="1347" y="4440" width="439" height="435"/>
+	<SubTexture name="BF Dead Loop balls0030" x="1347" y="4440" width="439" height="435"/>
+	<SubTexture name="BF Dead Loop balls0031" x="1347" y="4440" width="439" height="435"/>
+	<SubTexture name="BF Dead Loop balls0032" x="1347" y="4440" width="439" height="435"/>
+	<SubTexture name="BF Dead Loop balls0033" x="1347" y="4440" width="439" height="435"/>
+	<SubTexture name="BF Dead confirm balls0000" x="7410" y="0" width="439" height="499"/>
+	<SubTexture name="BF Dead confirm balls0001" x="7410" y="509" width="439" height="499"/>
+	<SubTexture name="BF Dead confirm balls0002" x="7410" y="1018" width="439" height="499"/>
+	<SubTexture name="BF Dead confirm balls0003" x="7410" y="1527" width="439" height="499"/>
+	<SubTexture name="BF Dead confirm balls0004" x="7410" y="2036" width="439" height="499"/>
+	<SubTexture name="BF Dead confirm balls0005" x="7410" y="2545" width="439" height="499"/>
+	<SubTexture name="BF Dead confirm balls0006" x="7410" y="3054" width="439" height="499"/>
+	<SubTexture name="BF Dead confirm balls0007" x="7410" y="3563" width="439" height="499"/>
+	<SubTexture name="BF Dead confirm balls0008" x="3705" y="3885" width="439" height="499"/>
+	<SubTexture name="BF Dead confirm balls0009" x="4154" y="3885" width="439" height="499"/>
+	<SubTexture name="BF Dead confirm balls0010" x="4603" y="3885" width="439" height="499"/>
+	<SubTexture name="BF Dead confirm balls0011" x="5052" y="3885" width="439" height="499"/>
+	<SubTexture name="BF Dead confirm balls0012" x="5501" y="3885" width="439" height="499"/>
+	<SubTexture name="BF Dead confirm balls0013" x="5950" y="3885" width="439" height="499"/>
+	<SubTexture name="BF Dead confirm balls0014" x="6399" y="3885" width="439" height="499"/>
+	<SubTexture name="BF Dead confirm balls0015" x="6848" y="3885" width="439" height="499"/>
+	<SubTexture name="BF Dead confirm balls0016" x="7297" y="4072" width="439" height="499"/>
+	<SubTexture name="BF Dead confirm balls0017" x="3705" y="4394" width="439" height="499"/>
+	<SubTexture name="BF Dead confirm balls0018" x="4154" y="4394" width="439" height="499"/>
+	<SubTexture name="BF Dead confirm balls0019" x="4603" y="4394" width="439" height="499"/>
+	<SubTexture name="BF Dead confirm balls0020" x="5052" y="4394" width="439" height="499"/>
+	<SubTexture name="BF Dead confirm balls0021" x="5501" y="4394" width="439" height="499"/>
+	<SubTexture name="BF Dead confirm balls0022" x="5950" y="4394" width="439" height="499"/>
+	<SubTexture name="BF Dead confirm balls0023" x="5950" y="4394" width="439" height="499"/>
+	<SubTexture name="BF Dead confirm balls0024" x="6399" y="4394" width="439" height="499"/>
+	<SubTexture name="BF Dead confirm balls0025" x="6399" y="4394" width="439" height="499"/>
+	<SubTexture name="BF Dead confirm balls0026" x="6399" y="4394" width="439" height="499"/>
+	<SubTexture name="BF Dead confirm balls0027" x="6399" y="4394" width="439" height="499"/>
+	<SubTexture name="BF Dead confirm balls0028" x="6399" y="4394" width="439" height="499"/>
+	<SubTexture name="BF Dead confirm balls0029" x="6399" y="4394" width="439" height="499"/>
+	<SubTexture name="BF Dead confirm balls0030" x="6399" y="4394" width="439" height="499"/>
+	<SubTexture name="BF Dead confirm balls0031" x="6399" y="4394" width="439" height="499"/>
+	<SubTexture name="BF Dead confirm balls0032" x="6399" y="4394" width="439" height="499"/>
+	<SubTexture name="BF Dead confirm balls0033" x="6399" y="4394" width="439" height="499"/>
+	<SubTexture name="BF dies balls0000" x="0" y="0" width="1225" height="545"/>
+	<SubTexture name="BF dies balls0001" x="1235" y="0" width="1225" height="545"/>
+	<SubTexture name="BF dies balls0002" x="2470" y="0" width="1225" height="545"/>
+	<SubTexture name="BF dies balls0003" x="3705" y="0" width="1225" height="545"/>
+	<SubTexture name="BF dies balls0004" x="4940" y="0" width="1225" height="545"/>
+	<SubTexture name="BF dies balls0005" x="6175" y="0" width="1225" height="545"/>
+	<SubTexture name="BF dies balls0006" x="0" y="555" width="1225" height="545"/>
+	<SubTexture name="BF dies balls0007" x="0" y="555" width="1225" height="545"/>
+	<SubTexture name="BF dies balls0008" x="0" y="555" width="1225" height="545"/>
+	<SubTexture name="BF dies balls0009" x="0" y="555" width="1225" height="545"/>
+	<SubTexture name="BF dies balls0010" x="1235" y="555" width="1225" height="545"/>
+	<SubTexture name="BF dies balls0011" x="1235" y="555" width="1225" height="545"/>
+	<SubTexture name="BF dies balls0012" x="2470" y="555" width="1225" height="545"/>
+	<SubTexture name="BF dies balls0013" x="2470" y="555" width="1225" height="545"/>
+	<SubTexture name="BF dies balls0014" x="3705" y="555" width="1225" height="545"/>
+	<SubTexture name="BF dies balls0015" x="4940" y="555" width="1225" height="545"/>
+	<SubTexture name="BF dies balls0016" x="6175" y="555" width="1225" height="545"/>
+	<SubTexture name="BF dies balls0017" x="0" y="1110" width="1225" height="545"/>
+	<SubTexture name="BF dies balls0018" x="1235" y="1110" width="1225" height="545"/>
+	<SubTexture name="BF dies balls0019" x="1235" y="1110" width="1225" height="545"/>
+	<SubTexture name="BF dies balls0020" x="2470" y="1110" width="1225" height="545"/>
+	<SubTexture name="BF dies balls0021" x="2470" y="1110" width="1225" height="545"/>
+	<SubTexture name="BF dies balls0022" x="3705" y="1110" width="1225" height="545"/>
+	<SubTexture name="BF dies balls0023" x="3705" y="1110" width="1225" height="545"/>
+	<SubTexture name="BF dies balls0024" x="4940" y="1110" width="1225" height="545"/>
+	<SubTexture name="BF dies balls0025" x="6175" y="1110" width="1225" height="545"/>
+	<SubTexture name="BF dies balls0026" x="6175" y="1110" width="1225" height="545"/>
+	<SubTexture name="BF dies balls0027" x="0" y="1665" width="1225" height="545"/>
+	<SubTexture name="BF dies balls0028" x="0" y="1665" width="1225" height="545"/>
+	<SubTexture name="BF dies balls0029" x="1235" y="1665" width="1225" height="545"/>
+	<SubTexture name="BF dies balls0030" x="1235" y="1665" width="1225" height="545"/>
+	<SubTexture name="BF dies balls0031" x="2470" y="1665" width="1225" height="545"/>
+	<SubTexture name="BF dies balls0032" x="2470" y="1665" width="1225" height="545"/>
+	<SubTexture name="BF dies balls0033" x="2470" y="1665" width="1225" height="545"/>
+	<SubTexture name="BF dies balls0034" x="2470" y="1665" width="1225" height="545"/>
+	<SubTexture name="BF dies balls0035" x="0" y="1665" width="1225" height="545"/>
+	<SubTexture name="BF dies balls0036" x="3705" y="1665" width="1225" height="545"/>
+	<SubTexture name="BF dies balls0037" x="3705" y="1665" width="1225" height="545"/>
+	<SubTexture name="BF dies balls0038" x="3705" y="1665" width="1225" height="545"/>
+	<SubTexture name="BF dies balls0039" x="4940" y="1665" width="1225" height="545"/>
+	<SubTexture name="BF dies balls0040" x="4940" y="1665" width="1225" height="545"/>
+	<SubTexture name="BF dies balls0041" x="4940" y="1665" width="1225" height="545"/>
+	<SubTexture name="BF dies balls0042" x="6175" y="1665" width="1225" height="545"/>
+	<SubTexture name="BF dies balls0043" x="6175" y="1665" width="1225" height="545"/>
+	<SubTexture name="BF dies balls0044" x="6175" y="1665" width="1225" height="545"/>
+	<SubTexture name="BF dies balls0045" x="6175" y="1665" width="1225" height="545"/>
+	<SubTexture name="BF dies balls0046" x="0" y="2220" width="1225" height="545"/>
+	<SubTexture name="BF dies balls0047" x="0" y="2220" width="1225" height="545"/>
+	<SubTexture name="BF dies balls0048" x="0" y="2220" width="1225" height="545"/>
+	<SubTexture name="BF dies balls0049" x="0" y="2220" width="1225" height="545"/>
+	<SubTexture name="BF dies balls0050" x="0" y="2220" width="1225" height="545"/>
+	<SubTexture name="BF dies balls0051" x="0" y="2220" width="1225" height="545"/>
+	<SubTexture name="BF dies balls0052" x="0" y="2220" width="1225" height="545"/>
+	<SubTexture name="BF dies balls0053" x="1235" y="2220" width="1225" height="545"/>
+	<SubTexture name="BF dies balls0054" x="1235" y="2220" width="1225" height="545"/>
+	<SubTexture name="BF dies balls0055" x="1235" y="2220" width="1225" height="545"/>
+	<SubTexture name="BF dies balls0056" x="1235" y="2220" width="1225" height="545"/>
+	<SubTexture name="BF dies balls0057" x="1235" y="2220" width="1225" height="545"/>
+	<SubTexture name="BF dies balls0058" x="2470" y="2220" width="1225" height="545"/>
+	<SubTexture name="BF dies balls0059" x="2470" y="2220" width="1225" height="545"/>
+	<SubTexture name="BF dies balls0060" x="3705" y="2220" width="1225" height="545"/>
+	<SubTexture name="BF dies balls0061" x="3705" y="2220" width="1225" height="545"/>
+	<SubTexture name="BF dies balls0062" x="4940" y="2220" width="1225" height="545"/>
+	<SubTexture name="BF dies balls0063" x="4940" y="2220" width="1225" height="545"/>
+	<SubTexture name="BF dies balls0064" x="6175" y="2220" width="1225" height="545"/>
+	<SubTexture name="BF dies balls0065" x="0" y="2775" width="1225" height="545"/>
+	<SubTexture name="BF dies balls0066" x="0" y="2775" width="1225" height="545"/>
+	<SubTexture name="BF dies balls0067" x="0" y="2775" width="1225" height="545"/>
+	<SubTexture name="BF dies balls0068" x="0" y="2775" width="1225" height="545"/>
+	<SubTexture name="BF dies balls0069" x="0" y="2775" width="1225" height="545"/>
+	<SubTexture name="BF dies balls0070" x="0" y="2775" width="1225" height="545"/>
+	<SubTexture name="BF dies balls0071" x="0" y="2775" width="1225" height="545"/>
+	<SubTexture name="BF dies balls0072" x="0" y="2775" width="1225" height="545"/>
+	<SubTexture name="BF dies balls0073" x="0" y="2775" width="1225" height="545"/>
+	<SubTexture name="BF dies balls0074" x="0" y="2775" width="1225" height="545"/>
+	<SubTexture name="BF dies balls0075" x="0" y="2775" width="1225" height="545"/>
+	<SubTexture name="BF dies balls0076" x="0" y="2775" width="1225" height="545"/>
+	<SubTexture name="BF dies balls0077" x="0" y="2775" width="1225" height="545"/>
+	<SubTexture name="BF dies balls0078" x="0" y="2775" width="1225" height="545"/>
+	<SubTexture name="BF dies balls0079" x="0" y="2775" width="1225" height="545"/>
+	<SubTexture name="BF dies balls0080" x="0" y="2775" width="1225" height="545"/>
+	<SubTexture name="BF dies balls0081" x="0" y="2775" width="1225" height="545"/>
+	<SubTexture name="BF dies balls0082" x="1235" y="2775" width="1225" height="545"/>
+	<SubTexture name="BF dies balls0083" x="1235" y="2775" width="1225" height="545"/>
+	<SubTexture name="BF dies balls0084" x="2470" y="2775" width="1225" height="545"/>
+	<SubTexture name="BF dies balls0085" x="3705" y="2775" width="1225" height="545"/>
+	<SubTexture name="BF dies balls0086" x="4940" y="2775" width="1225" height="545"/>
+	<SubTexture name="BF dies balls0087" x="4940" y="2775" width="1225" height="545"/>
+	<SubTexture name="BF dies balls0088" x="6175" y="2775" width="1225" height="545"/>
+	<SubTexture name="BF dies balls0089" x="6175" y="2775" width="1225" height="545"/>
+	<SubTexture name="BF dies balls0090" x="0" y="3330" width="1225" height="545"/>
+	<SubTexture name="BF dies balls0091" x="1235" y="3330" width="1225" height="545"/>
+	<SubTexture name="BF dies balls0092" x="1235" y="3330" width="1225" height="545"/>
+	<SubTexture name="BF dies balls0093" x="1235" y="3330" width="1225" height="545"/>
+	<SubTexture name="BF dies balls0094" x="2470" y="3330" width="1225" height="545"/>
+	<SubTexture name="BF dies balls0095" x="2470" y="3330" width="1225" height="545"/>
+	<SubTexture name="BF dies balls0096" x="2470" y="3330" width="1225" height="545"/>
+	<SubTexture name="BF dies balls0097" x="2470" y="3330" width="1225" height="545"/>
+	<SubTexture name="BF dies balls0098" x="2470" y="3330" width="1225" height="545"/>
+	<SubTexture name="BF dies balls0099" x="2470" y="3330" width="1225" height="545"/>
+	<SubTexture name="BF dies balls0100" x="3705" y="3330" width="1225" height="545"/>
+	<SubTexture name="BF dies balls0101" x="3705" y="3330" width="1225" height="545"/>
+	<SubTexture name="BF dies balls0102" x="4940" y="3330" width="1225" height="545"/>
+	<SubTexture name="BF dies balls0103" x="4940" y="3330" width="1225" height="545"/>
+	<SubTexture name="BF dies balls0104" x="6175" y="3330" width="1225" height="545"/>
+	<SubTexture name="BF dies balls0105" x="6175" y="3330" width="1225" height="545"/>
+	<SubTexture name="BF dies balls0106" x="0" y="3885" width="1225" height="545"/>
+	<SubTexture name="BF dies balls0107" x="1235" y="3885" width="1225" height="545"/>
+	<SubTexture name="BF dies balls0108" x="2470" y="3885" width="1225" height="545"/>
+	<SubTexture name="BF dies balls0109" x="2470" y="3885" width="1225" height="545"/>
+	<SubTexture name="BF dies balls0110" x="2470" y="3885" width="1225" height="545"/>
+	<SubTexture name="BF dies balls0111" x="2470" y="3885" width="1225" height="545"/>
+	<SubTexture name="BF dies balls0112" x="2470" y="3885" width="1225" height="545"/>
+	<SubTexture name="BF dies balls0113" x="2470" y="3885" width="1225" height="545"/>
+	<SubTexture name="BF dies balls0114" x="2470" y="3885" width="1225" height="545"/>
+	<SubTexture name="BF dies balls0115" x="2470" y="3885" width="1225" height="545"/>
+</TextureAtlas>

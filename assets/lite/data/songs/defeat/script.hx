@@ -1,4 +1,3 @@
-import backend.CoolUtil;
 import objects.StrumNote;
 import objects.VideoSprite;
 import flixel.util.FlxSort;
@@ -8,7 +7,9 @@ import openfl.text.TextFormat;
 import Main;
 
 final MAX_MISSES:Int = 5;
+
 var isLegacy:Bool = false;
+
 var introVideo:VideoSprite;
 var fadeSprite:FlxSprite;
 var legacyFPSCounter:TextField;
@@ -41,6 +42,8 @@ function onCreate()
 	legacyFPSCounter.text = "FPS: 0";
 	legacyFPSCounter.alpha = 0;
 	FlxG.addChildBelowMouse(legacyFPSCounter);
+
+	game.setOnScripts("isLegacy", isLegacy);
 }
 
 function prepareDesktop()
@@ -195,6 +198,8 @@ function onUpdate(elapsed:Float)
 
 	if (isLegacy)
 		followCharacterMovement();
+
+	game.setOnScripts("isLegacy", isLegacy);
 }
 
 function preUpdateScore(miss:Bool)
@@ -273,6 +278,11 @@ function onFocus()
 {
 	if (!game.paused)
 		introVideo.resume();
+}
+
+function onGameOver()
+{
+	introVideo.destroy();
 }
 
 function onSectionHit()
@@ -757,11 +767,6 @@ function restoreDesktop()
 	FlxG.width = FlxG.initialWidth = 1200;
 	FlxG.height = FlxG.initialHeight = 900;
 	FlxG.resizeGame(1200, 900);
-	game.camGame.setSize(1200, 900);
-	game.camHUD.setSize(1200, 900);
-	game.camOther.setSize(1200, 900);
-	game.camCountdown.setSize(1200, 900);
-	game.camDialogue.setSize(1200, 900);
 
 	window.x = (window.display.bounds.width - 1200) / 2;
 	window.y = (window.display.bounds.height - 900) / 2;

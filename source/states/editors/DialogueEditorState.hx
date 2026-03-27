@@ -39,6 +39,8 @@ class DialogueEditorState extends MusicBeatState
 		add(linesText);
 
 		updateDialogue();
+
+		FlxG.mouse.visible = true;
     }
 
     override function update(elapsed:Float)

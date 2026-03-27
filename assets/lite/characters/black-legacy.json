@@ -1,64 +1,97 @@
 {
 	"animations": [
 		{
-			"loop": false,
-			"offsets": [
-				580,
-				-27
-			],
-			"anim": "singLEFT",
-			"fps": 24,
-			"name": "black left",
-			"indices": []
-		},
-		{
-			"loop": true,
 			"offsets": [
 				365,
 				30
 			],
-			"anim": "idle",
+			"loop": true,
 			"fps": 24,
-			"name": "black idle remast",
-			"indices": []
+			"anim": "idle",
+			"indices": [],
+			"name": "black idle remast"
 		},
 		{
+			"offsets": [
+				580,
+				-27
+			],
 			"loop": false,
+			"fps": 24,
+			"anim": "singLEFT",
+			"indices": [],
+			"name": "black left"
+		},
+		{
 			"offsets": [
 				352,
 				-48
 			],
-			"anim": "singRIGHT",
+			"loop": false,
 			"fps": 24,
-			"name": "black right",
-			"indices": []
+			"anim": "singRIGHT",
+			"indices": [],
+			"name": "black right"
 		},
 		{
-			"loop": false,
 			"offsets": [
 				571,
 				270
 			],
-			"anim": "singDOWN",
+			"loop": false,
 			"fps": 24,
-			"name": "black down",
-			"indices": []
+			"anim": "singDOWN",
+			"indices": [],
+			"name": "black down"
 		},
 		{
-			"loop": false,
 			"offsets": [
 				684,
 				135
 			],
-			"anim": "singUP",
+			"loop": false,
 			"fps": 24,
-			"name": "black up",
-			"indices": []
+			"anim": "singUP",
+			"indices": [],
+			"name": "black up"
+		},
+		{
+			"offsets": [
+				355,
+				-20
+			],
+			"loop": false,
+			"fps": 24,
+			"anim": "kill1",
+			"indices": [],
+			"name": "black kill 1"
+		},
+		{
+			"offsets": [
+				399,
+				-48
+			],
+			"loop": false,
+			"fps": 24,
+			"anim": "kill2",
+			"indices": [],
+			"name": "black kill 2"
+		},
+		{
+			"offsets": [
+				537,
+				318
+			],
+			"loop": false,
+			"fps": 24,
+			"anim": "kill3",
+			"indices": [],
+			"name": "black kill 3"
 		}
 	],
 	"vocals_file": "",
 	"no_antialiasing": false,
-	"image": "characters/black-legacy",
+	"image": "characters/black-legacy,characters/black-legacy-kill",
 	"position": [
 		220,
 		80

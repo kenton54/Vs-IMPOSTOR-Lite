@@ -103,6 +103,11 @@ class CoolUtil
 		return value < min ? min : (value > max ? max : value);
 	}
 
+	public static inline function fpsLerp(a:Float, b:Float, ratio:Float):Float
+	{
+		return FlxMath.lerp(a, b, FlxMath.getElapsedLerp(ratio, FlxG.elapsed));
+	}
+
 	inline public static function browserLoad(site:String) {
 		#if linux
 		Sys.command('/usr/bin/xdg-open', [site]);
