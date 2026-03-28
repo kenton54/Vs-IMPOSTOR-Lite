@@ -20,7 +20,6 @@ import flixel.ui.FlxButton;
 
 import flixel.util.FlxSort;
 import lime.media.AudioBuffer;
-import lime.utils.Assets;
 import openfl.events.Event;
 import openfl.events.IOErrorEvent;
 import openfl.media.Sound;
@@ -39,8 +38,10 @@ import objects.AttachedSprite;
 import objects.Character;
 import substates.Prompt;
 
+#if sys
 import sys.io.File;
 import sys.FileSystem;
+#end
 
 @:access(flixel.sound.FlxSound._sound)
 @:access(openfl.media.Sound.__buffer)
@@ -440,8 +441,8 @@ class ChartingState extends MusicBeatState
 
 			var songName:String = Paths.formatToSongPath(_song.song);
 			var file:String = Paths.json(songName + '/events');
-			#if sys
-			if (#if MODS_ALLOWED FileSystem.exists(Paths.modsJson(songName + '/events')) || #end FileSystem.exists(file))
+			#if MODS_ALLOWED
+			if (FileSystem.exists(Paths.modsJson(songName + '/events')) || FileSystem.exists(file))
 			#else
 			if (OpenFlAssets.exists(file))
 			#end
@@ -486,6 +487,7 @@ class ChartingState extends MusicBeatState
 		stepperSpeed.value = _song.speed;
 		stepperSpeed.name = 'song_speed';
 		blockPressWhileTypingOnStepper.push(stepperSpeed);
+
 		#if MODS_ALLOWED
 		var directories:Array<String> = [Paths.mods('characters/'), Paths.mods(Mods.currentModDirectory + '/characters/'), Paths.getLitePath('characters/')];
 		for(mod in Mods.getGlobalMods())
@@ -498,27 +500,44 @@ class ChartingState extends MusicBeatState
 		var characters:Array<String> = Mods.mergeAllTextsNamed('data/characterList.txt', Paths.getLitePath());
 		for (character in characters)
 		{
-			if(character.trim().length > 0)
+			if (character.trim().length > 0)
 				tempArray.push(character);
 		}
 
-		#if MODS_ALLOWED
-		for (i in 0...directories.length) {
-			var directory:String = directories[i];
-			if(FileSystem.exists(directory)) {
-				for (file in FileSystem.readDirectory(directory)) {
+		for (directory in directories)
+		{
+			#if MODS_ALLOWED
+			if (FileSystem.exists(directory))
+			{
+				for (file in Paths.readDirectory(directory))
+				{
 					var path = haxe.io.Path.join([directory, file]);
-					if (!FileSystem.isDirectory(path) && file.endsWith('.json')) {
+					if (!FileSystem.isDirectory(path) && file.endsWith('.json'))
+					{
 						var charToCheck:String = file.substr(0, file.length - 5);
-						if(charToCheck.trim().length > 0 && !charToCheck.endsWith('-dead') && !tempArray.contains(charToCheck)) {
+						if (charToCheck.trim().length > 0 && !charToCheck.endsWith('-dead') && !tempArray.contains(charToCheck)) {
 							tempArray.push(charToCheck);
 							characters.push(charToCheck);
 						}
 					}
 				}
 			}
+			#else
+			for (file in Paths.readDirectory(directory))
+			{
+				var path = haxe.io.Path.join([directory, file]);
+				if (file.endsWith('.json'))
+				{
+					var charToCheck:String = file.substr(0, file.length - 5);
+					if (charToCheck.trim().length > 0 && !charToCheck.endsWith('-dead') && !tempArray.contains(charToCheck))
+					{
+						tempArray.push(charToCheck);
+						characters.push(charToCheck);
+					}
+				}
+			}
+			#end
 		}
-		#end
 		tempArray = [];
 
 		var player1DropDown = new FlxUIDropDownMenu(10, stepperSpeed.y + 45, FlxUIDropDownMenu.makeStrIdLabelArray(characters, true), function(character:String)
@@ -564,25 +583,44 @@ class ChartingState extends MusicBeatState
 			}
 			tempArray.push(stage);
 		}
-		#if MODS_ALLOWED
-		for (i in 0...directories.length) {
-			var directory:String = directories[i];
-			if(FileSystem.exists(directory)) {
-				for (file in FileSystem.readDirectory(directory)) {
+
+		for (directory in directories)
+		{
+			#if MODS_ALLOWED
+			if (FileSystem.exists(directory))
+			{
+				for (file in Paths.readDirectory(directory))
+				{
 					var path = haxe.io.Path.join([directory, file]);
-					if (!FileSystem.isDirectory(path) && file.endsWith('.json')) {
+					if (!FileSystem.isDirectory(path) && file.endsWith('.json'))
+					{
 						var stageToCheck:String = file.substr(0, file.length - 5);
-						if(stageToCheck.trim().length > 0 && !tempArray.contains(stageToCheck)) {
+						if (stageToCheck.trim().length > 0 && !tempArray.contains(stageToCheck))
+						{
 							tempArray.push(stageToCheck);
 							stages.push(stageToCheck);
 						}
 					}
 				}
 			}
+			#else
+			for (file in Paths.readDirectory(directory))
+			{
+				var path = haxe.io.Path.join([directory, file]);
+				if (file.endsWith('.json'))
+				{
+					var stageToCheck:String = file.substr(0, file.length - 5);
+					if (stageToCheck.trim().length > 0 && !tempArray.contains(stageToCheck))
+					{
+						tempArray.push(stageToCheck);
+						stages.push(stageToCheck);
+					}
+				}
+			}
+			#end
 		}
-		#end
 
-		if(stages.length < 1) stages.push('stage');
+		if (stages.length < 1) stages.push('stage');
 
 		stageDropDown = new FlxUIDropDownMenu(player1DropDown.x + 140, player1DropDown.y, FlxUIDropDownMenu.makeStrIdLabelArray(stages, true), function(character:String)
 		{
@@ -917,26 +955,24 @@ class ChartingState extends MusicBeatState
 			key++;
 		}
 
-		#if sys
 		var foldersToCheck:Array<String> = Mods.directoriesWithFile(Paths.getLitePath(), 'notetypes/');
 		for (folder in foldersToCheck)
-			for (file in FileSystem.readDirectory(folder))
+		{
+			for (file in Paths.readDirectory(folder))
 			{
 				var fileName:String = file.toLowerCase().trim();
-				var wordLen:Int = 4; //length of word ".lua" and ".txt";
-				if((#if LUA_ALLOWED fileName.endsWith('.lua') || #end
-					#if HSCRIPT_ALLOWED (fileName.endsWith('.hx') && (wordLen = 3) == 3) || #end
-					fileName.endsWith('.txt')) && fileName != 'readme.txt')
+				var wordLen:Int = 4; // length of word ".lua" and ".txt";
+				if ((#if LUA_ALLOWED fileName.endsWith('.lua') || #end #if HSCRIPT_ALLOWED (fileName.endsWith('.hx') && (wordLen = 3) == 3) || #end fileName.endsWith('.txt')) && fileName != 'readme.txt')
 				{
 					var fileToCheck:String = file.substr(0, file.length - wordLen);
-					if(!curNoteTypes.contains(fileToCheck))
+					if (!curNoteTypes.contains(fileToCheck))
 					{
 						curNoteTypes.push(fileToCheck);
 						key++;
 					}
 				}
 			}
-		#end
+		}
 
 
 		var displayNameList:Array<String> = curNoteTypes.copy();
@@ -976,28 +1012,49 @@ class ChartingState extends MusicBeatState
 		var eventPushedMap:Map<String, Bool> = new Map<String, Bool>();
 		var directories:Array<String> = [];
 
-		#if MODS_ALLOWED
 		directories.push(Paths.getLitePath('events/'));
+		#if MODS_ALLOWED
 		directories.push(Paths.mods('events/'));
 		directories.push(Paths.mods(Mods.currentModDirectory + '/events/'));
-		for(mod in Mods.getGlobalMods())
+
+		for (mod in Mods.getGlobalMods())
 			directories.push(Paths.mods(mod + '/events/'));
 		#end
 
-		for (i in 0...directories.length) {
-			var directory:String =  directories[i];
-			if(FileSystem.exists(directory)) {
-				for (file in FileSystem.readDirectory(directory)) {
+		for (directory in directories)
+		{
+			#if MODS_ALLOWED
+			if (FileSystem.exists(directory))
+			{
+				for (file in Paths.readDirectory(directory))
+				{
 					var path = haxe.io.Path.join([directory, file]);
-					if (!FileSystem.isDirectory(path) && file != 'readme.txt' && file.endsWith('.txt')) {
+					if (!FileSystem.isDirectory(path) && file != 'readme.txt' && file.endsWith('.txt'))
+					{
 						var fileToCheck:String = file.substr(0, file.length - 4);
-						if(!eventPushedMap.exists(fileToCheck)) {
+						if (!eventPushedMap.exists(fileToCheck))
+						{
 							eventPushedMap.set(fileToCheck, true);
 							eventStuff.push([fileToCheck, File.getContent(path)]);
 						}
 					}
 				}
 			}
+			#else
+			for (file in Paths.readDirectory(directory))
+			{
+				var path = haxe.io.Path.join([directory, file]);
+				if (file.endsWith('.txt'))
+				{
+					var fileToCheck:String = file.substr(0, file.length - 4);
+					if (!eventPushedMap.exists(fileToCheck))
+					{
+						eventPushedMap.set(fileToCheck, true);
+						eventStuff.push([fileToCheck, OpenFlAssets.getText(path)]);
+					}
+				}
+			}
+			#end
 		}
 		eventPushedMap.clear();
 		eventPushedMap = null;

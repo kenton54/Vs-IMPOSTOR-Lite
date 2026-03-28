@@ -26,6 +26,7 @@ class HealthIcon extends FlxSprite
 	}
 
 	private var iconOffsets:Array<Float> = [0, 0];
+
 	public function changeIcon(char:String, ?allowGPU:Bool = true)
 	{
 		if (this.char != char)
@@ -48,28 +49,29 @@ class HealthIcon extends FlxSprite
 				isAnimatedIcon = false;
 				var graphic = Paths.image(name, allowGPU);
 				loadGraphic(graphic, true, Math.floor(graphic.width / 2), Math.floor(graphic.height));
-
-				var addMoreOffset:FlxPoint = FlxPoint.get();
-				if(char.contains('red')) 
-					addMoreOffset.set(0, -15);
-				else if(char.contains('dave')) 
-					addMoreOffset.set(-25, 0);
-				else if(char.contains('idk')) 
-					addMoreOffset.set(0, 25);
-
-				iconOffsets[0] = ((width - 150) / 2) - addMoreOffset.x;
-				iconOffsets[1] = ((height - 150) / 2) - addMoreOffset.y;
-				updateHitbox();
 	
 				animation.add(char, [0, 1], 0, false, isPlayer);
 				animation.play(char);
 			}
+
+			var additionalOffset:FlxPoint = FlxPoint.get();
+
+			switch (char)
+			{
+				case "red": additionalOffset.set(10, 0);
+				case "redM": additionalOffset.set(10, 0);
+				case "idk": additionalOffset.set(8, 0);
+				case "dave": additionalOffset.set(-30, -21);
+				case "black": additionalOffset.set(4, 0);
+			}
+
+			iconOffsets[0] = ((width - 150) / 2) - additionalOffset.x;
+			iconOffsets[1] = ((height - 150) / 2) - additionalOffset.y;
+			updateHitbox();
+
 			this.char = char;
 
-			if(char.endsWith('-pixel'))
-				antialiasing = false;
-			else
-				antialiasing = ClientPrefs.data.antialiasing;
+			antialiasing = char.endsWith('-pixel') ? false : ClientPrefs.data.antialiasing;
 		}
 	}
 

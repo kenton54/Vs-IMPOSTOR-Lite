@@ -16,15 +16,18 @@ class MasterEditorMenu extends MusicBeatState
 		'Dialogue Editor',
 		'Note Splash Editor'
 	];
-	private var grpTexts:FlxTypedGroup<Alphabet>;
-	private var directories:Array<String> = [null];
 
-	private var curSelected = 0;
-	private var curDirectory = 0;
-	private var directoryTxt:FlxText;
+	var grpTexts:FlxTypedGroup<Alphabet>;
+	var directories:Array<String> = [null];
+
+	static var curSelected = 0;
+	var curDirectory = 0;
+	var directoryTxt:FlxText;
 
 	override function create()
 	{
+		persistentUpdate = true;
+
 		// FlxG.camera.bgColor = FlxColor.BLACK;
 		#if DISCORD_ALLOWED
 		// Updating Discord Rich Presence
@@ -101,6 +104,8 @@ class MasterEditorMenu extends MusicBeatState
 
 		if (controls.ACCEPT)
 		{
+			persistentUpdate = false;
+
 			switch (curSelected)
 			{
 				case 0:
@@ -138,13 +143,7 @@ class MasterEditorMenu extends MusicBeatState
 	function changeSelection(change:Int = 0)
 	{
 		FlxG.sound.play(Paths.sound('scrollMenu'), 0.4);
-
-		curSelected += change;
-
-		if (curSelected < 0)
-			curSelected = options.length - 1;
-		if (curSelected >= options.length)
-			curSelected = 0;
+		curSelected = FlxMath.wrap(curSelected + change, 0, options.length - 1);
 	}
 
 	#if MODS_ALLOWED
@@ -152,14 +151,10 @@ class MasterEditorMenu extends MusicBeatState
 	{
 		FlxG.sound.play(Paths.sound('scrollMenu'), 0.4);
 
-		curDirectory += change;
-
-		if(curDirectory < 0)
-			curDirectory = directories.length - 1;
-		if(curDirectory >= directories.length)
-			curDirectory = 0;
+		curDirectory = FlxMath.wrap(curDirectory + change, 0, directories.length - 1);
 	
 		WeekData.setDirectoryFromWeek();
+
 		if (directories[curDirectory] == null || directories[curDirectory].length < 1)
 			directoryTxt.text = '< No Mod Directory Loaded >';
 		else

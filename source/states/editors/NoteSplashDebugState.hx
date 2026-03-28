@@ -7,7 +7,9 @@ import objects.NoteSplash;
 import flixel.addons.ui.FlxInputText;
 import flixel.addons.ui.FlxUINumericStepper;
 
+#if sys
 import sys.io.File;
+#end
 
 class NoteSplashDebugState extends MusicBeatState
 {

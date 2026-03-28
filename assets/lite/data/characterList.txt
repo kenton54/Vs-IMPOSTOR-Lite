@@ -9,10 +9,10 @@ gf-ghost
 red
 red-sabotage
 red-meltdown
+red-angry
 
 idk
 dave
-dave-angry
 
 black
 black-legacy

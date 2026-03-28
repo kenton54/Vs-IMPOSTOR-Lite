@@ -21,8 +21,10 @@ import objects.Character;
 import objects.HealthIcon;
 import objects.Bar;
 
+#if sys
 import sys.io.File;
 import sys.FileSystem;
+#end
 
 class CharacterEditorState extends MusicBeatState
 {
@@ -1062,6 +1064,8 @@ class CharacterEditorState extends MusicBeatState
 
 		if (healthIcon.isAnimatedIcon)
 			healthIcon.animation.play((healthBar.percent < 20) ? 'losing' : (healthBar.percent > 80 ? 'winning' : 'normal'));
+		else
+			healthIcon.animation.curAnim.curFrame = healthBar.percent < 20 ? 1 : 0;
 
 		return health;
 	}
@@ -1152,19 +1156,24 @@ class CharacterEditorState extends MusicBeatState
 	}
 
 	var characterList:Array<String> = [];
-	function reloadCharacterDropDown() {
+	function reloadCharacterDropDown()
+	{
 		characterList = Mods.mergeAllTextsNamed('data/characterList.txt', Paths.getLitePath());
 		var foldersToCheck:Array<String> = Mods.directoriesWithFile(Paths.getLitePath(), 'characters/');
 		for (folder in foldersToCheck)
-			for (file in FileSystem.readDirectory(folder))
-				if(file.toLowerCase().endsWith('.json'))
+		{
+			for (file in Paths.readDirectory(folder))
+			{
+				if (file.toLowerCase().endsWith('.json'))
 				{
 					var charToCheck:String = file.substr(0, file.length - 5);
-					if(!characterList.contains(charToCheck))
+					if (!characterList.contains(charToCheck))
 						characterList.push(charToCheck);
 				}
+			}
+		}
 
-		if(characterList.length < 1) characterList.push('');
+		if (characterList.length < 1) characterList.push('');
 		charDropDown.setData(FlxUIDropDownMenu.makeStrIdLabelArray(characterList, true));
 		charDropDown.selectedLabel = _char;
 	}

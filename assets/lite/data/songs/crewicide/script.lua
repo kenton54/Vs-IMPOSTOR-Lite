@@ -17,10 +17,17 @@ local events = {
 		executed = false
 	},
 	{
-		step = 2066,
+		step = 2056,
+		func = function()
+			playAnim("dad", "jump-prep")
+			setProperty("dad.stunned", true)
+		end,
+		executed = false
+	},
+	{
+		step = 2067,
 		func = function()
 			playAnim("dad", "jump")
-			setProperty("dad.stunned", true)
 		end,
 		executed = false
 	},
