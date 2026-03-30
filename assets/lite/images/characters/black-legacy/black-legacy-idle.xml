@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+Created with Funkin Packer v0.1.3 https://neeeoo.github.io/funkin-packer/
+-->
+<TextureAtlas imagePath="black-legacy-idle.png" width="3367" height="3363">
+	<SubTexture name="black idle remast0000" x="2681" y="1294" width="664" height="661" frameX="-0" frameY="-19" frameWidth="691" frameHeight="681"/>
+	<SubTexture name="black idle remast0001" x="1995" y="2007" width="666" height="653" frameX="-0" frameY="-27" frameWidth="691" frameHeight="681"/>
+	<SubTexture name="black idle remast0002" x="662" y="2682" width="651" height="667" rotated="true" frameX="-1" frameY="-29" frameWidth="691" frameHeight="681"/>
+	<SubTexture name="black idle remast0003" x="2679" y="647" width="669" height="646" frameX="-2" frameY="-34" frameWidth="691" frameHeight="681"/>
+	<SubTexture name="black idle remast0004" x="2010" y="1322" width="670" height="644" frameX="-7" frameY="-36" frameWidth="691" frameHeight="681"/>
+	<SubTexture name="black idle remast0005" x="2026" y="1" width="670" height="645" frameX="-9" frameY="-36" frameWidth="691" frameHeight="681"/>
+	<SubTexture name="black idle remast0006" x="1323" y="2668" width="645" height="668" rotated="true" frameX="-13" frameY="-36" frameWidth="691" frameHeight="681"/>
+	<SubTexture name="black idle remast0007" x="2697" y="1" width="669" height="645" frameX="-16" frameY="-35" frameWidth="691" frameHeight="681"/>
+	<SubTexture name="black idle remast0008" x="1995" y="2661" width="668" height="646" frameX="-19" frameY="-34" frameWidth="691" frameHeight="681"/>
+	<SubTexture name="black idle remast0009" x="1" y="2695" width="648" height="667" rotated="true" frameX="-22" frameY="-32" frameWidth="691" frameHeight="681"/>
+	<SubTexture name="black idle remast0010" x="2662" y="1967" width="665" height="651" frameX="-26" frameY="-29" frameWidth="691" frameHeight="681"/>
+	<SubTexture name="black idle remast0011" x="2664" y="2619" width="658" height="664" rotated="true" frameX="-26" frameY="-22" frameWidth="691" frameHeight="681"/>
+	<SubTexture name="black idle remast0012" x="1342" y="1345" width="667" height="661" rotated="true" frameX="-29" frameY="-14" frameWidth="691" frameHeight="681"/>
+	<SubTexture name="black idle remast0013" x="1" y="1" width="662" height="672" frameX="-26" frameY="-9" frameWidth="691" frameHeight="681"/>
+	<SubTexture name="black idle remast0014" x="2004" y="661" width="674" height="660" rotated="true" frameX="-24" frameY="-7" frameWidth="691" frameHeight="681"/>
+	<SubTexture name="black idle remast0015" x="662" y="2004" width="660" height="677" frameX="-21" frameY="-4" frameWidth="691" frameHeight="681"/>
+	<SubTexture name="black idle remast0016" x="662" y="1345" width="679" height="658" rotated="true" frameX="-18" frameY="-2" frameWidth="691" frameHeight="681"/>
+	<SubTexture name="black idle remast0017" x="1344" y="663" width="659" height="681" frameX="-15" frameY="-0" frameWidth="691" frameHeight="681"/>
+	<SubTexture name="black idle remast0018" x="683" y="663" width="660" height="681" frameX="-12" frameY="-0" frameWidth="691" frameHeight="681"/>
+	<SubTexture name="black idle remast0019" x="1" y="674" width="681" height="661" rotated="true" frameX="-10" frameY="-0" frameWidth="691" frameHeight="681"/>
+	<SubTexture name="black idle remast0020" x="664" y="1" width="681" height="661" rotated="true" frameX="-8" frameY="-0" frameWidth="691" frameHeight="681"/>
+	<SubTexture name="black idle remast0021" x="1" y="1336" width="660" height="681" frameX="-7" frameY="-0" frameWidth="691" frameHeight="681"/>
+	<SubTexture name="black idle remast0022" x="1346" y="1" width="679" height="659" rotated="true" frameX="-5" frameY="-2" frameWidth="691" frameHeight="681"/>
+	<SubTexture name="black idle remast0023" x="1" y="2018" width="660" height="676" frameX="-3" frameY="-5" frameWidth="691" frameHeight="681"/>
+	<SubTexture name="black idle remast0024" x="1323" y="2007" width="671" height="660" rotated="true" frameX="-3" frameY="-10" frameWidth="691" frameHeight="681"/>
+</TextureAtlas>

@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+Created with Funkin Packer v0.1.3 https://neeeoo.github.io/funkin-packer/
+-->
+<TextureAtlas imagePath="black-legacy-kill3.png" width="2312" height="2984">
+	<SubTexture name="black kill 30000" x="1009" y="2244" width="616" height="707" rotated="true" frameX="-277" frameY="-386" frameWidth="1677" frameHeight="1013"/>
+	<SubTexture name="black kill 30001" x="1009" y="2244" width="616" height="707" rotated="true" frameX="-277" frameY="-386" frameWidth="1677" frameHeight="1013"/>
+	<SubTexture name="black kill 30002" x="1483" y="1692" width="606" height="545" rotated="true" frameX="-326" frameY="-396" frameWidth="1677" frameHeight="1013"/>
+	<SubTexture name="black kill 30003" x="1483" y="1692" width="606" height="545" rotated="true" frameX="-326" frameY="-396" frameWidth="1677" frameHeight="1013"/>
+	<SubTexture name="black kill 30004" x="1626" y="2238" width="517" height="644" frameX="-286" frameY="-366" frameWidth="1677" frameHeight="1013"/>
+	<SubTexture name="black kill 30005" x="1626" y="2238" width="517" height="644" frameX="-286" frameY="-366" frameWidth="1677" frameHeight="1013"/>
+	<SubTexture name="black kill 30006" x="922" y="1326" width="560" height="917" frameX="-151" frameY="-93" frameWidth="1677" frameHeight="1013"/>
+	<SubTexture name="black kill 30007" x="922" y="1326" width="560" height="917" frameX="-151" frameY="-93" frameWidth="1677" frameHeight="1013"/>
+	<SubTexture name="black kill 30008" x="945" y="1" width="678" height="863" frameX="-13" frameY="-148" frameWidth="1677" frameHeight="1013"/>
+	<SubTexture name="black kill 30009" x="945" y="1" width="678" height="863" frameX="-13" frameY="-148" frameWidth="1677" frameHeight="1013"/>
+	<SubTexture name="black kill 30010" x="1624" y="1" width="687" height="816" frameX="-0" frameY="-195" frameWidth="1677" frameHeight="1013"/>
+	<SubTexture name="black kill 30011" x="1624" y="1" width="687" height="816" frameX="-0" frameY="-195" frameWidth="1677" frameHeight="1013"/>
+	<SubTexture name="black kill 30012" x="1624" y="1" width="687" height="816" frameX="-0" frameY="-195" frameWidth="1677" frameHeight="1013"/>
+	<SubTexture name="black kill 30013" x="1483" y="865" width="637" height="826" frameX="-50" frameY="-185" frameWidth="1677" frameHeight="1013"/>
+	<SubTexture name="black kill 30014" x="1" y="2338" width="1007" height="645" rotated="true" frameX="-140" frameY="-4" frameWidth="1677" frameHeight="1013"/>
+	<SubTexture name="black kill 30015" x="1" y="1326" width="920" height="1011" frameX="-311" frameY="-0" frameWidth="1677" frameHeight="1013"/>
+	<SubTexture name="black kill 30016" x="1" y="1" width="943" height="1324" rotated="true" frameX="-353" frameY="-70" frameWidth="1677" frameHeight="1013"/>
+</TextureAtlas>

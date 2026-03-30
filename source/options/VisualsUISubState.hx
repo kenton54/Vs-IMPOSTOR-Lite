@@ -67,7 +67,7 @@ class VisualsUISubState extends BaseOptionsMenu
 			"What should the Time Bar display?",
 			'timeBarType',
 			Choice,
-			['Time Left', 'Time Elapsed', 'Total Time', 'Song Name', 'Percentage', 'Song Name and Percentage', 'Disabled']);
+			['Time Left', 'Time Elapsed', /*'Total Time',*/ 'Song Name', /*'Percentage', 'Song Name and Percentage',*/ 'Disabled']);
 		addOption(option);
 
 		var option:Option = new Option('Flashing Lights',
@@ -131,6 +131,7 @@ class VisualsUISubState extends BaseOptionsMenu
 			"Uncheck this to prevent accidental leaks, it will hide the Application from your \"Playing\" box on Discord",
 			'discordRPC',
 			Boolean);
+		option.onChange = onChangeDiscordRPC;
 		addOption(option);
 		#end
 
@@ -244,6 +245,13 @@ class VisualsUISubState extends BaseOptionsMenu
 	function onChangeFPSCounter()
 	{
 		Main.fpsCounter.visible = ClientPrefs.data.showFPS;
+	}
+	#end
+
+	#if DISCORD_ALLOWED
+	function onChangeDiscordRPC()
+	{
+		DiscordClient.check();
 	}
 	#end
 }

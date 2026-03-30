@@ -4,9 +4,6 @@ import backend.CrashHandler;
 import debug.FPSCounter;
 
 import flixel.FlxGame;
-import haxe.io.Path;
-import lime.graphics.Image;
-import lime.system.System;
 import openfl.Lib;
 import openfl.display.Sprite;
 import openfl.events.Event;
@@ -16,10 +13,6 @@ import states.InitState;
 #if HSCRIPT_ALLOWED
 import crowplexus.iris.Iris;
 import psychlua.HScript.HScriptInfos;
-#end
-
-#if android
-import extension.androidtools.content.Context;
 #end
 
 #if linux
@@ -40,9 +33,9 @@ class Main extends Sprite
 	public static function main()
 	{
 		#if android
-		Sys.setCwd(Path.addTrailingSlash(Context.getExternalFilesDir()));
+		Sys.setCwd(haxe.io.Path.addTrailingSlash(extension.androidtools.content.Context.getExternalFilesDir()));
 		#elseif ios
-		Sys.setCwd(Path.addTrailingSlash(System.documentsDirectory));
+		Sys.setCwd(haxe.io.Path.addTrailingSlash(lime.system.System.documentsDirectory));
 		#end
 
 		#if linux
@@ -76,34 +69,45 @@ class Main extends Sprite
 		}
 	}
 
-	private function init(?E:Event):Void
+	private function init(?E:Event)
 	{
 		if (hasEventListener(Event.ADDED_TO_STAGE))
 		{
 			removeEventListener(Event.ADDED_TO_STAGE, init);
 		}
 
+		#if (sys && !mobile)
+		Lib.current.stage.window.onClose.add(function()
+		{
+			#if hxvlc
+			hxvlc.util.Handle.dispose();
+			#end
+
+			#if linux
+			GamemodeClient.request_end();
+			#end
+
+			Sys.exit(0);
+		});
+		#end
+
 		setupGame();
 	}
 
-	private function setupGame():Void
+	private function setupGame()
 	{
-		var stageWidth:Int = Lib.current.stage.stageWidth;
-		var stageHeight:Int = Lib.current.stage.stageHeight;
-
-		/*
-		if (game.zoom == -1.0)
-		{
-			var ratioX:Float = stageWidth / game.width;
-			var ratioY:Float = stageHeight / game.height;
-			game.zoom = Math.min(ratioX, ratioY);
-			game.width = Math.ceil(stageWidth / game.zoom);
-			game.height = Math.ceil(stageHeight / game.zoom);
-		}
-		*/
-
 		// we're a pixelated mod
 		FlxSprite.defaultAntialiasing = false;
+
+		#if hxvlc
+		hxvlc.util.Handle.initAsync(null, function(success:Bool)
+		{
+			if (success)
+				trace("LibVLC initialized successfully.");
+			else
+				trace("Failed to initialize LibVLC.");
+		});
+		#end
 
 		#if HSCRIPT_ALLOWED
 		Iris.warn = function(x, ?pos:haxe.PosInfos)
@@ -195,7 +199,7 @@ class Main extends Sprite
 		addChild(fpsCounter);
 
 		#if linux
-		Lib.current.stage.window.setIcon(Image.fromFile("icon.png"));
+		Lib.current.stage.window.setIcon(lime.graphics.Image.fromFile("icon.png"));
 		#end
 
 		#if DISCORD_ALLOWED

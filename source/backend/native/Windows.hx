@@ -1,8 +1,6 @@
 package backend.native;
 
-#if (windows && cpp)
-import cpp.ConstCharStar;
-
+#if windows
 /**
  * Adds helper functions exclusively for windows.
  * 

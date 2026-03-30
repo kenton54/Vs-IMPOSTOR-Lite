@@ -1,7 +1,6 @@
 package backend;
 
 #if DISCORD_ALLOWED
-import Sys.sleep;
 import lime.app.Application;
 import hxdiscord_rpc.Discord;
 import hxdiscord_rpc.Types;
@@ -15,10 +14,12 @@ class DiscordClient
 
 	public static function check()
 	{
-		if(ClientPrefs.data.discordRPC) initialize();
-		else if(isInitialized) shutdown();
+		if (ClientPrefs.data.discordRPC && !isInitialized)
+			initialize();
+		else if (isInitialized)
+			shutdown();
 	}
-	
+
 	public static function prepare()
 	{
 		if (!isInitialized && ClientPrefs.data.discordRPC)
@@ -29,11 +30,12 @@ class DiscordClient
 		});
 	}
 
-	public dynamic static function shutdown() {
+	public static function shutdown()
+	{
 		Discord.Shutdown();
 		isInitialized = false;
 	}
-	
+
 	private static function onReady(request:cpp.RawConstPointer<DiscordUser>):Void {
 		var requestPtr:cpp.Star<DiscordUser> = cpp.ConstPointer.fromRaw(request).ptr;
 
@@ -55,13 +57,15 @@ class DiscordClient
 
 	public static function initialize()
 	{
+		if (isInitialized) return;
+
 		var discordHandlers:DiscordEventHandlers = new DiscordEventHandlers();
 		discordHandlers.ready = cpp.Function.fromStaticFunction(onReady);
 		discordHandlers.disconnected = cpp.Function.fromStaticFunction(onDisconnected);
 		discordHandlers.errored = cpp.Function.fromStaticFunction(onError);
 		Discord.Initialize(clientID, cpp.RawPointer.addressOf(discordHandlers), true, null);
 
-		if(!isInitialized) trace("Discord Client initialized");
+		trace("Discord Client initialized");
 
 		sys.thread.Thread.create(() ->
 		{
@@ -77,6 +81,7 @@ class DiscordClient
 				Sys.sleep(0.5);
 			}
 		});
+
 		isInitialized = true;
 	}
 
@@ -132,7 +137,8 @@ class DiscordClient
 	#end
 
 	#if LUA_ALLOWED
-	public static function addLuaCallbacks(lua:State) {
+	public static function addLuaCallbacks(lua:State)
+	{
 		Lua_helper.add_callback(lua, "changeDiscordPresence", function(details:String, state:Null<String>, ?smallImageKey:String, ?hasStartTimestamp:Bool, ?endTimestamp:Float) {
 			changePresence(details, state, smallImageKey, hasStartTimestamp, endTimestamp);
 		});

@@ -1,8 +1,8 @@
 package objects;
 
+#if VIDEOS_ALLOWED
 import flixel.addons.display.FlxPieDial;
 
-#if VIDEOS_ALLOWED
 #if hxvlc
 import hxvlc.flixel.FlxVideoSprite as VideoHandler;
 #elseif html5
@@ -39,7 +39,6 @@ class VideoSprite extends FlxSpriteGroup
 
 		this.videoName = videoName;
 		scrollFactor.set();
-		//cameras = [FlxG.cameras.list[FlxG.cameras.list.length - 1]];
 
 		waiting = isWaiting;
 		if (!waiting)

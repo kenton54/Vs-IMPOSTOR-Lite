@@ -1,100 +1,100 @@
 {
 	"animations": [
 		{
+			"loop": true,
 			"offsets": [
 				365,
 				30
 			],
-			"loop": true,
-			"fps": 24,
 			"anim": "idle",
-			"indices": [],
-			"name": "black idle remast"
-		},
-		{
-			"offsets": [
-				580,
-				-27
-			],
-			"loop": false,
 			"fps": 24,
-			"anim": "singLEFT",
-			"indices": [],
-			"name": "black left"
+			"name": "black idle remast",
+			"indices": []
 		},
 		{
-			"offsets": [
-				352,
-				-48
-			],
 			"loop": false,
-			"fps": 24,
-			"anim": "singRIGHT",
-			"indices": [],
-			"name": "black right"
-		},
-		{
 			"offsets": [
-				571,
-				270
-			],
-			"loop": false,
-			"fps": 24,
-			"anim": "singDOWN",
-			"indices": [],
-			"name": "black down"
-		},
-		{
-			"offsets": [
-				684,
-				135
-			],
-			"loop": false,
-			"fps": 24,
-			"anim": "singUP",
-			"indices": [],
-			"name": "black up"
-		},
-		{
-			"offsets": [
-				355,
+				590,
 				-20
 			],
-			"loop": false,
+			"anim": "singLEFT",
 			"fps": 24,
-			"anim": "kill1",
-			"indices": [],
-			"name": "black kill 1"
+			"name": "black left",
+			"indices": []
 		},
 		{
+			"loop": false,
+			"offsets": [
+				328,
+				0
+			],
+			"anim": "singRIGHT",
+			"fps": 24,
+			"name": "black right",
+			"indices": []
+		},
+		{
+			"loop": false,
+			"offsets": [
+				551,
+				315
+			],
+			"anim": "singDOWN",
+			"fps": 24,
+			"name": "black down",
+			"indices": []
+		},
+		{
+			"loop": false,
+			"offsets": [
+				674,
+				85
+			],
+			"anim": "singUP",
+			"fps": 24,
+			"name": "black up",
+			"indices": []
+		},
+		{
+			"loop": false,
 			"offsets": [
 				399,
-				-48
+				20
 			],
-			"loop": false,
+			"anim": "kill1",
 			"fps": 24,
-			"anim": "kill2",
-			"indices": [],
-			"name": "black kill 2"
+			"name": "black kill 1",
+			"indices": []
 		},
 		{
-			"offsets": [
-				537,
-				318
-			],
 			"loop": false,
+			"offsets": [
+				445,
+				-7
+			],
+			"anim": "kill2",
 			"fps": 24,
+			"name": "black kill 2",
+			"indices": []
+		},
+		{
+			"loop": false,
+			"offsets": [
+				574,
+				360
+			],
 			"anim": "kill3",
-			"indices": [],
-			"name": "black kill 3"
+			"fps": 24,
+			"name": "black kill 3",
+			"indices": []
 		}
 	],
 	"vocals_file": "",
 	"no_antialiasing": false,
-	"image": "characters/black-legacy,characters/black-legacy-kill",
+	"image": "characters/black-legacy/black-legacy-idle,characters/black-legacy/black-legacy-kill1,characters/black-legacy/black-legacy-kill2,characters/black-legacy/black-legacy-kill3,characters/black-legacy/black-legacy-poses1,characters/black-legacy/black-legacy-poses2",
 	"position": [
 		220,
-		80
+		120
 	],
 	"healthicon": "black-legacy",
 	"flip_x": false,
@@ -104,8 +104,8 @@
 		79
 	],
 	"camera_position": [
-		-400,
-		-120
+		-340,
+		-40
 	],
 	"sing_duration": 4,
 	"scale": 1,

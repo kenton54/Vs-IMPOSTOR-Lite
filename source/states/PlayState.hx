@@ -307,7 +307,6 @@ class PlayState extends MusicBeatState
 		cpuControlled = true;
 		#end
 
-		// var gameCam:FlxCamera = FlxG.camera;
 		camGame = initPsychCamera();
 		camHUD = new FlxCamera();
 		camCountdown = new FlxCamera();
@@ -323,8 +322,8 @@ class PlayState extends MusicBeatState
 		FlxG.cameras.add(camHUD, false);
 		FlxG.cameras.add(camCountdown, false);
 		FlxG.cameras.add(camDialogue, false);
-		FlxG.cameras.add(camPause, false);
 		FlxG.cameras.add(camOther, false);
+		FlxG.cameras.add(camPause, false);
 
 		#if mobile
 		camControls = new FlxCamera();

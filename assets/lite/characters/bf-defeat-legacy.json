@@ -1,25 +1,24 @@
 {
 	"animations": [
 		{
-			"loop": false,
 			"offsets": [
 				0,
 				0
 			],
-			"anim": "idle",
+			"loop": false,
 			"fps": 24,
-			"name": "BF idle dance afraid",
-			"indices": []
+			"anim": "idle",
+			"indices": [],
+			"name": "BF idle dance afraid"
 		},
 		{
-			"loop": true,
 			"offsets": [
 				0,
 				0
 			],
-			"anim": "idle-loop",
+			"loop": true,
 			"fps": 24,
-			"name": "BF idle dance afraid",
+			"anim": "idle-loop",
 			"indices": [
 				9,
 				10,
@@ -28,161 +27,162 @@
 				13,
 				14,
 				15
-			]
+			],
+			"name": "BF idle dance afraid"
 		},
 		{
-			"loop": false,
 			"offsets": [
 				-6,
 				4
 			],
+			"loop": false,
+			"fps": 24,
 			"anim": "singLEFTmiss",
-			"fps": 24,
-			"name": "miss",
-			"indices": []
+			"indices": [],
+			"name": "miss"
 		},
 		{
-			"loop": false,
 			"offsets": [
 				-6,
 				4
 			],
+			"loop": false,
+			"fps": 24,
 			"anim": "singRIGHTmiss",
-			"fps": 24,
-			"name": "miss",
-			"indices": []
+			"indices": [],
+			"name": "miss"
 		},
 		{
-			"loop": false,
 			"offsets": [
 				-6,
 				4
 			],
+			"loop": false,
+			"fps": 24,
 			"anim": "singUPmiss",
-			"fps": 24,
-			"name": "miss",
-			"indices": []
+			"indices": [],
+			"name": "miss"
 		},
 		{
-			"loop": false,
 			"offsets": [
 				-6,
 				4
 			],
-			"anim": "singDOWNmiss",
+			"loop": false,
 			"fps": 24,
-			"name": "miss",
-			"indices": []
+			"anim": "singDOWNmiss",
+			"indices": [],
+			"name": "miss"
 		},
 		{
-			"loop": false,
 			"offsets": [
 				11,
 				0
 			],
-			"anim": "singLEFT",
+			"loop": false,
 			"fps": 24,
-			"name": "left",
-			"indices": []
+			"anim": "singLEFT",
+			"indices": [],
+			"name": "left"
 		},
 		{
-			"loop": false,
 			"offsets": [
 				-28,
 				-46
 			],
-			"anim": "singDOWN",
+			"loop": false,
 			"fps": 24,
-			"name": "down",
-			"indices": []
+			"anim": "singDOWN",
+			"indices": [],
+			"name": "down"
 		},
 		{
-			"loop": false,
 			"offsets": [
 				-17,
 				74
 			],
-			"anim": "singUP",
+			"loop": false,
 			"fps": 24,
-			"name": "up",
-			"indices": []
+			"anim": "singUP",
+			"indices": [],
+			"name": "up"
 		},
 		{
-			"loop": false,
 			"offsets": [
 				-72,
 				-17
 			],
+			"loop": false,
+			"fps": 25,
 			"anim": "singRIGHT",
-			"fps": 25,
-			"name": "right",
-			"indices": []
+			"indices": [],
+			"name": "right"
 		},
 		{
-			"loop": false,
 			"offsets": [
 				110,
 				7
 			],
+			"loop": false,
+			"fps": 25,
 			"anim": "firstDeath",
-			"fps": 25,
-			"name": "BF dies knife",
-			"indices": []
+			"indices": [],
+			"name": "BF dies knife"
 		},
 		{
-			"loop": true,
 			"offsets": [
 				110,
 				7
 			],
-			"anim": "deathLoop",
+			"loop": true,
 			"fps": 25,
-			"name": "BF Dead Loop knife",
-			"indices": []
+			"anim": "deathLoop",
+			"indices": [],
+			"name": "BF Dead Loop knife"
 		},
 		{
-			"loop": false,
 			"offsets": [
 				110,
-				55
+				22
 			],
-			"anim": "deathConfirm",
+			"loop": false,
 			"fps": 25,
-			"name": "BF Dead confirm knife",
-			"indices": []
+			"anim": "deathConfirm",
+			"indices": [],
+			"name": "BF Dead confirm knife"
 		},
 		{
-			"loop": false,
 			"offsets": [
 				813,
 				17
 			],
-			"anim": "firstDeath-balls",
-			"fps": 25,
-			"name": "BF dies balls",
-			"indices": []
-		},
-		{
-			"loop": true,
-			"offsets": [
-				27,
-				-9
-			],
-			"anim": "deathLoop-balls",
-			"fps": 25,
-			"name": "BF Dead Loop balls",
-			"indices": []
-		},
-		{
 			"loop": false,
+			"fps": 25,
+			"anim": "firstDeath-balls",
+			"indices": [],
+			"name": "BF dies balls"
+		},
+		{
 			"offsets": [
 				27,
-				55
+				-10
 			],
-			"anim": "deathConfirm-balls",
+			"loop": true,
 			"fps": 25,
-			"name": "BF Dead confirm balls",
-			"indices": []
+			"anim": "deathLoop-balls",
+			"indices": [],
+			"name": "BF Dead Loop balls"
+		},
+		{
+			"offsets": [
+				27,
+				22
+			],
+			"loop": false,
+			"fps": 25,
+			"anim": "deathConfirm-balls",
+			"indices": [],
+			"name": "BF Dead confirm balls"
 		}
 	],
 	"vocals_file": "",

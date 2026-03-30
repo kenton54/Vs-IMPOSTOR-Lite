@@ -1,5 +1,6 @@
 import lime.app.Application;
 import psychlua.CustomSubstate;
+import objects.VideoSprite;
 import states.FreeplayState;
 
 import flixel.FlxCamera.FlxCameraFollowStyle;
@@ -34,7 +35,10 @@ function onGameOver()
 
 function playLiteGameOver()
 {
-	CustomSubstate.openCustomSubstate("liteGameOver", true);
+	if (FlxG.random.bool(1 / 10000))
+		CustomSubstate.openCustomSubstate("ivebeeneverywhere-gameoverLol", true);
+	else
+		CustomSubstate.openCustomSubstate("liteGameOver", true);
 }
 
 function playLegacyGameOver()
@@ -48,6 +52,9 @@ function playLegacyGameOver()
 	game.defaultCamZoom = 0.65;
 
 	FlxTween.tween(game.camHUD, {alpha: 0}, 0.7, {ease: FlxEase.quadInOut});
+
+	boyfriend.playAnim("idle-loop");
+	boyfriend.stunned = true;
 
     dad.playAnim("kill1");
     dad.stunned = true;
@@ -133,6 +140,18 @@ function onCustomSubstateCreate(name:String)
 
 		bfMidpoint.put();
     }
+	else if (name == "ivebeeneverywhere-gameoverLol")
+	{
+		CustomSubstate.instance.cameras = [game.camPause];
+
+		var bg:FlxSprite = new FlxSprite().makeGraphic(FlxG.width, FlxG.height, FlxColor.BLACK);
+		CustomSubstate.instance.add(bg);
+
+		var lol:VideoSprite = new VideoSprite(Paths.video("ivebeeneverywhere"), false);
+		lol.finishCallback = () -> FlxG.resetState();
+		lol.play();
+		CustomSubstate.instance.add(lol);
+	}
 }
 
 function startLiteGameOver()

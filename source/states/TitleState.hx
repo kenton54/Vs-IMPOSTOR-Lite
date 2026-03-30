@@ -54,7 +54,7 @@ class TitleState extends MusicBeatState
 		titleStuff.add(enter);
 
 		logo = new FlxSprite(0, 50).loadGraphic(Paths.image('title/logo'));
-		logo.x = FlxG.width - logo.width - 40;
+		logo.x = FlxG.width - logo.width - 35;
 		logo.antialiasing = false;
 		titleStuff.add(logo);
 
@@ -117,7 +117,7 @@ class TitleState extends MusicBeatState
 
 		var pressedEnter:Bool = (PointerUtil.justReleased && !SwipeUtil.justSwipedAny) || FlxG.keys.justPressed.ENTER;
 
-		var mult:Float = FlxMath.lerp(0.8, logo.scale.x, Math.exp(-elapsed * 9 * 1));
+		var mult:Float = FlxMath.lerp(0.85, logo.scale.x, Math.exp(-elapsed * 9 * 1));
 		logo.scale.set(mult, mult);
 
 		if (!selected && pressedEnter)
@@ -151,9 +151,9 @@ class TitleState extends MusicBeatState
 	override function beatHit()
 	{
 		super.beatHit();
-		if(!allow) return;
+		if (!allow) return;
 		
-		logo.scale.set(0.85, 0.85);
+		logo.scale.set(0.9, 0.9);
 
 		if(!selected && !seenIntro)
 		{

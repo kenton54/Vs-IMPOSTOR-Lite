@@ -1,7 +1,8 @@
 bf
 bf-ghost
-bf-defeat-legacy
 idkbf
+bf-defeat-act1
+bf-defeat-legacy
 
 gf
 gf-ghost
