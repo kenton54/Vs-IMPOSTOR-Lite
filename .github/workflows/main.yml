@@ -35,7 +35,7 @@ jobs:
           chmod +x ./setup/setup.sh
           sh ./setup/setup.sh
 
-      - name: Setup HXCPP
+      - name: Set up HXCPP
         run: |
           cd ~/haxelib/hxcpp/git/tools/hxcpp/
           haxe compile.hxml
@@ -101,7 +101,7 @@ jobs:
           .\"setup/setup-windows.bat"
         shell: cmd
         
-      - name: Setup HXCPP
+      - name: Set up HXCPP
         run: |
           cd C:/haxelib/hxcpp/git/tools/hxcpp/
           haxe compile.hxml
@@ -166,7 +166,7 @@ jobs:
           chmod +x ./setup/setup.sh
           sh ./setup/setup.sh
 
-      - name: Setup HXCPP
+      - name: Set up HXCPP
         run: |
           cd ~/haxelib/hxcpp/git/tools/hxcpp/
           haxe compile.hxml
@@ -246,13 +246,13 @@ jobs:
           chmod +x ./setup/setup.sh
           sh ./setup/setup.sh
 
-      - name: Setup HXCPP
+      - name: Set up HXCPP
         run: |
           cd ~/haxelib/hxcpp/git/tools/hxcpp/
           haxe compile.hxml
           cd ~/
 
-      - name: Setup Android
+      - name: Set up Android
         run: |
           haxelib run lime config ANDROID_SDK $ANDROID_SDK_ROOT
           haxelib run lime config ANDROID_NDK_ROOT ${{ steps.ndk-install.outputs.ndk-path }}

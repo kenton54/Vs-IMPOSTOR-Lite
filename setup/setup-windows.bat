@@ -12,5 +12,6 @@ haxelib install hxvlc --skip-dependencies
 haxelib git linc_luajit https://github.com/superpowers04/linc_luajit master
 haxelib install extension-androidtools
 haxelib install hxgamemode
+haxelib git astc-compressor https://github.com/KarimAkra/astc-compressor main
 echo Finished!
 pause

@@ -73,6 +73,13 @@
       "name": "hxgamemode",
       "type": "haxelib",
       "version": null
+    },
+    {
+      "name": "astc-compressor",
+      "type": "git",
+      "dir": null,
+      "ref": "main",
+      "url": "https://github.com/KarimAkra/astc-compressor"
     }
   ]
 }

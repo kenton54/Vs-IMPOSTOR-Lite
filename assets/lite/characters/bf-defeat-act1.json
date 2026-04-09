@@ -8,7 +8,13 @@
 			"loop": false,
 			"fps": 12,
 			"anim": "idle",
-			"indices": [],
+			"indices": [
+				4,
+				3,
+				2,
+				4,
+				1
+			],
 			"name": "idle"
 		},
 		{

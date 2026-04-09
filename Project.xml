@@ -145,4 +145,6 @@
 	<icon path="art/icons/icon150.png" size='160'/>
 	<icon path="art/icons/icon300.png" size='320'/>
 	<icon path="art/icons/iconOG.png" />
+
+	<!--<prebuild command="haxelib run astc-compressor compress-from-json -json ./astc-compress-data.json" if="mobile" unless="display || clean"/>-->
 </project>

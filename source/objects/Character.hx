@@ -177,13 +177,15 @@ class Character extends FlxSprite
 				var animLoop:Bool = anim.loop;
 				var animIndices:Array<Int> = anim.indices;
 
-				if(animIndices != null && animIndices.length > 0)
+				if (animIndices != null && animIndices.length > 0)
 					animation.addByIndices(animAnim, animName, animIndices, "", animFps, animLoop);
 				else
 					animation.addByPrefix(animAnim, animName, animFps, animLoop);
 
-				if(anim.offsets != null && anim.offsets.length > 1) addOffset(anim.anim, anim.offsets[0], anim.offsets[1]);
-				else addOffset(anim.anim, 0, 0);
+				if (anim.offsets != null && anim.offsets.length > 1)
+					addOffset(animAnim, anim.offsets[0], anim.offsets[1]);
+				else
+					addOffset(animAnim, 0, 0);
 			}
 		}
 	}
