@@ -2010,6 +2010,30 @@ class PlayState extends MusicBeatState
 			iconP2.animation.play((healthBar.percent > 80) ? 'losing' : (healthBar.percent < 20 ? 'winning' : 'normal'));
 	}
 
+	public dynamic function updateScoreTextColor(char:String = 'bf', realChar:String = 'bf')
+	{
+		var isDad:Bool = (char == 'dad');
+
+		if (scoreTxt != null && dad != null && boyfriend != null && dynamicScoreColors)
+		{
+			if (isDad)
+				scoreTxt.color = FlxColor.fromRGB(dad.healthColorArray[0], dad.healthColorArray[1], dad.healthColorArray[2]);
+			else if (char == 'gf')
+				scoreTxt.color = FlxColor.fromRGB(gf.healthColorArray[0], gf.healthColorArray[1], gf.healthColorArray[2]);
+			else
+				scoreTxt.color = FlxColor.fromRGB(boyfriend.healthColorArray[0], boyfriend.healthColorArray[1], boyfriend.healthColorArray[2]);
+
+			// small detail that was also added to monster in lite funkin
+			if(realChar == 'black') scoreTxt.borderColor = FlxColor.WHITE; /* 0xfff03636 */
+			else scoreTxt.borderColor = FlxColor.BLACK;
+		}
+		else if (scoreTxt != null)
+		{
+			scoreTxt.borderColor = FlxColor.BLACK;
+			scoreTxt.color = FlxColor.WHITE;
+		}
+	}
+
 	function updateTimeBar()
 	{
 		if (ClientPrefs.data.timeBarType == Disabled) return;
@@ -2459,17 +2483,14 @@ class PlayState extends MusicBeatState
 			camFollow.setPosition(gf.getMidpoint().x, gf.getMidpoint().y);
 			camFollow.x += gf.cameraPosition[0] + girlfriendCameraOffset[0];
 			camFollow.y += gf.cameraPosition[1] + girlfriendCameraOffset[1];
+			updateScoreTextColor('gf', gf.curCharacter);
 			callOnScripts('onMoveCamera', ['gf']);
 			return;
 		}
 
 		var isDad:Bool = (SONG.notes[sec].mustHitSection != true);
 
-		if (scoreTxt != null && dad != null && boyfriend != null && dynamicScoreColors)
-		{
-			if (isDad) scoreTxt.color = FlxColor.fromRGB(dad.healthColorArray[0], dad.healthColorArray[1], dad.healthColorArray[2]);
-			else scoreTxt.color = FlxColor.fromRGB(boyfriend.healthColorArray[0], boyfriend.healthColorArray[1], boyfriend.healthColorArray[2]);
-		}
+		updateScoreTextColor(isDad ? 'dad' : 'boyfriend', isDad ? dad.curCharacter : boyfriend.curCharacter);
 
 		moveCamera(isDad);
 
