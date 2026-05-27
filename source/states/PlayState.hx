@@ -2010,7 +2010,7 @@ class PlayState extends MusicBeatState
 			iconP2.animation.play((healthBar.percent > 80) ? 'losing' : (healthBar.percent < 20 ? 'winning' : 'normal'));
 	}
 
-	public dynamic function updateScoreTextColor(char:String = 'bf', realChar:String = 'bf')
+	public function updateScoreTextColor(char:String = 'bf', realChar:String = 'bf')
 	{
 		var isDad:Bool = (char == 'dad');
 
