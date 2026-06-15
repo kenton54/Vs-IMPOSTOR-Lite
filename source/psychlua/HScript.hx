@@ -192,6 +192,7 @@ class HScript extends Iris
 		set('Character', Character);
 		set('Alphabet', Alphabet);
 		set('Note', objects.Note);
+		set('SnowEmitter', objects.SnowEmitter);
 		set('CustomSubstate', CustomSubstate);
 
 		#if !flash

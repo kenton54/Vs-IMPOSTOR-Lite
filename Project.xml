@@ -124,6 +124,7 @@
 	<haxedef name="hscriptPos" if="HSCRIPT_ALLOWED" />
 
 	<haxedef name="message.reporting" value="pretty" />
+	<haxedef name='-dce' value='no' />
 
 	<!--Disable deprecated warnings-->
 	<haxedef name='no-deprecation-warnings' />
