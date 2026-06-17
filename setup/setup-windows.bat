@@ -13,5 +13,7 @@ haxelib git linc_luajit https://github.com/superpowers04/linc_luajit master
 haxelib install extension-androidtools
 haxelib install hxgamemode
 haxelib git hxcpp https://github.com/FunkinCrew/hxcpp c79483a7bf1c0afa77d35a8c564cecac83d5c890
+haxelib install hxp
+haxelib install format
 echo Finished!
 pause
