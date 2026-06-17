@@ -295,10 +295,10 @@ enum abstract TimeBarType(String) from String to String
 	var Disabled = 'Disabled';
 	var TimeLeft = 'Time Left';
 	var TimeElapsed = 'Time Elapsed';
-	var TimeTotal = 'Total Time';
+	//var TimeTotal = 'Total Time';
 	var SongName = 'Song Name';
-	var Percentage = 'Percentage';
-	var SongNamePercent = 'Song Name and Percentage';
+	//var Percentage = 'Percentage';
+	//var SongNamePercent = 'Song Name and Percentage';
 }
 
 enum abstract MobileControlStyle(String) from String to String

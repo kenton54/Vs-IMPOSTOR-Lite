@@ -4,8 +4,8 @@
       "name": "hxcpp",
       "type": "git",
       "dir": null,
-      "ref": "master",
-      "url": "https://github.com/HaxeFoundation/hxcpp"
+      "ref": "c79483a7bf1c0afa77d35a8c564cecac83d5c890",
+      "url": "https://github.com/FunkinCrew/hxcpp"
     },
     {
       "name": "lime",
@@ -75,11 +75,14 @@
       "version": null
     },
     {
-      "name": "astc-compressor",
-      "type": "git",
-      "dir": null,
-      "ref": "main",
-      "url": "https://github.com/KarimAkra/astc-compressor"
+      "name": "hxp",
+      "type": "haxelib",
+      "version": null
+    },
+    {
+      "name": "format",
+      "type": "haxelib",
+      "version": null
     }
   ]
 }

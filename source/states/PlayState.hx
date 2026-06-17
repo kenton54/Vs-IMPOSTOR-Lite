@@ -497,7 +497,7 @@ class PlayState extends MusicBeatState
 		noteGroup.add(strumLineNotes);
 
 		timeTxt.y += 3;
-		if (ClientPrefs.data.timeBarType == SongName || ClientPrefs.data.timeBarType == SongNamePercent)
+		if (ClientPrefs.data.timeBarType == SongName /*|| ClientPrefs.data.timeBarType == SongNamePercent*/)
 		{
 			timeTxt.size = 24;
 			timeTxt.y -= 2;
@@ -2038,11 +2038,11 @@ class PlayState extends MusicBeatState
 	{
 		if (ClientPrefs.data.timeBarType == Disabled) return;
 
-		if (ClientPrefs.data.timeBarType == TimeElapsed || ClientPrefs.data.timeBarType == TimeLeft || ClientPrefs.data.timeBarType == TimeTotal)
+		if (ClientPrefs.data.timeBarType == TimeElapsed || ClientPrefs.data.timeBarType == TimeLeft /*|| ClientPrefs.data.timeBarType == TimeTotal*/)
 		{
 			var songCalc:Float = (songLength - curTime);
 
-			if (ClientPrefs.data.timeBarType == TimeElapsed || ClientPrefs.data.timeBarType == TimeTotal)
+			if (ClientPrefs.data.timeBarType == TimeElapsed /*|| ClientPrefs.data.timeBarType == TimeTotal*/)
 				songCalc = curTime;
 
 			var secondsTotal:Int = Math.floor(songCalc / 1000);
@@ -2050,11 +2050,13 @@ class PlayState extends MusicBeatState
 			if (secondsTotal < 0)
 				secondsTotal = 0;
 
+			/*
 			if (ClientPrefs.data.timeBarType != TimeTotal)
 				timeTxt.text = FlxStringUtil.formatTime(secondsTotal, false);
-			else
+			else*/
 				timeTxt.text = FlxStringUtil.formatTime(secondsTotal, false) + " - " + FlxStringUtil.formatTime(inst.length / 1000, false);
 		}
+		/*
 		else if (ClientPrefs.data.timeBarType == Percentage || ClientPrefs.data.timeBarType == SongNamePercent)
 		{
 			if (ClientPrefs.data.timeBarType == SongNamePercent)
@@ -2062,6 +2064,7 @@ class PlayState extends MusicBeatState
 			else
 				timeTxt.text = Math.round(songPercent * 100) + "%";
 		}
+		*/
 	}
 
 	var iconsAnimations:Bool = true;

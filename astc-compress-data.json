@@ -1,7 +1,0 @@
-{
-    "input": "./assets",
-    "output": "./astc-textures/",
-    "quality": "medium",
-    "blocksize": "10x10",
-    "colorprofile": "cl"
-}

@@ -222,10 +222,11 @@ class CharacterEditorState extends MusicBeatState
 
 		var isPlayer = (reload ? character.isPlayer : !predictCharacterIsNotPlayer(_char));
 		character = new Character(0, 0, _char, isPlayer);
-		if(!reload && character.editorIsPlayer != null && isPlayer != character.editorIsPlayer)
+		if (!reload && character.editorIsPlayer != null && isPlayer != character.editorIsPlayer)
 		{
 			character.isPlayer = !character.isPlayer;
 			character.flipX = (character.originalFlipX != character.isPlayer);
+			character.flipY = character.originalFlipY;
 			if(check_player != null) check_player.checked = character.isPlayer;
 		}
 		character.debugMode = true;
@@ -381,6 +382,7 @@ class CharacterEditorState extends MusicBeatState
 				],
 				no_antialiasing: false,
 				flip_x: false,
+				flip_y: false,
 				healthicon: 'face',
 				image: 'characters/BOYFRIEND',
 				sing_duration: 4,
@@ -448,6 +450,8 @@ class CharacterEditorState extends MusicBeatState
 	var animationIndicesInputText:FlxUIInputText;
 	var animationFramerate:FlxUINumericStepper;
 	var animationLoopCheckBox:FlxUICheckBox;
+	var animationFlipXCheckBox:FlxUICheckBox;
+	var animationFlipYCheckBox:FlxUICheckBox;
 	function addAnimationsUI()
 	{
 		var tab_group = new FlxUI(null, UI_box);
@@ -457,7 +461,9 @@ class CharacterEditorState extends MusicBeatState
 		animationNameInputText = new FlxUIInputText(animationInputText.x, animationInputText.y + 35, 150, '', 8);
 		animationIndicesInputText = new FlxUIInputText(animationNameInputText.x, animationNameInputText.y + 40, 250, '', 8);
 		animationFramerate = new FlxUINumericStepper(animationInputText.x + 170, animationInputText.y, 1, 24, 0, 240, 0);
-		animationLoopCheckBox = new FlxUICheckBox(animationNameInputText.x + 170, animationNameInputText.y - 1, null, null, "Should it Loop?", 100);
+		animationLoopCheckBox = new FlxUICheckBox(animationNameInputText.x + 170, animationNameInputText.y - 1, null, null, '', 0);
+		animationFlipXCheckBox = new FlxUICheckBox(animationLoopCheckBox.x + 50, animationLoopCheckBox.y, null, null, '', 0);
+		animationFlipYCheckBox = new FlxUICheckBox(animationFlipXCheckBox.x + 40, animationFlipXCheckBox.y, null, null, '', 0);
 
 		animationDropDown = new FlxUIDropDownMenu(15, animationInputText.y - 55, FlxUIDropDownMenu.makeStrIdLabelArray([''], true), function(pressed:String) {
 			var selectedAnimation:Int = Std.parseInt(pressed);
@@ -466,6 +472,8 @@ class CharacterEditorState extends MusicBeatState
 			animationNameInputText.text = anim.name;
 			animationLoopCheckBox.checked = anim.loop;
 			animationFramerate.value = anim.fps;
+			animationFlipXCheckBox.checked = anim.flipX;
+			animationFlipYCheckBox.checked = anim.flipY;
 
 			var indicesStr:String = anim.indices.toString();
 			animationIndicesInputText.text = indicesStr.substr(1, indicesStr.length - 2);
@@ -500,7 +508,9 @@ class CharacterEditorState extends MusicBeatState
 			addedAnim.loop = animationLoopCheckBox.checked;
 			addedAnim.indices = indices;
 			addedAnim.offsets = lastOffsets;
-			addAnimation(addedAnim.anim, addedAnim.name, addedAnim.fps, addedAnim.loop, addedAnim.indices);
+			addedAnim.flipX = animationFlipXCheckBox.checked;
+			addedAnim.flipY = animationFlipYCheckBox.checked;
+			addAnimation(addedAnim.anim, addedAnim.name, addedAnim.fps, addedAnim.loop, addedAnim.indices, addedAnim.flipX, addedAnim.flipY);
 			character.animationsArray.push(addedAnim);
 
 			reloadAnimList();
@@ -535,17 +545,22 @@ class CharacterEditorState extends MusicBeatState
 		reloadAnimList();
 		animationDropDown.selectedLabel = anims[0] != null ? anims[0].anim : '';
 
-		tab_group.add(new FlxText(animationDropDown.x, animationDropDown.y - 18, 0, 'Animations:'));
-		tab_group.add(new FlxText(animationInputText.x, animationInputText.y - 18, 0, 'Animation name:'));
-		tab_group.add(new FlxText(animationFramerate.x, animationFramerate.y - 18, 0, 'Framerate:'));
-		tab_group.add(new FlxText(animationNameInputText.x, animationNameInputText.y - 18, 0, 'Animation Symbol Name/Tag:'));
-		tab_group.add(new FlxText(animationIndicesInputText.x, animationIndicesInputText.y - 18, 0, 'ADVANCED - Animation Indices:'));
+		tab_group.add(new FlxText(animationDropDown.x, animationDropDown.y - 14, 0, 'Animations:'));
+		tab_group.add(new FlxText(animationInputText.x, animationInputText.y - 14, 0, 'Animation name:'));
+		tab_group.add(new FlxText(animationFramerate.x, animationFramerate.y - 14, 0, 'Framerate:'));
+		tab_group.add(new FlxText(animationNameInputText.x, animationNameInputText.y - 14, 0, 'Animation Name/Tag:'));
+		tab_group.add(new FlxText(animationLoopCheckBox.x, animationLoopCheckBox.y - 13, 0, 'Looped:'));
+		tab_group.add(new FlxText(animationIndicesInputText.x, animationIndicesInputText.y - 14, 0, 'ADVANCED - Animation Indices:'));
+		tab_group.add(new FlxText(animationFlipXCheckBox.x, animationFlipXCheckBox.y - 13, 0, 'Flip X:'));
+		tab_group.add(new FlxText(animationFlipYCheckBox.x, animationFlipYCheckBox.y - 13, 0, 'Flip Y:'));
 
 		tab_group.add(animationInputText);
 		tab_group.add(animationNameInputText);
 		tab_group.add(animationIndicesInputText);
 		tab_group.add(animationFramerate);
 		tab_group.add(animationLoopCheckBox);
+		tab_group.add(animationFlipXCheckBox);
+		tab_group.add(animationFlipYCheckBox);
 		tab_group.add(addUpdateButton);
 		tab_group.add(removeButton);
 		tab_group.add(animationDropDown);
@@ -564,6 +579,7 @@ class CharacterEditorState extends MusicBeatState
 	var positionCameraYStepper:FlxUINumericStepper;
 
 	var flipXCheckBox:FlxUICheckBox;
+	var flipYCheckBox:FlxUICheckBox;
 	var noAntialiasingCheckBox:FlxUICheckBox;
 
 	var healthColorStepperR:FlxUINumericStepper;
@@ -610,7 +626,13 @@ class CharacterEditorState extends MusicBeatState
 			character.flipX = (character.originalFlipX != character.isPlayer);
 		};
 
-		noAntialiasingCheckBox = new FlxUICheckBox(flipXCheckBox.x, flipXCheckBox.y + 40, null, null, "No Antialiasing", 80);
+		flipYCheckBox = new FlxUICheckBox(flipXCheckBox.x, flipXCheckBox.y + 20, null, null, "Flip Y", 50);
+		flipYCheckBox.checked = character.flipY;
+		flipYCheckBox.callback = function() {
+			character.flipY = character.originalFlipY = !character.originalFlipY;
+		};
+
+		noAntialiasingCheckBox = new FlxUICheckBox(flipYCheckBox.x, flipYCheckBox.y + 20, null, null, "No Antialiasing", 80);
 		noAntialiasingCheckBox.checked = character.noAntialiasing;
 		noAntialiasingCheckBox.callback = function() {
 			character.antialiasing = false;
@@ -650,6 +672,7 @@ class CharacterEditorState extends MusicBeatState
 		tab_group.add(singDurationStepper);
 		tab_group.add(scaleStepper);
 		tab_group.add(flipXCheckBox);
+		tab_group.add(flipYCheckBox);
 		tab_group.add(noAntialiasingCheckBox);
 		tab_group.add(positionXStepper);
 		tab_group.add(positionYStepper);
@@ -746,12 +769,14 @@ class CharacterEditorState extends MusicBeatState
 
 		for (anim in anims)
 		{
-			var animAnim:String = '' + anim.anim;
-			var animName:String = '' + anim.name;
+			var animAnim:String = anim.anim;
+			var animName:String = anim.name;
 			var animFps:Int = anim.fps;
-			var animLoop:Bool = !!anim.loop; //Bruh
+			var animLoop:Bool = anim.loop; //Bruh
 			var animIndices:Array<Int> = anim.indices;
-			addAnimation(animAnim, animName, animFps, animLoop, animIndices);
+			var animFlipX:Bool = anim.flipX;
+			var animFlipY:Bool = anim.flipY;
+			addAnimation(animAnim, animName, animFps, animLoop, animIndices, animFlipX, animFlipY);
 		}
 
 		if(anims.length > 0)
@@ -771,6 +796,7 @@ class CharacterEditorState extends MusicBeatState
 		singDurationStepper.value = character.singDuration;
 		scaleStepper.value = character.jsonScale;
 		flipXCheckBox.checked = character.originalFlipX;
+		flipYCheckBox.checked = character.originalFlipY;
 		noAntialiasingCheckBox.checked = character.noAntialiasing;
 		positionXStepper.value = character.positionArray[0];
 		positionYStepper.value = character.positionArray[1];
@@ -873,10 +899,10 @@ class CharacterEditorState extends MusicBeatState
 		}
 		else holdingArrowsTime = 0;
 
-		if (FlxG.mouse.pressedRight && (FlxG.mouse.deltaScreenX != 0 || FlxG.mouse.deltaScreenY != 0))
+		if (FlxG.mouse.pressedRight && (FlxG.mouse.deltaViewX != 0 || FlxG.mouse.deltaViewY != 0))
 		{
-			character.offset.x -= FlxG.mouse.deltaScreenX;
-			character.offset.y -= FlxG.mouse.deltaScreenY;
+			character.offset.x -= FlxG.mouse.deltaViewX;
+			character.offset.y -= FlxG.mouse.deltaViewY;
 			changedOffset = true;
 		}
 
@@ -1119,8 +1145,10 @@ class CharacterEditorState extends MusicBeatState
 
 	inline function updateCharacterPositions()
 	{
-		if((character != null && !character.isPlayer) || (character == null && predictCharacterIsNotPlayer(_char))) character.setPosition(dadPosition.x, dadPosition.y);
-		else character.setPosition(bfPosition.x, bfPosition.y);
+		if ((character != null && !character.isPlayer) || (character == null && predictCharacterIsNotPlayer(_char)))
+			character.setPosition(dadPosition.x, dadPosition.y);
+		else
+			character.setPosition(bfPosition.x, bfPosition.y);
 
 		character.x += character.positionArray[0];
 		character.y += character.positionArray[1];
@@ -1132,12 +1160,12 @@ class CharacterEditorState extends MusicBeatState
 				name.endsWith('-opponent') || name.startsWith('gf-') || name.endsWith('-gf') || name == 'gf';
 	}
 
-	function addAnimation(anim:String, name:String, fps:Float, loop:Bool, indices:Array<Int>)
+	function addAnimation(anim:String, name:String, fps:Float, loop:Bool, indices:Array<Int>, flipX:Bool, flipY:Bool)
 	{
 		if (indices != null && indices.length > 0)
-			character.animation.addByIndices(anim, name, indices, "", fps, loop);
+			character.animation.addByIndices(anim, name, indices, "", fps, loop, flipX, flipY);
 		else
-			character.animation.addByPrefix(anim, name, fps, loop);
+			character.animation.addByPrefix(anim, name, fps, loop, flipX, flipY);
 
 		if (!character.animOffsets.exists(anim))
 			character.addOffset(anim, 0, 0);
@@ -1151,7 +1179,9 @@ class CharacterEditorState extends MusicBeatState
 			fps: 24,
 			anim: anim,
 			indices: [],
-			name: name
+			name: name,
+			flipX: false,
+			flipY: false
 		};
 	}
 
@@ -1237,6 +1267,7 @@ class CharacterEditorState extends MusicBeatState
 			"camera_position": character.cameraPosition,
 
 			"flip_x": character.originalFlipX,
+			"flip_y": character.originalFlipY,
 			"no_antialiasing": character.noAntialiasing,
 			"healthbar_colors": character.healthColorArray,
 			"vocals_file": character.vocalsFile,

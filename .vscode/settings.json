@@ -1,0 +1,7 @@
+{
+    "files.associations": {
+        "*.hxp": "haxe",
+        "*.haxe": "haxe"
+    },
+    "lime.projectFile": "project.hxp",
+}
