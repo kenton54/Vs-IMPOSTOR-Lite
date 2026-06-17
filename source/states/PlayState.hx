@@ -27,6 +27,7 @@ import states.editors.CharacterEditorState;
 
 import substates.PauseSubState;
 import substates.GameOverSubstate;
+import substates.DialogueSubState;
 
 #if !flash
 import flixel.addons.display.FlxRuntimeShader;
@@ -227,6 +228,8 @@ class PlayState extends MusicBeatState
 	public var skipCountdown:Bool = false;
 	var songLength:Float = 0;
 
+	public var hasDialogue:Bool = false;
+
 	public var boyfriendCameraOffset:Array<Float> = null;
 	public var opponentCameraOffset:Array<Float> = null;
 	public var girlfriendCameraOffset:Array<Float> = null;
@@ -353,6 +356,8 @@ class PlayState extends MusicBeatState
 		GameOverSubstate.resetVariables();
 
 		songName = Paths.formatToSongPath(SONG.song);
+
+		hasDialogue = Paths.fileExists('data/songs/' + songName + '/dialogue.json', TEXT);
 
 		if (SONG.stage == null || SONG.stage.length < 1)
 			SONG.stage = StageData.vanillaSongStage(songName);
@@ -640,7 +645,7 @@ class PlayState extends MusicBeatState
 			startDialogue(DialogueLiteBox.parseDialogue(Paths.json('dialogues/dialogues/$songName')), songName);
 			seenCutscene = true;
 		}
-		else
+		else if (hasDialogue == false)
 			startCallback();
 
 		//startCallback();
@@ -669,6 +674,12 @@ class PlayState extends MusicBeatState
 		callOnScripts('onCreatePost');
 
 		super.create();
+
+		if (hasDialogue == true) {
+			inCutscene = true;
+			openSubState(new DialogueSubState());
+		}
+		
 		Paths.clearUnusedMemory();
 		
 		cacheCountdown();
@@ -1703,7 +1714,7 @@ class PlayState extends MusicBeatState
 
 		callOnScripts('onFocusLost');
 
-		if (#if !mobile ClientPrefs.data.autoPause && #end canPause && !paused)
+		if (#if !mobile ClientPrefs.data.autoPause && #end canPause && !paused && !inCutscene)
 			openPauseMenu();
 
 		super.onFocusLost();
