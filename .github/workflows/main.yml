@@ -30,14 +30,15 @@ jobs:
         run: |
           sudo apt-get install libvlc-dev
           sudo apt-get install libvlccore-dev
+          haxelib setup ~/haxelib
           chmod +x ./setup/setup.sh
           sh ./setup/setup.sh
 
       - name: Set up HXCPP
         run: |
-          cd ./.haxelib/hxcpp/git/tools/hxcpp/
+          cd ~/haxelib/hxcpp/git/tools/hxcpp/
           haxe compile.hxml
-          cd ../../../../../
+          cd ~/
 
       - name: Build Game
         run: |
@@ -94,14 +95,15 @@ jobs:
 
       - name: Install Libraries
         run: |
+          haxelib setup C:/haxelib
           .\"setup/setup-windows.bat"
         shell: cmd
         
       - name: Set up HXCPP
         run: |
-          cd ./.haxelib/hxcpp/git/tools/hxcpp/
+          cd C:/haxelib/hxcpp/git/tools/hxcpp/
           haxe compile.hxml
-          cd ../../../../../
+          cd C:/
 
       - name: Build Game
         run: haxelib run lime build windows
@@ -157,14 +159,15 @@ jobs:
 
       - name: Install Libraries
         run: |
+          haxelib setup ~/haxelib
           chmod +x ./setup/setup.sh
           sh ./setup/setup.sh
 
       - name: Set up HXCPP
         run: |
-          cd ./.haxelib/hxcpp/git/tools/hxcpp/
+          cd ~/haxelib/hxcpp/git/tools/hxcpp/
           haxe compile.hxml
-          cd ../../../../../
+          cd ~/
 
       - name: Build Game
         run: arch -x86_64 haxelib run lime build mac
@@ -235,14 +238,15 @@ jobs:
 
       - name: Install Libraries
         run: |
+          haxelib setup ~/haxelib
           chmod +x ./setup/setup.sh
           sh ./setup/setup.sh
 
       - name: Set up HXCPP
         run: |
-          cd ./.haxelib/hxcpp/git/tools/hxcpp/
+          cd ~/haxelib/hxcpp/git/tools/hxcpp/
           haxe compile.hxml
-          cd ../../../../../
+          cd ~/
 
       - name: Set up Android
         run: |
