@@ -14,6 +14,7 @@ import llua.Lua;
 import backend.Achievements;
 #end
 
+import backend.Assets;
 import backend.Paths;
 import backend.Controls;
 import backend.PointerUtil;

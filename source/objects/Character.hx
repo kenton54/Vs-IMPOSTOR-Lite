@@ -5,7 +5,6 @@ import backend.animation.PsychAnimationController;
 
 import flixel.util.FlxSort;
 
-import openfl.utils.Assets;
 import haxe.Json;
 
 typedef CharacterFile = {
@@ -88,11 +87,7 @@ class Character extends FlxSprite
 
 		var path:String = Paths.getPath('characters/$curCharacter.json', TEXT, null, true);
 
-		#if MODS_ALLOWED
-		if (!FileSystem.exists(path))
-		#else
 		if (!Assets.exists(path))
-		#end
 		{
 			path = Paths.getLitePath('characters/$DEFAULT_CHARACTER.json'); //If a character couldn't be found, change him to BF just to prevent a crash
 			color = FlxColor.BLACK;

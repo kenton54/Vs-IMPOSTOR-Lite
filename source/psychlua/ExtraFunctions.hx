@@ -2,7 +2,6 @@ package psychlua;
 
 #if LUA_ALLOWED
 import flixel.util.FlxSave;
-import openfl.utils.Assets;
 
 import sys.FileSystem;
 
@@ -215,10 +214,10 @@ class ExtraFunctions
 			return false;
 		});
 		Lua_helper.add_callback(lua, "getTextFromFile", function(path:String, ?ignoreModFolders:Bool = false) {
-			return Paths.getTextFromFile(path, ignoreModFolders);
+			return Paths.getTextFromFile(path, null, !ignoreModFolders);
 		});
 		Lua_helper.add_callback(lua, "directoryFileList", function(folder:String) {
-			return Paths.readDirectory(folder);
+			return Assets.readDirectory(folder);
 		});
 
 		// String tools

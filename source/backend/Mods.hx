@@ -1,7 +1,5 @@
 package backend;
 
-import openfl.Assets;
-
 #if sys
 import sys.FileSystem;
 #end
@@ -57,7 +55,7 @@ class Mods
 		var modsFolder:String = Paths.mods();
 		if (FileSystem.exists(modsFolder))
 		{
-			for (folder in Paths.readDirectory(modsFolder))
+			for (folder in Assets.readDirectory(modsFolder))
 			{
 				var path = haxe.io.Path.join([modsFolder, folder]);
 				if (FileSystem.isDirectory(path) && !ignoreModFolders.contains(folder.toLowerCase()) && !list.contains(folder))

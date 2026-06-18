@@ -27,15 +27,15 @@ class DialogueEditorState extends MusicBeatState
 		dialogueBox.start(true);
 
         var replayDialogueText:FlxText = new FlxText(10, 10, FlxG.width - 20, "Press SPACE to replay the current line", 16);
-		replayDialogueText.setFormat(Paths.font("vcr.ttf"), 16, FlxColor.WHITE, LEFT, OUTLINE, FlxColor.BLACK);
+		replayDialogueText.setFormat(Paths.font("vcr"), 16, FlxColor.WHITE, LEFT, OUTLINE, FlxColor.BLACK);
         add(replayDialogueText);
 
         var addLineText:FlxText = new FlxText(10, 32, FlxG.width - 20, "Press O to remove the current line, Press P to add a line after the current one", 16);
-		addLineText.setFormat(Paths.font("vcr.ttf"), 16, FlxColor.WHITE, LEFT, OUTLINE, FlxColor.BLACK);
+		addLineText.setFormat(Paths.font("vcr"), 16, FlxColor.WHITE, LEFT, OUTLINE, FlxColor.BLACK);
         add(addLineText);
 
 		linesText = new FlxText(10, 62, FlxG.width - 20, "Line 0 / 0", 16);
-		linesText.setFormat(Paths.font("vcr.ttf"), 16, FlxColor.WHITE, LEFT, OUTLINE, FlxColor.BLACK);
+		linesText.setFormat(Paths.font("vcr"), 16, FlxColor.WHITE, LEFT, OUTLINE, FlxColor.BLACK);
 		add(linesText);
 
 		updateDialogue();

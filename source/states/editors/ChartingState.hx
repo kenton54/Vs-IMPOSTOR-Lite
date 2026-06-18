@@ -3,7 +3,6 @@ package states.editors;
 #if EDITORS_ALLOWED
 import flash.geom.Rectangle;
 import haxe.Json;
-import haxe.format.JsonParser;
 import haxe.io.Bytes;
 
 import flixel.FlxObject;
@@ -20,11 +19,8 @@ import flixel.ui.FlxButton;
 
 import flixel.util.FlxSort;
 import lime.media.AudioBuffer;
-import openfl.events.Event;
-import openfl.events.IOErrorEvent;
-import openfl.media.Sound;
-import openfl.net.FileReference;
-import openfl.utils.Assets as OpenFlAssets;
+
+import backend.FileDialog;
 
 import backend.Song;
 import backend.Section;
@@ -81,8 +77,6 @@ class ChartingState extends MusicBeatState
 		['Set Property', "Value 1: Variable name\nValue 2: New value"],
 		['Play Sound', "Value 1: Sound file name\nValue 2: Volume (Default: 1), ranges from 0 to 1"]
 	];
-
-	var _file:FileReference;
 
 	var UI_box:FlxUITabMenu;
 
@@ -344,7 +338,7 @@ class ChartingState extends MusicBeatState
 		for (i in 0...tipTextArray.length) {
 			var tipText:FlxText = new FlxText(UI_box.x, UI_box.y + UI_box.height + 8, 0, tipTextArray[i], 16);
 			tipText.y += i * 12;
-			tipText.setFormat(Paths.font("vcr.ttf"), 14, FlxColor.WHITE, LEFT/*, FlxTextBorderStyle.OUTLINE, FlxColor.BLACK*/);
+			tipText.setFormat(Paths.font("vcr"), 14, FlxColor.WHITE, LEFT/*, FlxTextBorderStyle.OUTLINE, FlxColor.BLACK*/);
 			//tipText.borderSize = 2;
 			tipText.scrollFactor.set();
 			add(tipText);
@@ -444,7 +438,7 @@ class ChartingState extends MusicBeatState
 			#if MODS_ALLOWED
 			if (FileSystem.exists(Paths.modsJson(songName + '/events')) || FileSystem.exists(file))
 			#else
-			if (OpenFlAssets.exists(file))
+			if (Assets.exists(file))
 			#end
 			{
 				clearEvents();
@@ -509,7 +503,7 @@ class ChartingState extends MusicBeatState
 			#if MODS_ALLOWED
 			if (FileSystem.exists(directory))
 			{
-				for (file in Paths.readDirectory(directory))
+				for (file in Assets.readDirectory(directory))
 				{
 					var path = haxe.io.Path.join([directory, file]);
 					if (!FileSystem.isDirectory(path) && file.endsWith('.json'))
@@ -523,7 +517,7 @@ class ChartingState extends MusicBeatState
 				}
 			}
 			#else
-			for (file in Paths.readDirectory(directory))
+			for (file in Assets.readDirectory(directory))
 			{
 				var path = haxe.io.Path.join([directory, file]);
 				if (file.endsWith('.json'))
@@ -589,7 +583,7 @@ class ChartingState extends MusicBeatState
 			#if MODS_ALLOWED
 			if (FileSystem.exists(directory))
 			{
-				for (file in Paths.readDirectory(directory))
+				for (file in Assets.readDirectory(directory))
 				{
 					var path = haxe.io.Path.join([directory, file]);
 					if (!FileSystem.isDirectory(path) && file.endsWith('.json'))
@@ -604,7 +598,7 @@ class ChartingState extends MusicBeatState
 				}
 			}
 			#else
-			for (file in Paths.readDirectory(directory))
+			for (file in Assets.readDirectory(directory))
 			{
 				var path = haxe.io.Path.join([directory, file]);
 				if (file.endsWith('.json'))
@@ -958,7 +952,7 @@ class ChartingState extends MusicBeatState
 		var foldersToCheck:Array<String> = Mods.directoriesWithFile(Paths.getLitePath(), 'notetypes/');
 		for (folder in foldersToCheck)
 		{
-			for (file in Paths.readDirectory(folder))
+			for (file in Assets.readDirectory(folder))
 			{
 				var fileName:String = file.toLowerCase().trim();
 				var wordLen:Int = 4; // length of word ".lua" and ".txt";
@@ -1026,7 +1020,7 @@ class ChartingState extends MusicBeatState
 			#if MODS_ALLOWED
 			if (FileSystem.exists(directory))
 			{
-				for (file in Paths.readDirectory(directory))
+				for (file in Assets.readDirectory(directory))
 				{
 					var path = haxe.io.Path.join([directory, file]);
 					if (!FileSystem.isDirectory(path) && file != 'readme.txt' && file.endsWith('.txt'))
@@ -1041,7 +1035,7 @@ class ChartingState extends MusicBeatState
 				}
 			}
 			#else
-			for (file in Paths.readDirectory(directory))
+			for (file in Assets.readDirectory(directory))
 			{
 				var path = haxe.io.Path.join([directory, file]);
 				if (file.endsWith('.txt'))
@@ -1050,7 +1044,7 @@ class ChartingState extends MusicBeatState
 					if (!eventPushedMap.exists(fileToCheck))
 					{
 						eventPushedMap.set(fileToCheck, true);
-						eventStuff.push([fileToCheck, OpenFlAssets.getText(path)]);
+						eventStuff.push([fileToCheck, Assets.getText(path)]);
 					}
 				}
 			}
@@ -1494,8 +1488,8 @@ class ChartingState extends MusicBeatState
 		opponentVocals = new FlxSound();
 		try
 		{
-			var playerVocals = Paths.voices(currentSongName, (characterData.vocalsP1 == null || characterData.vocalsP1.length < 1) ? 'Player' : characterData.vocalsP1);
-			vocals.loadEmbedded(playerVocals != null ? playerVocals : Paths.voices(currentSongName));
+			var playerVocals:String = Paths.voicesPath(currentSongName, (characterData.vocalsP1 == null || characterData.vocalsP1.length < 1) ? 'Player' : characterData.vocalsP1);
+			vocals.loadEmbedded(Assets.exists(playerVocals) ? playerVocals : Paths.voices(currentSongName));
 		}
 		vocals.autoDestroy = false;
 		FlxG.sound.list.add(vocals);
@@ -1503,8 +1497,8 @@ class ChartingState extends MusicBeatState
 		opponentVocals = new FlxSound();
 		try
 		{
-			var oppVocals = Paths.voices(currentSongName, (characterData.vocalsP2 == null || characterData.vocalsP2.length < 1) ? 'Opponent' : characterData.vocalsP2);
-			if(oppVocals != null) opponentVocals.loadEmbedded(oppVocals);
+			var oppVocals:String = Paths.voicesPath(currentSongName, (characterData.vocalsP2 == null || characterData.vocalsP2.length < 1) ? 'Opponent' : characterData.vocalsP2);
+			if (Assets.exists(oppVocals)) opponentVocals.loadEmbedded(oppVocals);
 		}
 		opponentVocals.autoDestroy = false;
 		FlxG.sound.list.add(opponentVocals);
@@ -2710,7 +2704,7 @@ class ChartingState extends MusicBeatState
 	var characterFailed:Bool = false;
 	function loadCharacterFile(char:String):CharacterFile {
 		characterFailed = false;
-		var characterPath:String = 'characters/' + char + '.json';
+		var characterPath:String = 'characters/$char.json';
 		#if MODS_ALLOWED
 		var path:String = Paths.modFolders(characterPath);
 		if (!FileSystem.exists(path)) {
@@ -2720,19 +2714,14 @@ class ChartingState extends MusicBeatState
 		if (!FileSystem.exists(path))
 		#else
 		var path:String = Paths.getLitePath(characterPath);
-		if (!OpenFlAssets.exists(path))
+		if (!Assets.exists(path))
 		#end
 		{
 			path = Paths.getLitePath('characters/' + Character.DEFAULT_CHARACTER + '.json'); //If a character couldn't be found, change him to BF just to prevent a crash
 			characterFailed = true;
 		}
 
-		#if MODS_ALLOWED
-		var rawJson = File.getContent(path);
-		#else
-		var rawJson = OpenFlAssets.getText(path);
-		#end
-		return cast Json.parse(rawJson);
+		return cast Json.parse(Assets.getText(path));
 	}
 
 	function updateNoteUI():Void
@@ -2806,7 +2795,7 @@ class ChartingState extends MusicBeatState
 				if(typeInt < 0) theType = '?';
 
 				var daText:AttachedFlxText = new AttachedFlxText(0, 0, 100, theType, 24);
-				daText.setFormat(Paths.font("vcr.ttf"), 24, FlxColor.WHITE, CENTER, FlxTextBorderStyle.OUTLINE_FAST, FlxColor.BLACK);
+				daText.setFormat(Paths.font("vcr"), 24, FlxColor.WHITE, CENTER, FlxTextBorderStyle.OUTLINE_FAST, FlxColor.BLACK);
 				daText.xAdd = -32;
 				daText.yAdd = 6;
 				daText.borderSize = 1;
@@ -2831,7 +2820,7 @@ class ChartingState extends MusicBeatState
 				if(note.eventLength > 1) text = note.eventLength + ' Events:\n' + note.eventName;
 
 				var daText:AttachedFlxText = new AttachedFlxText(0, 0, 400, text, 12);
-				daText.setFormat(Paths.font("vcr.ttf"), 12, FlxColor.WHITE, RIGHT, FlxTextBorderStyle.OUTLINE_FAST, FlxColor.BLACK);
+				daText.setFormat(Paths.font("vcr"), 12, FlxColor.WHITE, RIGHT, FlxTextBorderStyle.OUTLINE_FAST, FlxColor.BLACK);
 				daText.xAdd = -410;
 				daText.borderSize = 1;
 				if(note.eventLength > 1) daText.yAdd += 8;
@@ -3177,7 +3166,7 @@ class ChartingState extends MusicBeatState
 			if(missingText == null)
 			{
 				missingText = new FlxText(50, 0, FlxG.width - 100, '', 24);
-				missingText.setFormat(Paths.font("vcr.ttf"), 24, FlxColor.WHITE, CENTER, FlxTextBorderStyle.OUTLINE, FlxColor.BLACK);
+				missingText.setFormat(Paths.font("vcr"), 24, FlxColor.WHITE, CENTER, FlxTextBorderStyle.OUTLINE, FlxColor.BLACK);
 				missingText.scrollFactor.set();
 				add(missingText);
 			}
@@ -3218,11 +3207,7 @@ class ChartingState extends MusicBeatState
 
 		if ((data != null) && (data.length > 0))
 		{
-			_file = new FileReference();
-			_file.addEventListener(#if desktop Event.SELECT #else Event.COMPLETE #end, onSaveComplete);
-			_file.addEventListener(Event.CANCEL, onSaveCancel);
-			_file.addEventListener(IOErrorEvent.IO_ERROR, onSaveError);
-			_file.save(data.trim(), "main.json");
+			FileDialog.saveDataToFile(data.trim(), "main.json");
 		}
 	}
 
@@ -3245,44 +3230,8 @@ class ChartingState extends MusicBeatState
 
 		if ((data != null) && (data.length > 0))
 		{
-			_file = new FileReference();
-			_file.addEventListener(#if desktop Event.SELECT #else Event.COMPLETE #end, onSaveComplete);
-			_file.addEventListener(Event.CANCEL, onSaveCancel);
-			_file.addEventListener(IOErrorEvent.IO_ERROR, onSaveError);
-			_file.save(data.trim(), "events.json");
+			FileDialog.saveDataToFile(data.trim(), "events.json");
 		}
-	}
-
-	function onSaveComplete(_):Void
-	{
-		_file.removeEventListener(Event.COMPLETE, onSaveComplete);
-		_file.removeEventListener(Event.CANCEL, onSaveCancel);
-		_file.removeEventListener(IOErrorEvent.IO_ERROR, onSaveError);
-		_file = null;
-		FlxG.log.notice("Successfully saved LEVEL DATA.");
-	}
-
-	/**
-	 * Called when the save file dialog is cancelled.
-	 */
-	function onSaveCancel(_):Void
-	{
-		_file.removeEventListener(Event.COMPLETE, onSaveComplete);
-		_file.removeEventListener(Event.CANCEL, onSaveCancel);
-		_file.removeEventListener(IOErrorEvent.IO_ERROR, onSaveError);
-		_file = null;
-	}
-
-	/**
-	 * Called if there is an error while saving the gameplay recording.
-	 */
-	function onSaveError(_):Void
-	{
-		_file.removeEventListener(Event.COMPLETE, onSaveComplete);
-		_file.removeEventListener(Event.CANCEL, onSaveCancel);
-		_file.removeEventListener(IOErrorEvent.IO_ERROR, onSaveError);
-		_file = null;
-		FlxG.log.error("Problem saving Level data");
 	}
 
 	function getSectionBeats(?section:Null<Int> = null)

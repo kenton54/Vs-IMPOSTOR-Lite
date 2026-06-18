@@ -1,8 +1,5 @@
 package states;
 
-import openfl.utils.Assets;
-import flixel.addons.transition.FlxTransitionableState;
-
 class TitleState extends MusicBeatState
 {
 	/**
@@ -21,9 +18,8 @@ class TitleState extends MusicBeatState
 	var logoTTSpr:FlxSprite;
 	var titleStuff:FlxTypedGroup<FlxSprite>;
 
-	override function create():Void
+	override function create()
 	{
-		Paths.clearStoredMemory();
 		PointerUtil.visible = false;
 
 		curWacky = FlxG.random.getObject(getIntroTextShit());
@@ -91,7 +87,6 @@ class TitleState extends MusicBeatState
 		});
 
 		super.create();
-		Paths.clearUnusedMemory();
 	}
 
 	function getIntroTextShit():Array<Array<String>>

@@ -15,7 +15,6 @@ import flixel.addons.transition.FlxTransitionableState;
 import flixel.util.FlxSort;
 import flixel.util.FlxStringUtil;
 import flixel.input.keyboard.FlxKey;
-import openfl.utils.Assets;
 import openfl.events.KeyboardEvent;
 
 import cutscenes.DialogueLiteBox;
@@ -272,8 +271,6 @@ class PlayState extends MusicBeatState
 
 	override public function create()
 	{
-		Paths.clearStoredMemory();
-
 		instance = this;
 
 		#if mobile
@@ -408,7 +405,7 @@ class PlayState extends MusicBeatState
 		#if (LUA_ALLOWED || HSCRIPT_ALLOWED)
 		for (folder in Mods.directoriesWithFile(Paths.getLitePath(), 'scripts/'))
 		{
-			for (file in Paths.readDirectory(folder))
+			for (file in Assets.readDirectory(folder))
 			{
 				#if LUA_ALLOWED
 				if (Path.extension(file) == 'lua')
@@ -474,7 +471,7 @@ class PlayState extends MusicBeatState
 
 		var showTime:Bool = ClientPrefs.data.timeBarType != Disabled;
 		timeTxt = new FlxText(0 /*STRUM_X + (FlxG.width / 2) - 248*/, 19, FlxG.width, "", 22);
-		timeTxt.setFormat(Paths.font("vcr.ttf"), 22, FlxColor.WHITE, CENTER, FlxTextBorderStyle.OUTLINE, FlxColor.BLACK);
+		timeTxt.setFormat(Paths.font("vcr"), 22, FlxColor.WHITE, CENTER, FlxTextBorderStyle.OUTLINE, FlxColor.BLACK);
 		timeTxt.scrollFactor.set();
 		timeTxt.alpha = 0;
 		timeTxt.borderSize = 2;
@@ -562,7 +559,7 @@ class PlayState extends MusicBeatState
 		healthBar.alpha = iconP1.alpha = iconP2.alpha = ClientPrefs.data.healthBarAlpha;
 
 		scoreTxt = new FlxText(0, healthBar.y + 40, FlxG.width, "", 26);
-		scoreTxt.setFormat(Paths.font("vcr.ttf"), 26, FlxColor.WHITE, CENTER, FlxTextBorderStyle.OUTLINE, FlxColor.BLACK);
+		scoreTxt.setFormat(Paths.font("vcr"), 26, FlxColor.WHITE, CENTER, FlxTextBorderStyle.OUTLINE, FlxColor.BLACK);
 		scoreTxt.scrollFactor.set();
 		scoreTxt.borderSize = 2;
 		scoreTxt.visible = !ClientPrefs.data.hideHud;
@@ -571,7 +568,7 @@ class PlayState extends MusicBeatState
 		add(scoreTxt);
 
 		botplayTxt = new FlxText(0, timeBar.y + 55, FlxG.width, "AUTO", 32);
-		botplayTxt.setFormat(Paths.font("vcr.ttf"), 32, FlxColor.WHITE, CENTER, FlxTextBorderStyle.OUTLINE, FlxColor.BLACK);
+		botplayTxt.setFormat(Paths.font("vcr"), 32, FlxColor.WHITE, CENTER, FlxTextBorderStyle.OUTLINE, FlxColor.BLACK);
 		botplayTxt.scrollFactor.set();
 		botplayTxt.borderSize = 1.25;
 		botplayTxt.visible = cpuControlled;
@@ -625,7 +622,7 @@ class PlayState extends MusicBeatState
 		#if (LUA_ALLOWED || HSCRIPT_ALLOWED)
 		for (folder in Mods.directoriesWithFile(Paths.getLitePath(), 'data/songs/$songName/'))
 		{
-			for (file in Paths.readDirectory(folder))
+			for (file in Assets.readDirectory(folder))
 			{
 				#if LUA_ALLOWED
 				if (Path.extension(file) == 'lua')
@@ -679,9 +676,7 @@ class PlayState extends MusicBeatState
 			inCutscene = true;
 			openSubState(new DialogueSubState());
 		}
-		
-		Paths.clearUnusedMemory();
-		
+
 		cacheCountdown();
 		cachePopUpScore();
 
@@ -1392,11 +1387,11 @@ class PlayState extends MusicBeatState
 		{
 			if (songData.needsVoices)
 			{
-				var playerVocals = Paths.voices(songData.song, (boyfriend.vocalsFile == null || boyfriend.vocalsFile.length < 1) ? 'Player' : boyfriend.vocalsFile);
-				vocals.loadEmbedded(playerVocals != null ? playerVocals : Paths.voices(songData.song));
+				var playerVocals:String = Paths.voicesPath(songData.song, (boyfriend.vocalsFile == null || boyfriend.vocalsFile.length < 1) ? 'Player' : boyfriend.vocalsFile);
+				vocals.loadEmbedded(Assets.exists(playerVocals) ? playerVocals : Paths.voices(songData.song));
 				
-				var oppVocals = Paths.voices(songData.song, (dad.vocalsFile == null || dad.vocalsFile.length < 1) ? 'Opponent' : dad.vocalsFile);
-				if(oppVocals != null) opponentVocals.loadEmbedded(oppVocals);
+				var oppVocals:String = Paths.voicesPath(songData.song, (dad.vocalsFile == null || dad.vocalsFile.length < 1) ? 'Opponent' : dad.vocalsFile);
+				if (Assets.exists(oppVocals)) opponentVocals.loadEmbedded(oppVocals);
 			}
 		}
 		catch(e:Dynamic) {}

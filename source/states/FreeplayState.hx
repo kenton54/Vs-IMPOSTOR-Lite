@@ -66,9 +66,6 @@ class FreeplayState extends MusicBeatState
 
 	override function create()
 	{
-		//Paths.clearStoredMemory();
-		//Paths.clearUnusedMemory();
-
 		persistentUpdate = true;
 
 		PlayState.isStoryMode = false;
@@ -158,11 +155,11 @@ class FreeplayState extends MusicBeatState
 		final textsBorders:Float = 6;
 
 		scoreText = new FlxText(0, 5, FlxG.width - textsBorders * 2, "", 32);
-		scoreText.setFormat(Paths.font("vcr.ttf"), 32, FlxColor.WHITE, RIGHT);
+		scoreText.setFormat(Paths.font("vcr"), 32, FlxColor.WHITE, RIGHT);
 		scoreText.screenCenter(X);
 
 		ratingText = new FlxText(0, 10, FlxG.width - textsBorders * 2, "", 26);
-		ratingText.setFormat(Paths.font("vcr.ttf"), 26, FlxColor.WHITE, RIGHT);
+		ratingText.setFormat(Paths.font("vcr"), 26, FlxColor.WHITE, RIGHT);
 		ratingText.screenCenter(X);
 
 		scoreBG = new FlxSprite(FlxG.width, 0).makeGraphic(1, 66, 0xFF000000);
@@ -179,7 +176,7 @@ class FreeplayState extends MusicBeatState
 		add(missingTextBG);
 		
 		missingText = new FlxText(50, 0, FlxG.width - 100, '', 24);
-		missingText.setFormat(Paths.font("vcr.ttf"), 24, FlxColor.WHITE, CENTER, FlxTextBorderStyle.OUTLINE, FlxColor.BLACK);
+		missingText.setFormat(Paths.font("vcr"), 24, FlxColor.WHITE, CENTER, FlxTextBorderStyle.OUTLINE, FlxColor.BLACK);
 		missingText.scrollFactor.set();
 		missingText.visible = false;
 		add(missingText);
@@ -194,7 +191,7 @@ class FreeplayState extends MusicBeatState
 		add(bottomBG);
 
 		bottomText = new FlxText(bottomBG.x + 10, 0, FlxG.width, defaultBottomText, 16);
-		bottomText.setFormat(Paths.font("vcr.ttf"), 16, FlxColor.WHITE, LEFT);
+		bottomText.setFormat(Paths.font("vcr"), 16, FlxColor.WHITE, LEFT);
 		bottomText.scrollFactor.set();
 		bottomText.y = bottomBG.y - bottomText.height + 20;
 		#if !mobile

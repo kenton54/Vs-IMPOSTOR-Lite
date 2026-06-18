@@ -1,6 +1,5 @@
 package backend;
 
-import openfl.utils.Assets;
 import objects.Note;
 
 typedef NoteTypeProperty = {

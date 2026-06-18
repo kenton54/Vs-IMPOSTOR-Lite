@@ -10,16 +10,14 @@ import flixel.addons.ui.*;
 import flixel.ui.FlxButton;
 import flixel.util.FlxDestroyUtil;
 
-import openfl.net.FileReference;
-import openfl.events.Event;
-import openfl.events.IOErrorEvent;
-import openfl.utils.Assets;
 import lime.system.Clipboard;
 
 import objects.BGSprite;
 import objects.Character;
 import objects.HealthIcon;
 import objects.Bar;
+
+import backend.FileDialog;
 
 #if sys
 import sys.io.File;
@@ -73,8 +71,6 @@ class CharacterEditorState extends MusicBeatState
 
 	override function create()
 	{
-		if(ClientPrefs.data.cacheOnGPU) Paths.clearStoredMemory();
-
 		FlxG.sound.music.stop();
 		camEditor = initPsychCamera();
 
@@ -162,8 +158,6 @@ class CharacterEditorState extends MusicBeatState
 		updatePointerPos();
 		updateHealthBar();
 		character.finishAnimation();
-
-		if (ClientPrefs.data.cacheOnGPU) Paths.clearUnusedMemory();
 
 		super.create();
 
@@ -414,11 +408,7 @@ class CharacterEditorState extends MusicBeatState
 
 			var characterPath:String = 'characters/$intended.json';
 			var path:String = Paths.getPath(characterPath, TEXT, null, true);
-			#if MODS_ALLOWED
-			if (FileSystem.exists(path))
-			#else
 			if (Assets.exists(path))
-			#end
 			{
 				_char = intended;
 				check_player.checked = character.isPlayer;
@@ -1192,7 +1182,7 @@ class CharacterEditorState extends MusicBeatState
 		var foldersToCheck:Array<String> = Mods.directoriesWithFile(Paths.getLitePath(), 'characters/');
 		for (folder in foldersToCheck)
 		{
-			for (file in Paths.readDirectory(folder))
+			for (file in Assets.readDirectory(folder))
 			{
 				if (file.toLowerCase().endsWith('.json'))
 				{
@@ -1216,46 +1206,8 @@ class CharacterEditorState extends MusicBeatState
 		animationDropDown.setData(FlxUIDropDownMenu.makeStrIdLabelArray(animList, true));
 	}
 
-	// save
-	var _file:FileReference;
-	function onSaveComplete(_):Void
+	function saveCharacter()
 	{
-		if(_file == null) return;
-		_file.removeEventListener(Event.COMPLETE, onSaveComplete);
-		_file.removeEventListener(Event.CANCEL, onSaveCancel);
-		_file.removeEventListener(IOErrorEvent.IO_ERROR, onSaveError);
-		_file = null;
-		FlxG.log.notice("Successfully saved file.");
-	}
-
-	/**
-		* Called when the save file dialog is cancelled.
-		*/
-	function onSaveCancel(_):Void
-	{
-		if(_file == null) return;
-		_file.removeEventListener(Event.COMPLETE, onSaveComplete);
-		_file.removeEventListener(Event.CANCEL, onSaveCancel);
-		_file.removeEventListener(IOErrorEvent.IO_ERROR, onSaveError);
-		_file = null;
-	}
-
-	/**
-		* Called if there is an error while saving the gameplay recording.
-		*/
-	function onSaveError(_):Void
-	{
-		if(_file == null) return;
-		_file.removeEventListener(Event.COMPLETE, onSaveComplete);
-		_file.removeEventListener(Event.CANCEL, onSaveCancel);
-		_file.removeEventListener(IOErrorEvent.IO_ERROR, onSaveError);
-		_file = null;
-		FlxG.log.error("Problem saving file");
-	}
-
-	function saveCharacter() {
-		if(_file != null) return;
-
 		var json:Dynamic = {
 			"animations": character.animationsArray,
 			"image": character.imageFile,
@@ -1278,11 +1230,7 @@ class CharacterEditorState extends MusicBeatState
 
 		if (data.length > 0)
 		{
-			_file = new FileReference();
-			_file.addEventListener(#if desktop Event.SELECT #else Event.COMPLETE #end, onSaveComplete);
-			_file.addEventListener(Event.CANCEL, onSaveCancel);
-			_file.addEventListener(IOErrorEvent.IO_ERROR, onSaveError);
-			_file.save(data, '$_char.json');
+			FileDialog.saveDataToFile(data, '$_char.json');
 		}
 	}
 }

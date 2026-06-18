@@ -43,9 +43,6 @@ class StoryMenuState extends MusicBeatState
 
 	override function create()
 	{
-		Paths.clearStoredMemory();
-		Paths.clearUnusedMemory();
-
 		persistentUpdate = true;
 
 		PlayState.isStoryMode = true;
@@ -53,15 +50,15 @@ class StoryMenuState extends MusicBeatState
 		if (curWeek >= WeekData.weeksList.length) curWeek = 0;
 
 		scoreText = new FlxText(10, 10, 0, "SCORE: 49324858", 36);
-		scoreText.setFormat(Paths.font("vcr.ttf"), 32, FlxColor.BLACK);
+		scoreText.setFormat(Paths.font("vcr"), 32, FlxColor.BLACK);
 
 		txtWeekTitle = new FlxText(FlxG.width * 0.7, 10, 0, "", 32);
-		txtWeekTitle.setFormat(Paths.font("vcr.ttf"), 32, FlxColor.BLACK, RIGHT);
+		txtWeekTitle.setFormat(Paths.font("vcr"), 32, FlxColor.BLACK, RIGHT);
 		txtWeekTitle.alpha = 1;
 
 		var rankText:FlxText = new FlxText(0, 10);
 		rankText.text = 'RANK: GREAT';
-		rankText.setFormat(Paths.font("vcr.ttf"), 32);
+		rankText.setFormat(Paths.font("vcr"), 32);
 		rankText.size = scoreText.size;
 		rankText.screenCenter(X);
 
@@ -168,7 +165,7 @@ class StoryMenuState extends MusicBeatState
 		var leText:String = "\nCTRL / Gameplay options\nRESET / Resets score and accuracy";
 		var size:Int = 16;
 		var bottomText:FlxText = new FlxText(10, 0, FlxG.width, leText, size);
-		bottomText.setFormat(Paths.font("vcr.ttf"), size, FlxColor.BLACK, LEFT);
+		bottomText.setFormat(Paths.font("vcr"), size, FlxColor.BLACK, LEFT);
 		bottomText.scrollFactor.set();
 		bottomText.y = (FlxG.height - 26) - bottomText.height + 20;
 		add(bottomText);

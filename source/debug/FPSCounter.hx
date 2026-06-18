@@ -48,7 +48,7 @@ class FPSCounter extends Sprite
 		currentFPS = 0;
 		text.selectable = false;
 		text.mouseEnabled = false;
-		text.defaultTextFormat = new TextFormat(FlxG.assets.getFont(Paths.font("vcr.ttf")).fontName, 14, color);
+		text.defaultTextFormat = new TextFormat(FlxG.assets.getFont(Paths.font("vcr")).fontName, 14, color);
 		text.autoSize = LEFT;
 		text.multiline = true;
 		text.text = "";

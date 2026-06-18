@@ -6,7 +6,6 @@ import flixel.addons.text.FlxTypeText;
 import flixel.group.FlxGroup;
 import haxe.Json;
 import objects.HealthIcon;
-import openfl.utils.Assets;
 import shaders.RGBPalette;
 
 class DialogueLiteBox extends FlxGroup
@@ -131,11 +130,11 @@ class DialogueLiteBox extends FlxGroup
 		add(lastChatBox);
 
 		dialogueText = new FlxTypeText(chatBox.x + 120, chatBox.y + 36, Std.int(chatBox.width - 132));
-		dialogueText.setFormat(Paths.font("vcr.ttf"), 24, FlxColor.BLACK, LEFT);
+		dialogueText.setFormat(Paths.font("vcr"), 24, FlxColor.BLACK, LEFT);
 		add(dialogueText);
 
 		lastDialogueText = new FlxText(dialogueText.x, lastChatBox.y + 36, dialogueText.fieldWidth);
-		lastDialogueText.setFormat(Paths.font("vcr.ttf"), 24, FlxColor.BLACK, LEFT);
+		lastDialogueText.setFormat(Paths.font("vcr"), 24, FlxColor.BLACK, LEFT);
 		lastDialogueText.visible = false;
 		add(lastDialogueText);
 

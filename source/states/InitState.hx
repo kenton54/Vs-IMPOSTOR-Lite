@@ -36,6 +36,8 @@ class InitState extends FlxState
 		if (FlxG.save.data.weekCompleted != null)
 			StoryMenuState.weekCompleted = FlxG.save.data.weekCompleted;
 
+		Assets.init();
+
 		FlxTransitionableState.skipNextTransOut = true;
 		if (!FlxG.save.data.seenWarning)
 			FlxG.switchState(() -> new WarningState());

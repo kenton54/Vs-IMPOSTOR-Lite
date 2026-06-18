@@ -6,7 +6,7 @@ import lime.app.Future;
 
 import flixel.util.typeLimit.NextState;
 
-import openfl.utils.Assets;
+import openfl.utils.Assets as OpenFLAssets;
 import lime.utils.Assets as LimeAssets;
 import lime.utils.AssetLibrary;
 import lime.utils.AssetManifest;
@@ -81,16 +81,16 @@ class LoadingState extends MusicBeatState
 
 	function checkLoadSong(path:String)
 	{
-		if (!Assets.cache.hasSound(path))
+		if (!OpenFLAssets.cache.hasSound(path))
 		{
-			var library:AssetLibrary = Assets.getLibrary("data");
+			var library:AssetLibrary = OpenFLAssets.getLibrary("data");
 			final symbolPath = path.split(":").pop();
 			// @:privateAccess
 			// library.types.set(symbolPath, SOUND);
 			// @:privateAccess
 			// library.pathGroups.set(symbolPath, [library.__cacheBreak(symbolPath)]);
 			var callback = callbacks?.add("song:" + path);
-			Assets.loadSound(path).onComplete(function (_)
+			OpenFLAssets.loadSound(path).onComplete(function (_)
 			{
 				if (callback != null)
 					callback();
@@ -100,14 +100,14 @@ class LoadingState extends MusicBeatState
 
 	function checkLibrary(library:String)
 	{
-		if (Assets.getLibrary(library) == null)
+		if (OpenFLAssets.getLibrary(library) == null)
 		{
 			@:privateAccess
 			if (!LimeAssets.libraryPaths.exists(library))
 				throw 'Missing library "$library"';
 
 			var callback = callbacks?.add("library:" + library);
-			Assets.loadLibrary(library).onComplete(function (_)
+			OpenFLAssets.loadLibrary(library).onComplete(function (_)
 			{
 				if (callback != null)
 					callback();
@@ -173,7 +173,6 @@ class LoadingState extends MusicBeatState
 
 		if(weekDir != null && weekDir.length > 0 && weekDir != '') directory = weekDir;
 
-		Paths.setCurrentLevel(directory);
 		// trace('Setting asset folder to ' + directory);
 
 		/*#if NO_PRELOAD_ALL
@@ -195,12 +194,12 @@ class LoadingState extends MusicBeatState
 	static function isSoundLoaded(path:String):Bool
 	{
 		trace(path);
-		return Assets.cache.hasSound(path);
+		return OpenFLAssets.cache.hasSound(path);
 	}
 	
 	static function isLibraryLoaded(library:String):Bool
 	{
-		return Assets.getLibrary(library) != null;
+		return OpenFLAssets.getLibrary(library) != null;
 	}
 	#end*/
 

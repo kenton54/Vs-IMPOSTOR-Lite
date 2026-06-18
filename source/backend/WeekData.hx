@@ -1,6 +1,5 @@
 package backend;
 
-import openfl.utils.Assets;
 import haxe.Json;
 
 typedef WeekFile =
@@ -125,7 +124,7 @@ class WeekData {
 						addWeek(daWeek, path, directories[i], i, originalLength);
 				}
 
-				for (file in Paths.readDirectory(directory))
+				for (file in Assets.readDirectory(directory))
 				{
 					var path = haxe.io.Path.join([directory, file]);
 					if (!FileSystem.isDirectory(path) && file.endsWith('.json'))

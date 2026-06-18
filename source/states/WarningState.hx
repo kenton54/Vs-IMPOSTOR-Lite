@@ -32,11 +32,11 @@ class WarningState extends MusicBeatState
 		add(stars);
 
 		disclaimerTxtTitle = new FlxText(0, 0, 0, "disclaimer:", 32);
-		disclaimerTxtTitle.setFormat(Paths.font("vcr.ttf"), 32, FlxColor.WHITE, CENTER);
+		disclaimerTxtTitle.setFormat(Paths.font("vcr"), 32, FlxColor.WHITE, CENTER);
 		disclaimerTxtTitle.text = disclaimerTxtTitle.text.toUpperCase();
 
 		disclaimerTxt = new FlxText(0, disclaimerTxtTitle.y + disclaimerTxtTitle.height + 10, 0, "", 20);
-		disclaimerTxt.setFormat(Paths.font("vcr.ttf"), 20, FlxColor.WHITE, CENTER);
+		disclaimerTxt.setFormat(Paths.font("vcr"), 20, FlxColor.WHITE, CENTER);
 		disclaimerTxt.text = 
 		"\nWE ARE #NOT# AFFILIATED WITH OR APART OF THE ORIGINAL *LITE FUNKIN' TEAM*."
 		+ "\nThis mod is completely $separate from Lite Funkin'$ and is merely a $passionate project$ inspired by the mod,"
@@ -44,7 +44,7 @@ class WarningState extends MusicBeatState
 		+ "\n\nThe original mod's credits is listed in the *CREDITS section* in the main menu.";
 
 		disclaimerTxtEnter = new FlxText(0, disclaimerTxt.y + disclaimerTxt.height + 25, 0, "> Okay, damn, let me play <", 20);
-		disclaimerTxtEnter.setFormat(Paths.font("vcr.ttf"), 20, FlxColor.WHITE, CENTER);
+		disclaimerTxtEnter.setFormat(Paths.font("vcr"), 20, FlxColor.WHITE, CENTER);
 
 		// FlxG.camera.bgColor = 0xFF030317;
 		persistentUpdate = true;

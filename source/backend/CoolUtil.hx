@@ -1,7 +1,10 @@
 package backend;
 
-import openfl.utils.Assets;
 import openfl.Lib;
+
+#if sys
+import sys.FileSystem;
+#end
 
 class CoolUtil
 {
@@ -116,20 +119,40 @@ class CoolUtil
 		#end
 	}
 
-	inline public static function openFolder(folder:String, absolute:Bool = false) {
+	inline public static function openFolder(folder:String, createIfNonExistent:Bool = true)
+	{
 		#if sys
-		if (!absolute) folder =  Sys.getCwd() + '$folder';
+		folder = folder.trim();
 
-		folder = folder.replace('/', '\\');
-		if (folder.endsWith('/')) folder.substr(0, folder.length - 1);
+		if (createIfNonExistent && !FileSystem.exists(folder))
+		{
+			FileSystem.createDirectory(folder);
+		}
+		else if (!FileSystem.exists(folder))
+		{
+			FlxG.log.error("Cannot open a folder that doesn't exist!");
+			return;
+		}
 
-		#if linux
-		var command:String = '/usr/bin/xdg-open';
-		#else
-		var command:String = 'explorer.exe';
+		#if windows
+		Sys.command('explorer', [folder.replace('/', '\\')]);
+		#elseif mac
+		Sys.command('open', [folder]);
+		#elseif linux
+		var exitCode:Int = Sys.command("xdg-open", [pathFolder]);
+		if (exitCode == 0) return;
+
+		for (fileManager in ["dolphin", "nautilus", "nemo", "thunar", "caja", "konqueror", "spacefm", "pcmanfm"])
+		{
+			if (Sys.command("which", [fileManager]) == 0)
+			{
+				exitCode = Sys.command(fileManager, [pathFolder]);
+				if (exitCode == 0) return;
+			}
+		}
+
+		FlxG.log.warn('No compatible file manager found for Linux.');
 		#end
-		Sys.command(command, [folder]);
-		trace('$command $folder');
 		#else
 		FlxG.log.error("Platform is not supported for CoolUtil.openFolder");
 		#end

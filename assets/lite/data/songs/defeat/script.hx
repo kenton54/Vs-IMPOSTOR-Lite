@@ -470,7 +470,7 @@ function setUpLegacy()
 	fadeSprite.screenCenter();
 
 	game.scoreTxt.fieldWidth = FlxG.width;
-	game.scoreTxt.font = Paths.font("vcr-real.ttf");
+	game.scoreTxt.font = Paths.font("vcr-real");
 	game.scoreTxt.size = 20;
 	game.scoreTxt.borderSize = 1.25;
 
@@ -478,10 +478,10 @@ function setUpLegacy()
 	game.botplayTxt.fieldWidth = FlxG.width;
 	game.botplayTxt.text = "BOTPLAY";
 	game.botplayTxt.size = 32;
-	game.botplayTxt.font = Paths.font("vcr-real.ttf");
+	game.botplayTxt.font = Paths.font("vcr-real");
 
 	game.timeTxt.fieldWidth = FlxG.width;
-	game.timeTxt.font = Paths.font("vcr-real.ttf");
+	game.timeTxt.font = Paths.font("vcr-real");
 
 	game.timeBar.screenCenter(0x01);
 	game.timeBar.leftBar.color = 0xFFFF0000;
@@ -635,17 +635,17 @@ function setUpLite()
 	fadeSprite.screenCenter();
 
 	game.scoreTxt.fieldWidth = FlxG.width;
-	game.scoreTxt.font = Paths.font("vcr.ttf");
+	game.scoreTxt.font = Paths.font("vcr");
 	game.scoreTxt.size = 26;
 	game.scoreTxt.borderSize = 2;
 
 	game.botplayTxt.y = ClientPrefs.data.downScroll ? game.timeBar.y - 78 : game.timeBar.y + 55;
 	game.botplayTxt.fieldWidth = FlxG.width;
 	game.botplayTxt.text = "AUTO";
-	game.botplayTxt.font = Paths.font("vcr.ttf");
+	game.botplayTxt.font = Paths.font("vcr");
 
 	game.timeTxt.fieldWidth = FlxG.width;
-	game.timeTxt.font = Paths.font("vcr.ttf");
+	game.timeTxt.font = Paths.font("vcr");
 
 	game.timeBar.screenCenter(0x01);
 	game.timeBar.leftBar.color = 0xFFF03636;

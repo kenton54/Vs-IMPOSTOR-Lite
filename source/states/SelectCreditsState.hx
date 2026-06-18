@@ -1,6 +1,5 @@
 package states;
 
-import openfl.utils.Assets;
 import flixel.effects.FlxFlicker;
 
 #if mobile
@@ -36,7 +35,7 @@ class SelectCreditsState extends MusicBeatState
 		add(bg);
 
         var titleTxt = new FlxText(0, 1, FlxG.width, "Select a Team!", 40);
-		titleTxt.setFormat(Paths.font("vcr.ttf"), 40, FlxColor.BLACK, CENTER);
+		titleTxt.setFormat(Paths.font("vcr"), 40, FlxColor.BLACK, CENTER);
 		add(titleTxt);
 
         logosGrp = new FlxTypedGroup<FlxSprite>();

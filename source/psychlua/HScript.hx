@@ -3,7 +3,6 @@ package psychlua;
 #if HSCRIPT_ALLOWED
 import flixel.FlxBasic;
 import objects.Character;
-import openfl.utils.Assets;
 import psychlua.LuaUtils;
 import psychlua.CustomSubstate;
 

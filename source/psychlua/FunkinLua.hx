@@ -5,7 +5,6 @@ import backend.WeekData;
 import backend.Highscore;
 import backend.Song;
 
-import openfl.utils.Assets;
 import flixel.FlxBasic;
 import flixel.FlxObject;
 import flixel.addons.transition.FlxTransitionableState;
@@ -1245,21 +1244,13 @@ class FunkinLua
 			var songPath:String = Paths.formatToSongPath(PlayState.SONG.song);
 			#if TRANSLATIONS_ALLOWED
 			path = Paths.getPath('data/$songPath/${dialogueFile}_${ClientPrefs.data.language}.json', TEXT);
-			#if MODS_ALLOWED
-			if(!FileSystem.exists(path))
-			#else
 			if(!Assets.exists(path, TEXT))
-			#end
 			#end
 				path = Paths.getPath('data/$songPath/$dialogueFile.json', TEXT);
 
 			luaTrace('startDialogue: Trying to load dialogue: ' + path);
 
-			#if MODS_ALLOWED
-			if(FileSystem.exists(path))
-			#else
 			if(Assets.exists(path, TEXT))
-			#end
 			{
 				var shit:DialogueData = DialogueLiteBox.parseDialogue(path);
 				if(shit.lines.length > 0)
@@ -1749,19 +1740,11 @@ class FunkinLua
 	{
 		if(!scriptFile.endsWith(ext)) scriptFile += ext;
 		var path:String = Paths.getPath(scriptFile, TEXT);
-		#if MODS_ALLOWED
-		if(FileSystem.exists(path))
-		#else
 		if(Assets.exists(path, TEXT))
-		#end
 		{
 			return path;
 		}
-		#if MODS_ALLOWED
-		else if(FileSystem.exists(scriptFile))
-		#else
 		else if(Assets.exists(scriptFile, TEXT))
-		#end
 		{
 			return scriptFile;
 		}

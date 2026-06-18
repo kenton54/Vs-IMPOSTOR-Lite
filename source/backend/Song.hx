@@ -1,7 +1,6 @@
 package backend;
 
 import haxe.Json;
-import openfl.utils.Assets;
 
 import backend.Section;
 

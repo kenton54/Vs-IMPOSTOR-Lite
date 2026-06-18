@@ -87,7 +87,7 @@ class CreditsState extends MusicBeatState
 		add(descBox);
 
 		descText = new FlxText(0, FlxG.height + offsetThing - 25, 1100, "", 32);
-		descText.setFormat(Paths.font("vcr.ttf"), 32, FlxColor.WHITE, CENTER /*, FlxTextBorderStyle.OUTLINE, FlxColor.BLACK*/);
+		descText.setFormat(Paths.font("vcr"), 32, FlxColor.WHITE, CENTER /*, FlxTextBorderStyle.OUTLINE, FlxColor.BLACK*/);
 		descText.scrollFactor.set();
 		// descText.borderSize = 2.4;
 		descText.screenCenter(X);
@@ -96,7 +96,7 @@ class CreditsState extends MusicBeatState
 
 		var socialText:String = #if mobile "Touch the person to open their social media!" #else "Press ACCEPT to open their social media!" #end;
 		var socialCheck:FlxText = new FlxText(0, FlxG.height - 24, 0, socialText, 12);
-		socialCheck.setFormat(Paths.font("vcr.ttf"), 18, FlxColor.WHITE, CENTER, FlxTextBorderStyle.OUTLINE, FlxColor.BLACK);
+		socialCheck.setFormat(Paths.font("vcr"), 18, FlxColor.WHITE, CENTER, FlxTextBorderStyle.OUTLINE, FlxColor.BLACK);
 		socialCheck.screenCenter(X);
 		add(socialCheck);
 

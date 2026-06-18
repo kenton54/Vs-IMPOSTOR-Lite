@@ -114,19 +114,19 @@ class MainMenuState extends MusicBeatState
 
 		var fnfVer:FlxText = new FlxText(12, FlxG.height - 24, 0, "Vs. Impostor: Lite", 12);
 		fnfVer.scrollFactor.set();
-		fnfVer.setFormat(Paths.font("vcr.ttf"), 16, FlxColor.WHITE, LEFT, OUTLINE, FlxColor.BLACK);
+		fnfVer.setFormat(Paths.font("vcr"), 16, FlxColor.WHITE, LEFT, OUTLINE, FlxColor.BLACK);
 		add(fnfVer);
 
 		var psychVer:FlxText = new FlxText(0, FlxG.height - 24, 0, "Psych Engine v" + psychEngineVersion, 12);
 		psychVer.scrollFactor.set();
-		psychVer.setFormat(Paths.font("vcr.ttf"), 16, FlxColor.WHITE, LEFT, OUTLINE, FlxColor.BLACK);
+		psychVer.setFormat(Paths.font("vcr"), 16, FlxColor.WHITE, LEFT, OUTLINE, FlxColor.BLACK);
 		psychVer.x = FlxG.width - psychVer.width - 12;
 		add(psychVer);
 
 		if (TitleState.isSteginiteBuildLol)
 		{
 			steginiteLol = new FlxText(logo.x + 580, logo.y + logo.height - 40, 320, "The Steginite\nBuild!", 36);
-			steginiteLol.setFormat(Paths.font("vcr.ttf"), 36, FlxColor.WHITE, CENTER, OUTLINE, FlxColor.BLACK);
+			steginiteLol.setFormat(Paths.font("vcr"), 36, FlxColor.WHITE, CENTER, OUTLINE, FlxColor.BLACK);
 			steginiteLol.borderSize = 2.4;
 			steginiteLol.angle = -16;
 			add(steginiteLol);

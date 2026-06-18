@@ -1,7 +1,5 @@
 package cutscenes;
 
-import openfl.utils.Assets;
-
 class DialogueCharacter extends FlxSprite
 {
     public static final DEFAULT_CHARACTER:String = "bf";

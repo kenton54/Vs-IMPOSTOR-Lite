@@ -84,7 +84,7 @@ class GameOverSubstate extends MusicBeatSubstate
 					add(arrowSpr);
 
 					var disTxt:FlxText = new FlxText(arrowSpr.x + arrowSpr.width + 5, arrowSpr.y, 0, ["Girlfriend", "Boyfriend"][i] + " left the game.");
-					disTxt.setFormat(Paths.font("vcr.ttf"), 20, 0xffff4747, LEFT, FlxTextBorderStyle.OUTLINE, FlxColor.BLACK);
+					disTxt.setFormat(Paths.font("vcr"), 20, 0xffff4747, LEFT, FlxTextBorderStyle.OUTLINE, FlxColor.BLACK);
 					disTxt.borderSize = 1.5;
 					add(disTxt);
 
