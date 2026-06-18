@@ -139,14 +139,14 @@ class CoolUtil
 		#elseif mac
 		Sys.command('open', [folder]);
 		#elseif linux
-		var exitCode:Int = Sys.command("xdg-open", [pathFolder]);
+		var exitCode:Int = Sys.command("xdg-open", [folder]);
 		if (exitCode == 0) return;
 
 		for (fileManager in ["dolphin", "nautilus", "nemo", "thunar", "caja", "konqueror", "spacefm", "pcmanfm"])
 		{
 			if (Sys.command("which", [fileManager]) == 0)
 			{
-				exitCode = Sys.command(fileManager, [pathFolder]);
+				exitCode = Sys.command(fileManager, [folder]);
 				if (exitCode == 0) return;
 			}
 		}
