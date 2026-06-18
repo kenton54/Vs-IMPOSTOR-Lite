@@ -26,7 +26,6 @@ import states.editors.CharacterEditorState;
 
 import substates.PauseSubState;
 import substates.GameOverSubstate;
-import substates.DialogueSubState;
 
 #if !flash
 import flixel.addons.display.FlxRuntimeShader;
@@ -310,19 +309,19 @@ class PlayState extends MusicBeatState
 		camGame = initPsychCamera();
 		camHUD = new FlxCamera();
 		camCountdown = new FlxCamera();
+		camOther = new FlxCamera();
 		camDialogue = new FlxCamera();
 		camPause = new FlxCamera();
-		camOther = new FlxCamera();
 		camHUD.bgColor = 0x0;
 		camCountdown.bgColor = 0x0;
+		camOther.bgColor = 0x0;
 		camDialogue.bgColor = 0x0;
 		camPause.bgColor = 0x0;
-		camOther.bgColor = 0x0;
 
 		FlxG.cameras.add(camHUD, false);
 		FlxG.cameras.add(camCountdown, false);
-		FlxG.cameras.add(camDialogue, false);
 		FlxG.cameras.add(camOther, false);
+		FlxG.cameras.add(camDialogue, false);
 		FlxG.cameras.add(camPause, false);
 
 		#if mobile
@@ -354,7 +353,7 @@ class PlayState extends MusicBeatState
 
 		songName = Paths.formatToSongPath(SONG.song);
 
-		hasDialogue = Paths.fileExists('data/songs/' + songName + '/dialogue.json', TEXT);
+		hasDialogue = Assets.exists(Paths.json('songs/$songName/dialogue'), TEXT);
 
 		if (SONG.stage == null || SONG.stage.length < 1)
 			SONG.stage = StageData.vanillaSongStage(songName);
@@ -637,15 +636,11 @@ class PlayState extends MusicBeatState
 		}
 		#end
 
-		if (isStoryMode && !seenCutscene && Paths.txt(songName + '/dialogue') != null)
-		{
-			startDialogue(DialogueLiteBox.parseDialogue(Paths.json('dialogues/dialogues/$songName')), songName);
-			seenCutscene = true;
-		}
-		else if (hasDialogue == false)
+		if (isStoryMode && !seenCutscene && hasDialogue)
+			startDialogue(DialogueLiteBox.parseDialogue(Paths.json('songs/$songName/dialogue')));
+		else
 			startCallback();
 
-		//startCallback();
 		RecalculateRating();
 
 		FlxG.stage.addEventListener(KeyboardEvent.KEY_DOWN, onKeyPress);
@@ -671,11 +666,6 @@ class PlayState extends MusicBeatState
 		callOnScripts('onCreatePost');
 
 		super.create();
-
-		if (hasDialogue == true) {
-			inCutscene = true;
-			openSubState(new DialogueSubState());
-		}
 
 		cacheCountdown();
 		cachePopUpScore();
@@ -904,26 +894,25 @@ class PlayState extends MusicBeatState
 	}
 
 	var liteDialogue:DialogueLiteBox;
-	public function startDialogue(dialogueData:DialogueData, ?song:String)
+	public function startDialogue(dialogueData:DialogueData)
 	{
 		if (liteDialogue != null) return;
 
-		inCutscene = true;
-		var file:String = Paths.txt(songName + '/dialogue');
-		#if MODS_ALLOWED
-		if (!FileSystem.exists(file))
-		#else
-		if (!Assets.exists(file))
-		#end
+		liteDialogue = new DialogueLiteBox(dialogueData);
+		liteDialogue.onFinish = () ->
 		{
-			startCountdown();
-			return;
-		}
+			liteDialogue.destroy();
+			remove(liteDialogue);
+			startAndEnd();
 
-		liteDialogue = new DialogueLiteBox(file);
-		liteDialogue.cameras = [camDialogue];
-		liteDialogue.onFinish = startCountdown;
+			liteDialogue = null;
+		};
+		liteDialogue.camera = camDialogue;
 		add(liteDialogue);
+
+		FlxTimer.wait(0.5, () -> liteDialogue.start());
+
+		inCutscene = true;
 	}
 
 	public function changeUIStyle(?style:String)

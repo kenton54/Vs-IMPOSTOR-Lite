@@ -1,22 +1,16 @@
 package cutscenes;
 
-import flixel.util.FlxDestroyUtil;
+import flixel.util.typeLimit.OneOfTwo;
 import flixel.system.FlxAssets.FlxSoundAsset;
-import flixel.addons.text.FlxTypeText;
 import flixel.group.FlxGroup;
 import haxe.Json;
-import objects.HealthIcon;
 import shaders.RGBPalette;
 
 class DialogueLiteBox extends FlxGroup
 {
 	public static inline function parseDialogue(path:String):DialogueData
 	{
-		#if MODS_ALLOWED
-		return FileSystem.exists(path) ? Json.parse(File.getContent(path)) : getDefaultDialogue();
-		#else
 		return Assets.exists(path, TEXT) ? Json.parse(Assets.getText(path)) : getDefaultDialogue();
-		#end
 	}
 
 	public static inline function getDefaultDialogue():DialogueData
@@ -41,9 +35,6 @@ class DialogueLiteBox extends FlxGroup
 	public var dialogueLines:Array<DialogueLineData>;
 	var dialogueMusic:FlxSound;
 
-	var dialogueText:FlxTypeText;
-	var lastDialogueText:FlxText;
-
 	/*
 	var curType:String = '';
 	var curCharacter:String = '';
@@ -51,7 +42,6 @@ class DialogueLiteBox extends FlxGroup
 	var curAnim:String = '';
 	*/
 	public var curLine(default, set):Int = 0;
-	var lineEnded:Bool = false;
 
 	/**
 	 * Gets triggered every time the dialogue advances or changes line.
@@ -70,15 +60,12 @@ class DialogueLiteBox extends FlxGroup
 	public var bgFade(default, null):FlxSprite;
 	var phoneBG:FlxSprite;
 	var phone:FlxSprite;
-	var chatBox:FlxSprite;
-	var lastChatBox:FlxSprite;
-	var icon:HealthIcon;
-	var lastIcon:HealthIcon;
+	var chatBox:DialogueChatBox;
+	var lastChatBox:DialogueChatBox;
 
-	var portraits:Array<DialogueCharacter>;
+	var dialoguePortraits:Map<String, DialogueCharacter> = [];
 	var portraitsPositionTweens:Map<String, FlxTween> = [];
 	var portraitsPositions:Map<String, Float> = [];
-	var portraitIDs:Map<String, String> = [];
 	var addedPortraits:Map<String, Bool> = [];
 
 	var started:Bool = false;
@@ -86,9 +73,9 @@ class DialogueLiteBox extends FlxGroup
 
 	var controls(get, never):Controls;
 
-	var startPos:Float = FlxG.height - 380;
+	var startPos:Float = FlxG.height - 340;
 
-	public function new(?dialogueFile:String)
+	public function new(?dialogueFile:OneOfTwo<String, DialogueData>)
 	{
 		super();
 
@@ -112,47 +99,32 @@ class DialogueLiteBox extends FlxGroup
 		phoneBG.screenCenter(X);
 		add(phoneBG);
 
-		chatBox = new FlxSprite().loadGraphic(Paths.image('dialogue/chatbox'));
-		chatBox.scale.set(1.08, 1.08);
-		chatBox.updateHitbox();
+		chatBox = new DialogueChatBox(0, startPos + 70);
 		chatBox.screenCenter(X);
 		chatBox.x -= 8;
-		chatBox.y = startPos + 80;
 		chatBox.visible = false;
 		add(chatBox);
 
-		lastChatBox = new FlxSprite().loadGraphicFromSprite(chatBox);
-		lastChatBox.scale.set(1.08, 1.08);
-		lastChatBox.updateHitbox();
-		lastChatBox.x = chatBox.x;
-		lastChatBox.y = chatBox.y + chatBox.height + 30;
+		lastChatBox = new DialogueChatBox(chatBox.x, chatBox.y + chatBox.height + 6);
 		lastChatBox.visible = false;
 		add(lastChatBox);
-
-		dialogueText = new FlxTypeText(chatBox.x + 120, chatBox.y + 36, Std.int(chatBox.width - 132));
-		dialogueText.setFormat(Paths.font("vcr"), 24, FlxColor.BLACK, LEFT);
-		add(dialogueText);
-
-		lastDialogueText = new FlxText(dialogueText.x, lastChatBox.y + 36, dialogueText.fieldWidth);
-		lastDialogueText.setFormat(Paths.font("vcr"), 24, FlxColor.BLACK, LEFT);
-		lastDialogueText.visible = false;
-		add(lastDialogueText);
 
 		add(phone);
 
 		if (dialogueFile != null)
-			load(dialogueFile);
+		{
+			if (dialogueFile is String)
+				loadFile(dialogueFile);
+			else
+				loadFromData(dialogueFile);
+		}
 
 		visible = false;
 	}
 
-	public function load(file:String)
+	public function loadFile(file:String)
 	{
-		#if MODS_ALLOWED
-		if (!FileSystem.exists(file))
-		#else
 		if (!Assets.exists(file))
-		#end
 		{
 			FlxG.log.error('Could not find dialogue file at path "$file"!');
 			return;
@@ -166,8 +138,8 @@ class DialogueLiteBox extends FlxGroup
 	{
 		dialogueLines = [];
 		addedPortraits.clear();
-		portraits = FlxDestroyUtil.destroyArray(portraits);
-		portraits = [];
+		portraitsPositions.clear();
+		destroyPortraits();
 
 		var musicPath = (data.music != null && data.music != "") ? Paths.music('dialogues/' + data.music) : Paths.music('offsetSong');
 		loadMusic(musicPath);
@@ -181,9 +153,10 @@ class DialogueLiteBox extends FlxGroup
 			portraitChar.dialogueID = portrait.id;
 			positionPortrait(portrait.position, portraitChar);
 			portraitChar.alpha = 0;
+			portraitChar.flipX = portrait.flipX ?? false;
 
 			insert(members.indexOf(phoneBG), portraitChar);
-			portraits.push(portraitChar);
+			dialoguePortraits.set(portrait.id, portraitChar);
 			addedPortraits.set(portrait.id, false);
 			portraitsPositions.set(portrait.id, 200);
 		}
@@ -191,12 +164,12 @@ class DialogueLiteBox extends FlxGroup
 		for (line in data.lines)
 		{
 			var lineData:DialogueLineData = {
-				text: line.text ?? '',
-				formats: line.formats ?? [],
+				text: line.text,
+				portrait: line.portrait,
+				expression: line.expression,
 				speed: line.speed ?? 0.05,
-				portrait: line.portrait ?? portraits[0].dialogueID,
-				expression: line.expression ?? 'neutral',
-				phoneColor: line.phoneColor ?? 'FFFFFF',
+				phoneColor: line.phoneColor ?? '#FFFFFF',
+				formats: line.formats ?? [],
 				sounds: line.sounds ?? []
 			};
 			dialogueLines.push(lineData);
@@ -210,18 +183,18 @@ class DialogueLiteBox extends FlxGroup
 		var percent:Float = FlxMath.bound(position, 0, 1);
 
 		var pos:Float = min + max * percent;
-		character.x = pos - character.width / 2;
+		character.x = character.positionArray[0] + pos - character.width / 2;
 	}
 
 	public function addLine(line:DialogueLineData, ?pos:Int)
 	{
 		var lineData:DialogueLineData = {
-			text: line.text ?? '',
-			formats: line.formats ?? [],
+			text: line.text,
+			portrait: line.portrait,
+			expression: line.expression,
 			speed: line.speed ?? 0.05,
-			portrait: line.portrait ?? portraits[0].dialogueID,
-			expression: line.expression ?? 'neutral',
-			phoneColor: line.phoneColor ?? 'FFFFFF',
+			phoneColor: line.phoneColor ?? '#FFFFFF',
+			formats: line.formats ?? [],
 			sounds: line.sounds ?? []
 		};
 
@@ -269,10 +242,10 @@ class DialogueLiteBox extends FlxGroup
 	{
 		curLine++;
 
-		if (!lineEnded)
+		if (!chatBox.finishedTyping)
 			skipLine();
 
-		if (curLine >= dialogueLines.length)
+		if (curLine >= (dialogueLines.length - 1))
 		{
 			if (endDialogue) end();
 			return;
@@ -288,7 +261,7 @@ class DialogueLiteBox extends FlxGroup
 	{
 		curLine--;
 
-		if (!lineEnded)
+		if (!chatBox.finishedTyping)
 			skipLine();
 
 		updateLine();
@@ -296,7 +269,7 @@ class DialogueLiteBox extends FlxGroup
 		if (onNextLine != null)
 			onNextLine();
 
-		var portraitIDs:Array<String> = [for (character in portraits) character.dialogueID];
+		var portraitIDs:Array<String> = [for (id in dialoguePortraits.keys()) id];
 		var earliestAppearances:Array<Int> = [for (id in portraitIDs) -1];
 
 		for (i => portraitID in portraitIDs)
@@ -320,8 +293,6 @@ class DialogueLiteBox extends FlxGroup
 
 	public function updateLine()
 	{
-		lineEnded = false;
-
 		if (!chatBox.visible)
 		{
 			chatBox.visible = true;
@@ -330,13 +301,15 @@ class DialogueLiteBox extends FlxGroup
 		if (curLine > 0)
 		{
 			lastChatBox.visible = true;
-			lastDialogueText.visible = true;
-			lastDialogueText.text = dialogueLines[curLine - 1].text;
+
+			var char:DialogueCharacter = getPortraitMatchingID(dialogueLines[curLine - 1].portrait);
+			lastChatBox.changeDisplay(dialogueLines[curLine - 1].text, char.icon, char.name);
+			lastChatBox.startText();
+			lastChatBox.finishText();
 		}
 		else if (curLine <= 0)
 		{
 			lastChatBox.visible = false;
-			lastDialogueText.visible = false;
 		}
 
 		checkPortraits();
@@ -346,8 +319,7 @@ class DialogueLiteBox extends FlxGroup
 		var portraitChar:DialogueCharacter = getPortraitMatchingID(lineData.portrait);
 		portraitChar.changeExpression(lineData.expression);
 
-		dialogueText.clearFormats();
-		dialogueText.resetText(lineData.text);
+		chatBox.changeDisplay(lineData.text, portraitChar.icon, portraitChar.name);
 
 		phoneRGB.r = FlxColor.fromString(lineData.phoneColor);
 
@@ -362,18 +334,17 @@ class DialogueLiteBox extends FlxGroup
 						textFormat.format.size = format.size;
 						textFormat.format.font = Paths.font(format.font);
 					}
-					dialogueText.addFormat(textFormat, format.start, format.start + format.length);
+					chatBox.addFormat(textFormat, format.start, format.start + format.length);
 				}
 			}
 		}
 
 		if (lineData.sounds != null && lineData.sounds.length > 0)
-			dialogueText.sounds = [for (sound in lineData.sounds) FlxG.sound.load(Paths.sound(sound))];
+			chatBox.text.sounds = [for (sound in lineData.sounds) FlxG.sound.load(Paths.sound(sound))];
 		else
-			dialogueText.sounds = [FlxG.sound.load(Paths.sound('dialogue'))];
+			chatBox.text.sounds = [FlxG.sound.load(Paths.sound('dialogue'))];
 
-		dialogueText.completeCallback = () -> lineEnded = true;
-		dialogueText.start(lineData.speed, true);
+		chatBox.startText(lineData.speed);
 	}
 
 	function checkPortraits()
@@ -405,40 +376,27 @@ class DialogueLiteBox extends FlxGroup
 		if (portraitsPositionTweens[id] != null) portraitsPositionTweens[id].cancel();
 		FlxTween.cancelTweensOf(character);
 
-		portraitsPositionTweens[id] = FlxTween.num(0, 200, 1, {ease: FlxEase.expoOut}, function(value:Float) {
+		portraitsPositionTweens[id] = FlxTween.num(0, 200, 0.5, {ease: FlxEase.expoOut}, function(value:Float) {
 			portraitsPositions[id] = value;
 		});
-		FlxTween.tween(character, {alpha: 0}, 1, {ease: FlxEase.expoOut, onComplete: _ -> {
+		FlxTween.tween(character, {alpha: 0}, 0.5, {ease: FlxEase.expoOut, onComplete: _ -> {
 			addedPortraits[id] = false;
 		}});
 	}
 
 	public function getPortraitMatchingID(id:String):Null<DialogueCharacter>
 	{
-		for (character in portraits)
-		{
-			if (character.dialogueID == id)
-				return character;
-		}
-
-		return null;
-	}
-
-	public function rearrangePortraits()
-	{
-		var min:Float = phone.x + 30;
-		var max:Float = phone.x + phone.width - 30;
+		return dialoguePortraits.get(id);
 	}
 
 	public function repeatLine(force:Bool = false)
 	{
-		dialogueText.start(dialogueText.delay, force);
+		chatBox.startText(chatBox.text.delay, force);
 	}
 
 	function skipLine()
 	{
-		lineEnded = true;
-		dialogueText.skip();
+		chatBox.finishText();
 	}
 
 	public function end()
@@ -446,12 +404,24 @@ class DialogueLiteBox extends FlxGroup
 		started = false;
 		ending = true;
 
-		FlxTween.tween(bgFade, {alpha: 0}, 1, {onComplete: _ -> {
-			if (onFinish != null)
-				onFinish();
+		dialogueMusic.fadeOut();
 
-			visible = false;
-		}});
+		FlxTween.tween(phone, {y: FlxG.height}, 0.5, {ease: FlxEase.expoOut});
+		FlxTween.tween(phoneBG, {y: FlxG.height + 32}, 0.5, {ease: FlxEase.expoOut});
+		FlxTween.tween(chatBox, {y: FlxG.height + 70}, 0.5, {ease: FlxEase.expoOut});
+		FlxTween.tween(lastChatBox, {y: FlxG.height + chatBox.height + 6}, 0.5, {ease: FlxEase.expoOut});
+
+		for (id in dialoguePortraits.keys())
+			dissapearPortrait(getPortraitMatchingID(id));
+
+		FlxTween.tween(bgFade, {alpha: 0}, 1, {onComplete: _ ->
+			{
+				if (onFinish != null)
+					onFinish();
+
+				visible = false;
+			}
+		});
 	}
 
 	public var allowControls:Bool = true;
@@ -465,7 +435,7 @@ class DialogueLiteBox extends FlxGroup
 		{
 			if (controls.ACCEPT)
 			{
-				if (lineEnded)
+				if (chatBox.finishedTyping)
 					advanceDialogue();
 				else
 					skipLine();
@@ -477,8 +447,8 @@ class DialogueLiteBox extends FlxGroup
 
 	function updatePortraitsPosition()
 	{
-		for (character in portraits)
-			character.y = phone.y + 10 + portraitsPositions.get(character.dialogueID) - character.height;
+		for (id => character in dialoguePortraits)
+			character.y = phone.y + 10 + character.positionArray[1] + portraitsPositions.get(id) - character.height;
 	}
 
 	override function destroy()
@@ -496,7 +466,15 @@ class DialogueLiteBox extends FlxGroup
 			}
 		}
 
-		portraits = FlxDestroyUtil.destroyArray(portraits);
+		destroyPortraits();
+	}
+
+	function destroyPortraits()
+	{
+		for (id => portrait in dialoguePortraits)
+			portrait.destroy();
+
+		dialoguePortraits.clear();
 	}
 
 	function set_curLine(line:Int):Int
@@ -537,6 +515,13 @@ typedef DialoguePortraitData =
 	 * Defaults to `0`.
 	 */
 	var ?position:Float;
+
+	/**
+	 * Whether the portrait should be flipped horizontally.
+	 * 
+	 * Defaults to `false`.
+	 */
+	var ?flipX:Bool;
 }
 
 typedef DialogueLineData =
@@ -546,7 +531,17 @@ typedef DialogueLineData =
 	 * 
 	 * Defaults to a blank string.
 	 */
-	var ?text:String;
+	var text:String;
+
+	/**
+	 * The portrait to show for this dialogue line.
+	 */
+	var portrait:String;
+
+	/**
+	 * The expression of the portrait.
+	 */
+	var expression:String;
 
 	/**
 	 * The formats of the text.
@@ -561,20 +556,6 @@ typedef DialogueLineData =
 	 * Defaults to `0.05` seconds (or `50` milliseconds).
 	 */
 	var ?speed:Float;
-
-	/**
-	 * The portrait to show for this dialogue line.
-	 * 
-	 * Defaults to the first entry in `portraits`.
-	 */
-	var ?portrait:String;
-
-	/**
-	 * The expression of the portrait.
-	 * 
-	 * Defaults to `neutral`.
-	 */
-	var ?expression:String;
 
 	/**
 	 * The color of the phone.

@@ -1,13 +1,138 @@
 {
-    
-    "dialogues": [
+    "music": "sussus-moongus",
+    "portraits": [
         {
-            "portrait": "",
-            "speakerName": "",
-            "speaking": true,
-            "position": 2,
-            "speed": 100,
-            "text": "amogus"
+            "id": "red",
+            "character": "red",
+            "position": 0.25
+        },
+        {
+            "id": "red2",
+            "character": "red",
+            "position": 0.75,
+            "flipX": true
+        },
+        {
+            "id": "red3",
+            "character": "red",
+            "position": 0.5,
+            "flipX": true
+        },
+        {
+            "id": "red4",
+            "character": "red",
+            "position": 0.35,
+            "flipX": true
+        }
+    ],
+    "lines": [
+        {
+            "text": "Hello there.",
+            "portrait": "red",
+            "expression": "neutral",
+            "phoneColor": "#FF7E7E"
+        },
+        {
+            "text": "Hello!! ^^",
+            "portrait": "red2",
+            "expression": "happy",
+            "phoneColor": "#9AE0FF"
+        },
+        {
+            "text": "Who are you? Where did you come from?",
+            "portrait": "red3",
+            "expression": "thinking",
+            "phoneColor": "#FFB5B9"
+        },
+        {
+            "text": "Wait, you're not.....An Impostor, are you?",
+            "portrait": "red2",
+            "expression": "thinking",
+            "phoneColor": "#9AE0FF"
+        },
+        {
+            "text": "Whaattt? No!, That's nonsense.",
+            "portrait": "red",
+            "expression": "nervous",
+            "phoneColor": "#FF7E7E"
+        },
+        {
+            "text": "I've been doing my tasks, like a good crewmate!",
+            "portrait": "red",
+            "expression": "neutral",
+            "phoneColor": "#FF7E7E"
+        },
+        {
+            "text": "Oh, really? :0",
+            "portrait": "red2",
+            "expression": "happy",
+            "phoneColor": "#9AE0FF"
+        },
+        {
+            "text": "What tasks do you have? Tell me!",
+            "portrait": "red2",
+            "expression": "excited",
+            "phoneColor": "#9AE0FF"
+        },
+        {
+            "text": "If you were a crewmate you could tell us.",
+            "portrait": "red3",
+            "expression": "thoughtful",
+            "phoneColor": "#FFB5B9"
+        },
+        {
+            "text": "*nods*",
+            "portrait": "red4",
+            "expression": "nod",
+            "phoneColor": "#FFB5B9"
+        },
+        {
+            "text": "Taskkss?? Oh, uh, yeah! Uh...",
+            "portrait": "red",
+            "expression": "realizing",
+            "phoneColor": "#FF7E7E"
+        },
+        {
+            "text": "Or better yet, help me do my task of...",
+            "portrait": "red2",
+            "expression": "thinking",
+            "phoneColor": "#9AE0FF"
+        },
+        {
+            "text": "\"Sing Sussus Moongus, remixed by SliceOfBred\"",
+            "portrait": "red2",
+            "expression": "confused",
+            "phoneColor": "#9AE0FF"
+        },
+        {
+            "text": "Or that?",
+            "portrait": "red3",
+            "expression": "thinking",
+            "phoneColor": "#FFB5B9"
+        },
+        {
+            "text": "By who now?- ...Whatever, sure.",
+            "portrait": "red",
+            "expression": "thinking",
+            "phoneColor": "#FF7E7E"
+        },
+        {
+            "text": "TODO: code custom behaviour for dialogue lines\nthis line is supposed to have bf throw a mic to red",
+            "portrait": "red",
+            "expression": "amused",
+            "phoneColor": "#FF7E7E"
+        },
+        {
+            "text": "(At least he stopped asking about the tasks.)",
+            "portrait": "red",
+            "expression": "neutral",
+            "phoneColor": "#FF7E7E"
+        },
+        {
+            "text": "(Clueless idiots. Heheh.....)",
+            "portrait": "red",
+            "expression": "devilish",
+            "phoneColor": "#FF7E7E"
         }
     ]
 }

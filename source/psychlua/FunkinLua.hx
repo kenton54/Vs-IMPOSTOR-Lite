@@ -1239,7 +1239,7 @@ class FunkinLua
 			game.changeUIStyle(style);
 		});
 
-		Lua_helper.add_callback(lua, "startDialogue", function(dialogueFile:String, ?music:String = null) {
+		Lua_helper.add_callback(lua, "startDialogue", function(dialogueFile:String) {
 			var path:String;
 			var songPath:String = Paths.formatToSongPath(PlayState.SONG.song);
 			#if TRANSLATIONS_ALLOWED
@@ -1255,7 +1255,7 @@ class FunkinLua
 				var shit:DialogueData = DialogueLiteBox.parseDialogue(path);
 				if(shit.lines.length > 0)
 				{
-					game.startDialogue(shit, music);
+					game.startDialogue(shit);
 					luaTrace('startDialogue: Successfully loaded dialogue', false, false, FlxColor.GREEN);
 					return true;
 				}

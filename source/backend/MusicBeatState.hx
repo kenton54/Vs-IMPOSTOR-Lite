@@ -1,10 +1,10 @@
 package backend;
 
+import flixel.util.FlxSignal;
 import backend.BaseStage;
 import backend.CustomFadeTransition;
 import flixel.addons.ui.FlxUIState;
 import flixel.addons.transition.FlxTransitionableState;
-import flixel.util.typeLimit.NextState;
 
 class MusicBeatState extends FlxUIState
 {
@@ -13,6 +13,9 @@ class MusicBeatState extends FlxUIState
 
 	public inline static function getVariables()
 		return getState().variables;
+
+	public var onIntroDone:FlxSignal = new FlxSignal();
+	public var onOutroDone:FlxSignal = new FlxSignal();
 
 	private var stepsToDo:Int = 0;
 
@@ -192,5 +195,17 @@ class MusicBeatState extends FlxUIState
 		var val:Null<Float> = 4;
 		if(PlayState.SONG != null && PlayState.SONG.notes[curSection] != null) val = PlayState.SONG.notes[curSection].sectionBeats;
 		return val == null ? 4 : val;
+	}
+
+	override function finishTransIn()
+	{
+		super.finishTransIn();
+		onIntroDone.dispatch();
+	}
+
+	override function finishTransOut()
+	{
+		super.finishTransOut();
+		onOutroDone.dispatch();
 	}
 }

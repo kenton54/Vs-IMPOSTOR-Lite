@@ -7,22 +7,29 @@ class DialogueCharacter extends FlxSprite
     public var data(default, null):DialogueCharacterData;
 
     public var curCharacter(default, null):String;
+
     @:allow(cutscenes.DialogueLiteBox)
     public var dialogueID(default, null):String;
-    public var icon(default, null):String;
+    public var name:String;
+    public var icon:String;
 
-    var animOffsets:Map<String, FlxPoint> = [];
+    public var positionArray:Array<Float> = [0, 0];
+
+    var animOffsets:Map<String, Array<Float>> = [];
 
     public function new(x:Float = 0, y:Float = 0, ?character:String)
     {
         super(x, y);
-		load(character);
+		loadCharacter(character);
     }
 
-    public function load(character:String)
+	public function loadCharacter(character:String):DialogueCharacter
     {
 		animation.destroyAnimations();
 		animOffsets.clear();
+
+		this.x -= positionArray[0];
+		this.y -= positionArray[1];
 
         var characterToLoad:String = character;
 
@@ -36,24 +43,36 @@ class DialogueCharacter extends FlxSprite
 
 		data = {
 			image: charData.image,
+            name: charData.name,
+            icon: charData.icon ?? 'face',
 			scale: charData.scale ?? 1,
 			offsets: charData.offsets ?? [0, 0],
 			expressions: parseAnimations(charData.expressions)
 		};
 
+        name = data.name;
+        icon = data.icon;
+
+		positionArray = [data.offsets[0], data.offsets[1]];
+
 		frames = Paths.getAtlas('dialogue/portraits/${data.image}');
 
 		for (animData in data.expressions)
 		{
-			animation.addByPrefix(animData.name, animData.prefix, animData.framerate, true, animData.flipX, animData.flipY);
-			animOffsets.set(animData.name, FlxPoint.get(animData.offsets[0], animData.offsets[1]));
+			animation.addByPrefix(animData.name, animData.anim, animData.fps, true, animData.flipX, animData.flipY);
+			animOffsets.set(animData.name, [animData.offsets[0], animData.offsets[1]]);
 		}
 		changeExpression(animation.getNameList()[0]);
 
 		scale.x = scale.y = data.scale;
 		updateHitbox();
 
+		this.x += positionArray[0];
+		this.y += positionArray[1];
+
 		curCharacter = character;
+
+        return this;
     }
 
 	function parseAnimations(animations:Array<DialogueCharacterAnimationData>):Array<DialogueCharacterAnimationData>
@@ -63,8 +82,8 @@ class DialogueCharacter extends FlxSprite
         {
             result.push({
                 name: data.name,
-                prefix: data.prefix,
-                framerate: data.framerate,
+				anim: data.anim,
+                fps: data.fps,
                 offsets: data.offsets ?? [0, 0],
                 flipX: data.flipX ?? false,
                 flipY: data.flipY ?? false
@@ -79,9 +98,8 @@ class DialogueCharacter extends FlxSprite
         {
             animation.play(expression, true);
 
-            var animOffset:FlxPoint = animOffsets.get(expression);
-			var charOffset:FlxPoint = FlxPoint.get(data.offsets[0], data.offsets[1]);
-			offset.set(charOffset.x + animOffset.x, charOffset.y + animOffset.y);
+            var animOffset:Array<Float> = animOffsets.get(expression);
+			offset.set(animOffset[0], animOffset[1]);
         }
     }
 
@@ -96,6 +114,8 @@ class DialogueCharacter extends FlxSprite
 typedef DialogueCharacterData =
 {
     var image:String;
+    var name:String;
+    var ?icon:String;
     var ?scale:Float;
     var ?offsets:Array<Float>;
 	var expressions:Array<DialogueCharacterAnimationData>;
@@ -111,12 +131,12 @@ typedef DialogueCharacterAnimationData =
     /**
      * The name inside the atlas to use to find all the animation's frames.
      */
-    var prefix:String;
+	var anim:String;
 
     /**
      * How fast the animation plays.
      */
-    var framerate:Float;
+    var fps:Float;
 
 	/**
 	 * The animation offsets.
