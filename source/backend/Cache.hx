@@ -1,5 +1,7 @@
 package backend;
 
+import flixel.util.FlxStringUtil;
+import flixel.FlxState;
 import openfl.media.Sound;
 import flixel.graphics.FlxGraphic;
 import openfl.display.BitmapData;
@@ -86,8 +88,27 @@ class Cache
 		graphics = new Map<String, FlxGraphic>();
 		sounds = new Map<String, Sound>();
 
-		FlxG.signals.preStateCreate.add(_ -> clearStoredMemory());
+		FlxG.signals.preStateSwitch.add(prepareClearMemory);
+		FlxG.signals.preStateCreate.add(clearMemoryOnStateSwitch);
     }
+
+	var _lastState:Null<String> = null;
+
+	function prepareClearMemory()
+	{
+		_lastState = FlxStringUtil.getClassName(@:privateAccess FlxG.game._state);
+	}
+
+	function clearMemoryOnStateSwitch(newState:FlxState)
+	{
+		var newStateStr:String = FlxStringUtil.getClassName(newState);
+
+		if (_lastState == null || newStateStr != _lastState)
+		{
+			clearStoredMemory();
+			_lastState = null;
+		}
+	}
 
     public function clearStoredMemory()
     {
