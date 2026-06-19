@@ -910,7 +910,7 @@ class PlayState extends MusicBeatState
 		liteDialogue.camera = camDialogue;
 		add(liteDialogue);
 
-		FlxTimer.wait(0.5, () -> liteDialogue.start());
+		liteDialogue.start();
 
 		inCutscene = true;
 	}
