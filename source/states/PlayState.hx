@@ -563,7 +563,10 @@ class PlayState extends MusicBeatState
 		scoreTxt.borderSize = 2;
 		scoreTxt.visible = !ClientPrefs.data.hideHud;
 		scoreTxt.cameras = [camHUD];
-		updateScore(false);
+
+		if (updateScore != null)
+			updateScore(false);
+
 		add(scoreTxt);
 
 		botplayTxt = new FlxText(0, timeBar.y + 55, FlxG.width, "AUTO", 32);
@@ -1213,6 +1216,11 @@ class PlayState extends MusicBeatState
 	// cool right? -Crow
 	public dynamic function updateScore(miss:Bool = false)
 	{
+		_updateScore(miss);
+	}
+
+	function _updateScore(miss:Bool = false)
+	{
 		var ret:Dynamic = callOnScripts('preUpdateScore', [miss], true);
 		if (ret == LuaUtils.Function_Stop)
 			return;
@@ -1238,19 +1246,25 @@ class PlayState extends MusicBeatState
 
 	public dynamic function fullComboFunction()
 	{
+		_fullComboFunction();
+	}
+
+	function _fullComboFunction()
+	{
 		var sicks:Int = ratingsData[0].hits;
 		var goods:Int = ratingsData[1].hits;
 		var bads:Int = ratingsData[2].hits;
 		var shits:Int = ratingsData[3].hits;
 
 		ratingFC = "";
-		if(songMisses == 0)
+		if (songMisses == 0)
 		{
 			if (bads > 0 || shits > 0) ratingFC = 'FC';
 			else if (goods > 0) ratingFC = 'GFC';
 			else if (sicks > 0) ratingFC = 'SFC';
 		}
-		else {
+		else
+		{
 			if (songMisses < 10) ratingFC = 'SDCB';
 			else ratingFC = 'Clear';
 		}
@@ -2019,8 +2033,9 @@ class PlayState extends MusicBeatState
 				scoreTxt.color = FlxColor.fromRGB(boyfriend.healthColorArray[0], boyfriend.healthColorArray[1], boyfriend.healthColorArray[2]);
 
 			// small detail that was also added to monster in lite funkin
-			if(realChar == 'black') scoreTxt.borderColor = FlxColor.WHITE; /* 0xfff03636 */
-			else scoreTxt.borderColor = FlxColor.BLACK;
+			// but coded in a cooler way
+			var deltaColor:Float = (scoreTxt.color.redFloat + scoreTxt.color.greenFloat + scoreTxt.color.blueFloat) / 3;
+			scoreTxt.borderColor = deltaColor > 0.6 ? FlxColor.BLACK : FlxColor.WHITE;
 		}
 		else if (scoreTxt != null)
 		{
@@ -3712,9 +3727,14 @@ class PlayState extends MusicBeatState
 							break;
 						}
 			}
-			fullComboFunction();
+
+			if (fullComboFunction != null)
+				fullComboFunction();
 		}
-		updateScore(badHit); // score will only update after rating is calculated, if it's a badHit, it shouldn't bounce
+
+		if (updateScore != null)
+			updateScore(badHit); // score will only update after rating is calculated, if it's a badHit, it shouldn't bounce
+
 		setOnScripts('rating', ratingPercent);
 		setOnScripts('ratingName', ratingName);
 		setOnScripts('ratingFC', ratingFC);
