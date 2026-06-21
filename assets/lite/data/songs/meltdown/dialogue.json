@@ -1,0 +1,84 @@
+{
+    "music": "meltdown",
+    "portraits": [
+        {
+            "id": "red",
+            "character": "red-meltdown",
+            "position": 0.25
+        },
+        {
+            "id": "red2",
+            "character": "red",
+            "position": 0.75,
+            "flipX": true
+        },
+        {
+            "id": "red3",
+            "character": "red",
+            "position": 0.5,
+            "flipX": true
+        }
+    ],
+    "lines": [
+        {
+            "text": "W-What the?!",
+            "portrait": "red",
+            "expression": "scared",
+            "phoneColor": "#FF7E7E"
+        },
+        {
+            "text": "Baby you're a ghost!",
+            "portrait": "red2",
+            "expression": "neutral",
+            "phoneColor": "#9AE0FF"
+        },
+        {
+            "text": "You're a ghost too!!",
+            "portrait": "red3",
+            "expression": "annoyed",
+            "phoneColor": "#FFB5B9"
+        },
+        {
+            "text": "How can this be!? You're DEAD. BOTH OF YOU!!!",
+            "portrait": "red",
+            "expression": "dumb",
+            "phoneColor": "#FF7E7E"
+        },
+        {
+            "text": "Yeah! So, what are you gonna do now?! >:)",
+            "portrait": "red3",
+            "expression": "neutral",
+            "phoneColor": "#FFB5B9"
+        },
+        {
+            "text": "W-Wait, we can talk this out!",
+            "portrait": "red",
+            "expression": "desperate",
+            "phoneColor": "#FF7E7E"
+        },
+        {
+            "text": "You're out of bullets, and out of time.",
+            "portrait": "red2",
+            "expression": "neutral",
+            "phoneColor": "#9AE0FF"
+        },
+        {
+            "text": "Some impostor you are.",
+            "portrait": "red3",
+            "expression": "neutral",
+            "phoneColor": "#FFB5B9"
+        },
+        {
+            "text": "I-",
+            "portrait": "red",
+            "expression": "scared",
+            "phoneColor": "#FF7E7E"
+        },
+        {
+            "text": "Shit! I have to get out of here!",
+            "portrait": "red",
+            "expression": "flabberghasted",
+            "phoneColor": "#FF7E7E"
+        }
+    ]
+}

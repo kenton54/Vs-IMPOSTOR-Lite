@@ -406,10 +406,10 @@ class DialogueLiteBox extends FlxGroup
 
 		dialogueMusic.fadeOut();
 
-		FlxTween.tween(phone, {y: FlxG.height}, 0.5, {ease: FlxEase.expoOut});
-		FlxTween.tween(phoneBG, {y: FlxG.height + 32}, 0.5, {ease: FlxEase.expoOut});
-		FlxTween.tween(chatBox, {y: FlxG.height + 70}, 0.5, {ease: FlxEase.expoOut});
-		FlxTween.tween(lastChatBox, {y: FlxG.height + chatBox.height + 6}, 0.5, {ease: FlxEase.expoOut});
+		FlxTween.tween(phone, {y: FlxG.height}, 0.5, {ease: FlxEase.quartIn});
+		FlxTween.tween(phoneBG, {y: FlxG.height + 32}, 0.5, {ease: FlxEase.quartIn});
+		FlxTween.tween(chatBox, {y: FlxG.height + 70}, 0.5, {ease: FlxEase.quartIn});
+		FlxTween.tween(lastChatBox, {y: FlxG.height + chatBox.height + 6}, 0.5, {ease: FlxEase.quartIn});
 
 		for (id in dialoguePortraits.keys())
 			dissapearPortrait(getPortraitMatchingID(id));

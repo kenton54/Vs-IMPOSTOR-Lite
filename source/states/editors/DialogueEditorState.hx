@@ -25,6 +25,7 @@ class DialogueEditorState extends MusicBeatState
         add(bg);
 
 		dialogueBox = new DialogueLiteBox();
+		dialogueBox.bgFade.visible = false;
 		dialogueBox.loadFromData(DialogueLiteBox.getDefaultDialogue());
 		dialogueBox.allowControls = false;
         add(dialogueBox);

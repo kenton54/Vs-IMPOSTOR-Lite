@@ -1,0 +1,60 @@
+{
+    "music": "sabotage",
+    "portraits": [
+        {
+            "id": "red",
+            "character": "red",
+            "position": 0.25
+        },
+        {
+            "id": "red2",
+            "character": "red",
+            "position": 0.75,
+            "flipX": true
+        },
+        {
+            "id": "red3",
+            "character": "red",
+            "position": 0.5,
+            "flipX": true
+        }
+    ],
+    "lines": [
+        {
+            "text": "Good job, baby!! That was awesome ^w^",
+            "portrait": "red3",
+            "expression": "neutral",
+            "phoneColor": "#FFB5B9"
+        },
+        {
+            "text": "Haha, it was nothing.",
+            "portrait": "red2",
+            "expression": "neutral",
+            "phoneColor": "#9AE0FF"
+        },
+        {
+            "text": "...",
+            "portrait": "red",
+            "expression": "annoyed",
+            "phoneColor": "#FF7E7E"
+        },
+        {
+            "text": "Hey man.",
+            "portrait": "red",
+            "expression": "amused",
+            "phoneColor": "#FF7E7E"
+        },
+        {
+            "text": "Oh?",
+            "portrait": "red2",
+            "expression": "neutral",
+            "phoneColor": "#9AE0FF"
+        },
+        {
+            "text": "Watch this.",
+            "portrait": "red",
+            "expression": "neutral",
+            "phoneColor": "#FF7E7E"
+        }
+    ]
+}

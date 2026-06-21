@@ -1,0 +1,39 @@
+{
+    "image": "red-scared",
+    "name": "Red Impostor",
+    "icon": "redM",
+    "scale": 1,
+    "offsets": [-12, 44],
+    "expressions": [
+        {
+            "name": "desperate",
+            "anim": "RedDesperate",
+            "fps": 0,
+            "offsets": [0, 0]
+        },
+        {
+            "name": "dumb",
+            "anim": "RedDumbfounded",
+            "fps": 0,
+            "offsets": [0, 0]
+        },
+        {
+            "name": "flabberghasted",
+            "anim": "RedFlabberghasted",
+            "fps": 0,
+            "offsets": [0, 0]
+        },
+        {
+            "name": "scared",
+            "anim": "RedScared",
+            "fps": 0,
+            "offsets": [0, 0]
+        },
+        {
+            "name": "turn",
+            "anim": "Redturn",
+            "fps": 0,
+            "offsets": [0, 0]
+        }
+    ]
+}
