@@ -3,7 +3,7 @@ local introPlayed = false
 function onCreatePost()
     setProperty('defaultCamZoom', 0.65)
     setProperty('camGame.zoom', 0.65)
-    setProperty('camHUD.alpha', 0);
+    setProperty('camHUD.alpha', 0)
 
     makeLuaSprite('whiteThing', nil, 0, 0)
     makeGraphic('whiteThing', screenWidth, screenHeight, 'FFFFFF')

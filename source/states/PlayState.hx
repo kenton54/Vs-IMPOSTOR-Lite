@@ -308,8 +308,8 @@ class PlayState extends MusicBeatState
 
 		camGame = initPsychCamera();
 		camHUD = new FlxCamera();
-		camCountdown = new FlxCamera();
 		camOther = new FlxCamera();
+		camCountdown = new FlxCamera();
 		camDialogue = new FlxCamera();
 		camPause = new FlxCamera();
 		camHUD.bgColor = 0x0;
@@ -319,8 +319,8 @@ class PlayState extends MusicBeatState
 		camPause.bgColor = 0x0;
 
 		FlxG.cameras.add(camHUD, false);
-		FlxG.cameras.add(camCountdown, false);
 		FlxG.cameras.add(camOther, false);
+		FlxG.cameras.add(camCountdown, false);
 		FlxG.cameras.add(camDialogue, false);
 		FlxG.cameras.add(camPause, false);
 
