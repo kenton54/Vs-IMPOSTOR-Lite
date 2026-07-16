@@ -2,9 +2,9 @@ package objects;
 
 #if mobile
 import flixel.FlxObject;
-import flixel.input.touch.FlxTouch;
 import flixel.input.FlxInput;
 import flixel.input.IFlxInput;
+import flixel.input.touch.FlxTouch;
 import flixel.util.FlxDestroyUtil;
 import flixel.util.FlxSignal;
 
@@ -23,9 +23,9 @@ class Button extends FlxSprite implements IFlxInput
 
 	public var deadzones:Array<FlxObject> = [];
 
-    public var curTouch(get, never):Null<FlxTouch>;
+	public var curTouch(get, never):Null<FlxTouch>;
 
-    var curInput:IFlxInput;
+	var curInput:IFlxInput;
 	var input:FlxInput<Int>;
 
 	var touchID:Int = -1;
@@ -33,15 +33,15 @@ class Button extends FlxSprite implements IFlxInput
 	var _isPressed:Bool = false;
 
 	public function new(x:Float = 0, y:Float = 0)
-    {
-        super(x, y);
+	{
+		super(x, y);
 
 		solid = false;
 		immovable = true;
 		scrollFactor.set();
 
 		input = new FlxInput(0);
-    }
+	}
 
 	override function destroy()
 	{
@@ -58,59 +58,59 @@ class Button extends FlxSprite implements IFlxInput
 		onUnhover.removeAll();
 	}
 
-    override function update(elapsed:Float)
-    {
-        super.update(elapsed);
+	override function update(elapsed:Float)
+	{
+		super.update(elapsed);
 
-        if (visible && enabled)
-        {
+		if (visible && enabled)
+		{
 			final overlapping:Bool = checkOverlap();
 
 			if (curInput != null && curInput.justReleased && overlapping)
 				releaseHandler();
 
 			if ((curInput != null && curInput.justReleased) || !overlapping)
-                unhoverHandler();
-        }
+				unhoverHandler();
+		}
 
-        input.update();
-    }
+		input.update();
+	}
 
-    function checkOverlap():Bool
-    {
-        for (camera in cameras)
-        {
-            for (touch in FlxG.touches.list)
-            {
-                final worldPos:FlxPoint = touch.getWorldPosition(camera, _point);
+	function checkOverlap():Bool
+	{
+		for (camera in cameras)
+		{
+			for (touch in FlxG.touches.list)
+			{
+				final worldPos:FlxPoint = touch.getWorldPosition(camera, _point);
 
-                for (deadzone in deadzones)
+				for (deadzone in deadzones)
 					if (deadzone != null && deadzone.overlapsPoint(worldPos, true, camera))
-                        return false;
+						return false;
 
-                if (overlapsPoint(worldPos, true, camera))
-                {
+				if (overlapsPoint(worldPos, true, camera))
+				{
 					touchID = touch.touchPointID;
 					updateStatus(touch);
-                    return true;
-                }
-            }
-        }
+					return true;
+				}
+			}
+		}
 
-        return false;
-    }
+		return false;
+	}
 
-    function updateStatus(newInput:IFlxInput)
-    {
+	function updateStatus(newInput:IFlxInput)
+	{
 		if (newInput.justPressed)
-        {
+		{
 			curInput = newInput;
 			pressHandler();
-        }
-        else if (!_isPressed)
+		}
+		else if (!_isPressed)
 			if (newInput.pressed)
 				pressHandler();
-    }
+	}
 
 	function pressHandler()
 	{
@@ -155,6 +155,6 @@ class Button extends FlxSprite implements IFlxInput
 		return input.released;
 
 	function get_curTouch():Null<FlxTouch>
-        return FlxG.touches.getByID(touchID);
+		return FlxG.touches.getByID(touchID);
 }
 #end

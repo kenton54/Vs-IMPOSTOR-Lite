@@ -1,10 +1,10 @@
 package states;
 
 import flixel.util.typeLimit.OneOfTwo;
+
 import objects.AttachedSprite;
 import objects.CreditsList;
 import objects.MenuItem;
-
 #if mobile
 import objects.BackButton;
 #end
@@ -100,12 +100,6 @@ class CreditsState extends MusicBeatState
 		socialCheck.screenCenter(X);
 		add(socialCheck);
 
-		/*
-		#if MODS_ALLOWED
-		for (mod in Mods.parseList().enabled) pushModCreditsToList(mod);
-		#end
-		*/
-	
 		for (i => credit in creditsList)
 		{
 			var isSelectable:Bool = false;
@@ -171,6 +165,7 @@ class CreditsState extends MusicBeatState
 	var swiping:Bool = false;
 	var moveLength:Float = 0;
 	#end
+
 	override function update(elapsed:Float)
 	{
 		#if mobile
@@ -231,14 +226,18 @@ class CreditsState extends MusicBeatState
 			var checkLastHold:Int = Math.floor((holdTime - 0.5) * 10);
 			holdTime += elapsed;
 			var checkNewHold:Int = Math.floor((holdTime - 0.5) * 10);
-			
+
 			if (holdTime > 0.5 && checkNewHold - checkLastHold > 0)
 				changeSelection((checkNewHold - checkLastHold) * (overlapLeft ? -1 : 1));
 		}
 		else
 			holdTime = 0;
 
-		if (PointerUtil.overlaps(grpOptions.members[curSelected]) && !(overlapLeft || overlapRight) && !swiping && !SwipeUtil.justSwipedAny && PointerUtil.justReleased)
+		if (PointerUtil.overlaps(grpOptions.members[curSelected])
+			&& !(overlapLeft || overlapRight)
+			&& !swiping
+			&& !SwipeUtil.justSwipedAny
+			&& PointerUtil.justReleased)
 			checkSelection();
 
 		if (PointerUtil.justReleased)
@@ -260,7 +259,8 @@ class CreditsState extends MusicBeatState
 			if (creditsList.length > 1)
 			{
 				var shiftMult:Int = 1;
-				if(FlxG.keys.pressed.SHIFT) shiftMult = 3;
+				if (FlxG.keys.pressed.SHIFT)
+					shiftMult = 3;
 
 				var leftP = controls.UI_LEFT_P;
 				var rightP = controls.UI_RIGHT_P;
@@ -292,7 +292,8 @@ class CreditsState extends MusicBeatState
 
 			if (controls.BACK)
 			{
-				if(colorTween != null) colorTween.cancel();
+				if (colorTween != null)
+					colorTween.cancel();
 				FlxG.sound.play(Paths.sound('cancelMenu'));
 				FlxG.switchState(() -> new SelectCreditsState());
 				quitting = true;
@@ -304,6 +305,7 @@ class CreditsState extends MusicBeatState
 	}
 
 	var moveTween:FlxTween = null;
+
 	public function changeSelection(change:Int = 0, description:String = "", force:Bool = false)
 	{
 		var lastSelected:Int = curSelected;
@@ -389,28 +391,8 @@ class CreditsState extends MusicBeatState
 			CoolUtil.browserLoad(curCredits[3]);
 	}
 
-	#if MODS_ALLOWED
-	function pushModCreditsToList(folder:String)
+	private function unselectableCheck(num:Int):Bool
 	{
-		var creditsFile:String = null;
-		if(folder != null && folder.trim().length > 0) creditsFile = Paths.mods(folder + '/data/credits.txt');
-		else creditsFile = Paths.mods('data/credits.txt');
-
-		if (FileSystem.exists(creditsFile))
-		{
-			var firstarray:Array<String> = File.getContent(creditsFile).split('\n');
-			for(i in firstarray)
-			{
-				var arr:Array<String> = i.replace('\\n', '\n').split("::");
-				if(arr.length >= 5) arr.push(folder);
-				creditsList.push(arr);
-			}
-			creditsList.push(['']);
-		}
-	}
-	#end
-
-	private function unselectableCheck(num:Int):Bool {
 		return creditsList[num].length <= 1;
 	}
 
@@ -428,7 +410,8 @@ class CreditsState extends MusicBeatState
 
 		descText.y = FlxG.height - descText.height + offsetThing - 60;
 
-		if (moveTween != null) moveTween.cancel();
+		if (moveTween != null)
+			moveTween.cancel();
 		moveTween = FlxTween.tween(descText, {y: descText.y + 75}, 0.25, {ease: FlxEase.sineOut});
 
 		return value;

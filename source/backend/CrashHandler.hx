@@ -2,14 +2,15 @@ package backend;
 
 #if CRASH_HANDLER
 import lime.system.System;
+
+import openfl.Lib;
 import openfl.errors.Error;
 import openfl.events.ErrorEvent;
 import openfl.events.UncaughtErrorEvent;
-import openfl.Lib;
 
 #if sys
-import sys.io.File;
 import sys.FileSystem;
+import sys.io.File;
 #end
 
 #if hl
@@ -18,24 +19,24 @@ import hl.Api;
 
 final class CrashHandler
 {
-    public static function init()
-    {
+	public static function init()
+	{
 		Lib.current.loaderInfo.uncaughtErrorEvents.addEventListener(UncaughtErrorEvent.UNCAUGHT_ERROR, onUncaughtError);
 
-        #if cpp
+		#if cpp
 		untyped __global__.__hxcpp_set_critical_error_handler(onCriticalError);
-        #elseif hl
+		#elseif hl
 		Api.setErrorHandler(onCriticalError);
-        #end
-    }
+		#end
+	}
 
 	static function onUncaughtError(error:UncaughtErrorEvent)
 	{
 		try
 		{
-            var message:String = generateErrorMessage(error);
+			var message:String = generateErrorMessage(error);
 			lime.app.Application.current.window.alert(message, 'Impostor Lite Crash Handler');
-            saveCrashLog(message);
+			saveCrashLog(message);
 		}
 		catch (e:Dynamic) {}
 
@@ -65,9 +66,9 @@ final class CrashHandler
 		var callStack:Array<haxe.CallStack.StackItem> = haxe.CallStack.exceptionStack(true); // for some reason importing "CallStack" doesnt work
 
 		if (Std.isOfType(error.error, Error))
-			errorMsg = 'ERROR: ${cast(error.error, Error).message}\n\n';
+			errorMsg = 'ERROR: ${cast (error.error, Error).message}\n\n';
 		else if (Std.isOfType(error.error, ErrorEvent))
-			errorMsg = 'ERROR: ${cast(error.error, ErrorEvent).text}\n\n';
+			errorMsg = 'ERROR: ${cast (error.error, ErrorEvent).text}\n\n';
 		else
 			errorMsg = 'ERROR: ${error.error}\n\n';
 
@@ -102,19 +103,19 @@ final class CrashHandler
 		return errorMsg;
 	}
 
-    static function saveCrashLog(message:String)
-    {
-        var curDate:String = DateTools.format(Date.now(), "%Y-%m-%d_%H-%M-%S");
+	static function saveCrashLog(message:String)
+	{
+		var curDate:String = DateTools.format(Date.now(), "%Y-%m-%d_%H-%M-%S");
 		var crashSavepath:String = './crash/$curDate.txt';
 
-        #if sys
-        if (!FileSystem.exists("./crash/"))
-            FileSystem.createDirectory("./crash/");
+		#if sys
+		if (!FileSystem.exists("./crash/"))
+			FileSystem.createDirectory("./crash/");
 
-        File.saveContent(crashSavepath, message + "\n");
-        #else
-        trace("Can't save crash log in this system!");
-        #end
-    }
+		File.saveContent(crashSavepath, message + "\n");
+		#else
+		trace("Can't save crash log in this system!");
+		#end
+	}
 }
 #end

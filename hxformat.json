@@ -2,7 +2,7 @@
 	"lineEnds": {
 		"leftCurly": "both",
 		"rightCurly": "both",
-		"emptyCurly": "break",
+		"emptyCurly": "noBreak",
 		"objectLiteralCurly": {
 			"leftCurly": "after"
 		}
@@ -12,5 +12,22 @@
 		"doWhile": "next",
 		"tryBody": "next",
 		"tryCatch": "next"
+	},
+	"emptyLines": {
+		"importAndUsing": {
+			"betweenImportsLevel": "firstLevelPackage",
+			"betweenImports": 1,
+			"beforeType": 1,
+			"beforeUsing": 1
+		}
+	},
+	"indentation": {
+		"trailingWhitespace": false
+	},
+	"wrapping": {
+		"arrayWrap": {
+			"defaultWrap": "keep"
+		},
+		"maxLineLength": 600
 	}
 }

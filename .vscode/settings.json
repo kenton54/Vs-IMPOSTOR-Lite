@@ -1,7 +1,33 @@
 {
-    "files.associations": {
-        "*.hxp": "haxe",
-        "*.haxe": "haxe"
-    },
-    "lime.projectFile": "project.hxp",
+	"[haxe]": {
+		"editor.formatOnSave": true,
+		"editor.formatOnPaste": true,
+		"editor.codeActionsOnSave": {
+			"source.sortImports": "explicit"
+		},
+		"editor.defaultFormatter": "nadako.vshaxe"
+	},
+	"[json]": {
+		"editor.formatOnSave": true,
+		"editor.formatOnPaste": true,
+		"editor.defaultFormatter": "esbenp.prettier-vscode"
+	},
+	"[jsonc]": {
+		"editor.formatOnSave": true,
+		"editor.formatOnPaste": true,
+		"editor.defaultFormatter": "esbenp.prettier-vscode"
+	},
+	"files.associations": {
+		"*.hxp": "haxe",
+		"*.haxe": "haxe"
+	},
+	"editor.codeLens": true,
+	"files.insertFinalNewline": true,
+	"files.eol": "\n",
+	"prettier.tabWidth": 4,
+	"prettier.useTabs": true,
+	"haxe.displayPort": "auto",
+	"haxe.enableCompilationServer": true,
+	"haxe.enableCodeLens": true,
+	"lime.projectFile": "project.hxp"
 }

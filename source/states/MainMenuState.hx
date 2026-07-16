@@ -1,11 +1,14 @@
 package states;
 
-import objects.VideoSprite;
-import flixel.input.keyboard.FlxKey;
 import flixel.addons.transition.FlxTransitionableState;
 import flixel.effects.FlxFlicker;
-import states.editors.MasterEditorMenu;
+import flixel.input.keyboard.FlxKey;
+
+import objects.VideoSprite;
+
 import options.OptionsState;
+
+import states.editors.MasterEditorMenu;
 
 #if mobile
 import objects.BackButton;
@@ -35,11 +38,6 @@ class MainMenuState extends MusicBeatState
 	override function create()
 	{
 		PointerUtil.visible = false;
-
-		#if MODS_ALLOWED
-		Mods.pushGlobalMods();
-		#end
-		Mods.loadTopMod();
 
 		#if DISCORD_ALLOWED
 		// Updating Discord Rich Presence
@@ -148,6 +146,7 @@ class MainMenuState extends MusicBeatState
 	}
 
 	var selectedSomethin:Bool = false;
+
 	override function update(elapsed:Float)
 	{
 		if (FlxG.sound.music.volume < 0.8)
@@ -249,19 +248,19 @@ class MainMenuState extends MusicBeatState
 		{
 			leroyCodeStuff(FlxG.keys.firstJustPressed());
 			gay(FlxG.keys.firstJustPressed());
-
-			//trace("pressed key ID " + FlxG.keys.firstJustPressed());
 		}
 	}
 
 	var leroyCode:Array<FlxKey> = [L, E, R, O, Y];
 	var leroyPos:Int = 0;
+
 	function leroyCodeStuff(input:FlxKey)
 	{
 		if (input == leroyCode[leroyPos])
 		{
 			leroyPos++;
-			if (leroyPos >= leroyCode.length) playLeroy();
+			if (leroyPos >= leroyCode.length)
+				playLeroy();
 		}
 		else
 			leroyPos = 0;
@@ -269,12 +268,14 @@ class MainMenuState extends MusicBeatState
 
 	var gayGay:Array<FlxKey> = [G, A, Y];
 	var garry:Int = 0;
+
 	function gay(gayy:FlxKey)
 	{
 		if (gayy == gayGay[garry])
 		{
 			garry++;
-			if (garry >= gayGay.length) thenImGay();
+			if (garry >= gayGay.length)
+				thenImGay();
 		}
 		else
 			garry = 0;
@@ -285,7 +286,8 @@ class MainMenuState extends MusicBeatState
 		selectedSomethin = true;
 
 		FlxG.sound.music.pause();
-		if (FreeplayState.vocals != null) FreeplayState.vocals.pause();
+		if (FreeplayState.vocals != null)
+			FreeplayState.vocals.pause();
 
 		secretsBG = new FlxSprite().makeGraphic(FlxG.width + 1, FlxG.height + 1, FlxColor.WHITE);
 		secretsBG.scrollFactor.set();
@@ -304,7 +306,8 @@ class MainMenuState extends MusicBeatState
 		selectedSomethin = true;
 
 		FlxG.sound.music.pause();
-		if (FreeplayState.vocals != null) FreeplayState.vocals.pause();
+		if (FreeplayState.vocals != null)
+			FreeplayState.vocals.pause();
 
 		secretsBG = new FlxSprite().makeGraphic(FlxG.width + 1, FlxG.height + 1, FlxColor.WHITE);
 		secretsBG.scrollFactor.set();
@@ -329,14 +332,16 @@ class MainMenuState extends MusicBeatState
 		secretsBG = null;
 
 		FlxG.sound.music.resume();
-		if (FreeplayState.vocals != null) FreeplayState.vocals.resume();
+		if (FreeplayState.vocals != null)
+			FreeplayState.vocals.resume();
 	}
 
 	function changeItem(huh:Int = 0)
 	{
 		curSelected = FlxMath.wrap(curSelected + huh, 0, menuItems.length - 1);
 
-		if (huh != 0) FlxG.sound.play(Paths.sound('scrollMenu'));
+		if (huh != 0)
+			FlxG.sound.play(Paths.sound('scrollMenu'));
 
 		for (i => item in menuItems.members)
 		{
@@ -395,7 +400,8 @@ class MainMenuState extends MusicBeatState
 
 		for (i in 0...menuItems.members.length)
 		{
-			if (i == sus) continue;
+			if (i == sus)
+				continue;
 
 			FlxTween.tween(menuItems.members[i], {alpha: 0}, 0.4, {
 				ease: FlxEase.quadOut,

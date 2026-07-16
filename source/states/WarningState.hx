@@ -1,11 +1,10 @@
 package states;
 
-import flixel.FlxSubState;
-import flixel.effects.FlxFlicker;
+import flixel.addons.display.FlxBackdrop;
 import flixel.addons.transition.FlxTransitionableState;
+import flixel.effects.FlxFlicker;
 import flixel.text.FlxText;
 import flixel.util.FlxGradient;
-import flixel.addons.display.FlxBackdrop;
 
 class WarningState extends MusicBeatState
 {
@@ -18,12 +17,18 @@ class WarningState extends MusicBeatState
 	var disclaimerTxtTitle:FlxText;
 	var disclaimerTxt:FlxText;
 	var disclaimerTxtEnter:FlxText;
-	
+
 	var whiteTransition:FlxSprite;
 	var whiteTransitionTail:FlxSprite;
 
 	override function create()
 	{
+		if (leftState)
+		{
+			FlxG.switchState(() -> new TitleState());
+			return;
+		}
+
 		var stars:FlxBackdrop = new FlxBackdrop();
 		stars.loadGraphic(Paths.image("bg/polus/stars"));
 		stars.velocity.x = 8;
@@ -37,11 +42,10 @@ class WarningState extends MusicBeatState
 
 		disclaimerTxt = new FlxText(0, disclaimerTxtTitle.y + disclaimerTxtTitle.height + 10, 0, "", 20);
 		disclaimerTxt.setFormat(Paths.font("vcr"), 20, FlxColor.WHITE, CENTER);
-		disclaimerTxt.text = 
-		"\nWE ARE #NOT# AFFILIATED WITH OR APART OF THE ORIGINAL *LITE FUNKIN' TEAM*."
-		+ "\nThis mod is completely $separate from Lite Funkin'$ and is merely a $passionate project$ inspired by the mod,"
-		+ "\nas well as #Vs. Impostor V4#."
-		+ "\n\nThe original mod's credits is listed in the *CREDITS section* in the main menu.";
+		disclaimerTxt.text = "\nWE ARE #NOT# AFFILIATED WITH OR APART OF THE ORIGINAL *LITE FUNKIN' TEAM*."
+			+ "\nThis mod is completely $separate from Lite Funkin'$ and is merely a $passionate project$ inspired by the mod,"
+			+ "\nas well as #Vs. Impostor V4#."
+			+ "\n\nThe original mod's credits is listed in the *CREDITS section* in the main menu.";
 
 		disclaimerTxtEnter = new FlxText(0, disclaimerTxt.y + disclaimerTxt.height + 25, 0, "> Okay, damn, let me play <", 20);
 		disclaimerTxtEnter.setFormat(Paths.font("vcr"), 20, FlxColor.WHITE, CENTER);
@@ -51,18 +55,17 @@ class WarningState extends MusicBeatState
 		FlxG.stage.color = stageColor;
 
 		#if DISCORD_ALLOWED
-        DiscordClient.changePresence("Warning Screen", null);
-        #end
+		DiscordClient.changePresence("Warning Screen", null);
+		#end
 
-		disclaimerTxt.applyMarkup(disclaimerTxt.text,
-			[
-				new FlxTextFormatMarkerPair(new FlxTextFormat(0xe77279), "#"),
-				new FlxTextFormatMarkerPair(new FlxTextFormat(0xa8ffd0), "*"),
-				new FlxTextFormatMarkerPair(new FlxTextFormat(0xe4eb6a), "$")
-			]
-		);
+		disclaimerTxt.applyMarkup(disclaimerTxt.text, [
+			new FlxTextFormatMarkerPair(new FlxTextFormat(0xe77279), "#"),
+			new FlxTextFormatMarkerPair(new FlxTextFormat(0xa8ffd0), "*"),
+			new FlxTextFormatMarkerPair(new FlxTextFormat(0xe4eb6a), "$")
+		]);
 
-		for (txt in [disclaimerTxtTitle, disclaimerTxt, disclaimerTxtEnter]) {
+		for (txt in [disclaimerTxtTitle, disclaimerTxt, disclaimerTxtEnter])
+		{
 			txtsSpr.add(txt);
 			txt.screenCenter(X);
 			txt.scrollFactor.y = 1.25;
@@ -84,15 +87,21 @@ class WarningState extends MusicBeatState
 
 		FlxTween.cancelTweensOf(FlxG.camera);
 		FlxG.camera.scroll.y = -FlxG.height;
-		FlxTween.tween(FlxG.camera.scroll, {y: 0}, 0.8, {ease: FlxEase.quadInOut, startDelay: 0.8, onComplete: function(_) {
-			actuallyAllowed = true;
-		}});
+		FlxTween.tween(FlxG.camera.scroll, {y: 0}, 0.8, {
+			ease: FlxEase.quadInOut,
+			startDelay: 0.8,
+			onComplete: function(_)
+			{
+				actuallyAllowed = true;
+			}
+		});
 
 		super.create();
 	}
 
 	var stageColor:FlxColor = 0x2A2140;
 	var targetColor:FlxColor = 0x2A2140;
+
 	override function update(elapsed:Float)
 	{
 		whiteTransitionTail.x = whiteTransition.x;
@@ -107,17 +116,19 @@ class WarningState extends MusicBeatState
 
 				targetColor = 0xFFFFFF;
 
-            	FlxTransitionableState.skipNextTransOut = true;
-            	FlxTransitionableState.skipNextTransIn = true;
+				FlxTransitionableState.skipNextTransOut = true;
+				FlxTransitionableState.skipNextTransIn = true;
 
 				ClientPrefs.saveSettings();
 				FlxG.sound.play(Paths.sound('confirmMenu'));
 
-				FlxFlicker.flicker(disclaimerTxtEnter, 1.4, 0.1, false, true, function(_) {
+				FlxFlicker.flicker(disclaimerTxtEnter, 1.4, 0.1, false, true, function(_)
+				{
 					new FlxTimer().start(1.4, _ -> FlxG.switchState(() -> new TitleState()));
 				});
 
-				new FlxTimer().start(0.6, function(_) {
+				new FlxTimer().start(0.6, function(_)
+				{
 					FlxTween.cancelTweensOf(FlxG.camera);
 					FlxTween.tween(FlxG.camera, {"scroll.y": FlxG.height * 2}, 1, {ease: FlxEase.smootherStepIn});
 				});

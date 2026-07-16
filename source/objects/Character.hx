@@ -1,13 +1,16 @@
 package objects;
 
-import flixel.util.FlxDestroyUtil;
 import backend.animation.PsychAnimationController;
 
+import flixel.util.FlxDestroyUtil;
 import flixel.util.FlxSort;
 
 import haxe.Json;
 
-typedef CharacterFile = {
+import psychlua.ModchartSprite;
+
+typedef CharacterFile =
+{
 	var animations:Array<AnimArray>;
 	var image:String;
 	var scale:Float;
@@ -25,7 +28,8 @@ typedef CharacterFile = {
 	var ?_editor_isPlayer:Null<Bool>;
 }
 
-typedef AnimArray = {
+typedef AnimArray =
+{
 	var anim:String;
 	var name:String;
 	var fps:Int;
@@ -36,14 +40,13 @@ typedef AnimArray = {
 	var flipY:Bool;
 }
 
-class Character extends FlxSprite
+class Character extends ModchartSprite
 {
 	/**
 	 * In case a character is missing, it will use this on its place
 	**/
 	public static final DEFAULT_CHARACTER:String = 'bf';
 
-	public var animOffsets:Map<String, Array<Float>> = [];
 	public var debugMode:Bool = false;
 	public var extraData:Map<String, Dynamic> = [];
 
@@ -55,9 +58,9 @@ class Character extends FlxSprite
 	public var specialAnim:Bool = false;
 	public var animationNotes:Array<Dynamic> = [];
 	public var stunned:Bool = false;
-	public var singDuration:Float = 4; //Multiplier of how long a character holds the sing pose
+	public var singDuration:Float = 4; // Multiplier of how long a character holds the sing pose
 	public var idleSuffix:String = '';
-	public var danceIdle:Bool = false; //Character use "danceLeft" and "danceRight" instead of "idle"
+	public var danceIdle:Bool = false; // Character use "danceLeft" and "danceRight" instead of "idle"
 	public var skipDance:Bool = false;
 
 	public var healthIcon:String = 'face';
@@ -70,7 +73,7 @@ class Character extends FlxSprite
 	public var hasMissAnimations:Bool = false;
 	public var vocalsFile:String = '';
 
-	//Used on Character Editor
+	// Used on Character Editor
 	public var imageFile:String = '';
 	public var jsonScale:Float = 1;
 	public var noAntialiasing:Bool = false;
@@ -85,24 +88,20 @@ class Character extends FlxSprite
 		curCharacter = character;
 		this.isPlayer = isPlayer;
 
-		var path:String = Paths.getPath('characters/$curCharacter.json', TEXT, null, true);
+		var path:String = Paths.getPath('characters/$curCharacter.json');
 
 		if (!Assets.exists(path))
 		{
-			path = Paths.getLitePath('characters/$DEFAULT_CHARACTER.json'); //If a character couldn't be found, change him to BF just to prevent a crash
+			path = Paths.getLitePath('characters/$DEFAULT_CHARACTER.json'); // If a character couldn't be found, change him to BF just to prevent a crash
 			color = FlxColor.BLACK;
 			alpha = 0.6;
 		}
 
 		try
 		{
-			#if MODS_ALLOWED
-			loadCharacterFile(Json.parse(File.getContent(path)));
-			#else
 			loadCharacterFile(Json.parse(Assets.getText(path)));
-			#end
 		}
-		catch(e:Dynamic)
+		catch (e:Dynamic)
 		{
 			trace('Error loading character file of "$character": $e');
 		}
@@ -153,8 +152,10 @@ class Character extends FlxSprite
 
 		// animations
 		animationsArray = json.animations;
-		if(animationsArray != null && animationsArray.length > 0) {
-			for (anim in animationsArray) {
+		if (animationsArray != null && animationsArray.length > 0)
+		{
+			for (anim in animationsArray)
+			{
 				var animAnim:String = anim.anim ?? '';
 				var animName:String = anim.name ?? '';
 				var animFps:Float = anim.fps;
@@ -194,10 +195,10 @@ class Character extends FlxSprite
 		{
 			var rate:Float = (PlayState.instance != null ? PlayState.instance.playbackRate : 1.0);
 			heyTimer -= elapsed * rate;
-			if(heyTimer <= 0)
+			if (heyTimer <= 0)
 			{
 				var anim:String = getAnimationName();
-				if(specialAnim && (anim == 'hey' || anim == 'cheer'))
+				if (specialAnim && (anim == 'hey' || anim == 'cheer'))
 				{
 					specialAnim = false;
 					dance();
@@ -216,17 +217,20 @@ class Character extends FlxSprite
 			finishAnimation();
 		}
 
-		if (getAnimationName().startsWith('sing')) holdTimer += elapsed;
-		else if(isPlayer) holdTimer = 0;
+		if (getAnimationName().startsWith('sing'))
+			holdTimer += elapsed;
+		else if (isPlayer)
+			holdTimer = 0;
 
-		if (!isPlayer && holdTimer >= Conductor.stepCrochet * (0.0011 #if FLX_PITCH / (FlxG.sound.music != null ? FlxG.sound.music.pitch : 1) #end) * singDuration)
+		if (!isPlayer
+			&& holdTimer >= Conductor.stepCrochet * (0.0011 #if FLX_PITCH / (FlxG.sound.music != null ? FlxG.sound.music.pitch : 1) #end) * singDuration)
 		{
 			dance();
 			holdTimer = 0;
 		}
 
 		var name:String = getAnimationName();
-		if(isAnimationFinished() && animOffsets.exists('$name-loop'))
+		if (isAnimationFinished() && animOffsets.exists('$name-loop'))
 			playAnim('$name-loop');
 
 		super.update(elapsed);
@@ -239,7 +243,8 @@ class Character extends FlxSprite
 	{
 		var name:String = '';
 
-		if (!isAnimationNull()) name = animation.curAnim.name;
+		if (!isAnimationNull())
+			name = animation.curAnim.name;
 
 		return name;
 	}
@@ -251,7 +256,8 @@ class Character extends FlxSprite
 
 	public function finishAnimation():Void
 	{
-		if(isAnimationNull()) return;
+		if (isAnimationNull())
+			return;
 		animation.curAnim.finish();
 	}
 
@@ -261,14 +267,18 @@ class Character extends FlxSprite
 	}
 
 	public var animPaused(get, set):Bool;
+
 	private function get_animPaused():Bool
 	{
-		if(isAnimationNull()) return false;
+		if (isAnimationNull())
+			return false;
 		return animation.curAnim.paused;
 	}
+
 	private function set_animPaused(value:Bool):Bool
 	{
-		if(isAnimationNull()) return value;
+		if (isAnimationNull())
+			return value;
 		animation.curAnim.paused = value;
 
 		return value;
@@ -283,7 +293,7 @@ class Character extends FlxSprite
 	{
 		if (!debugMode && !skipDance && !specialAnim)
 		{
-			if(danceIdle)
+			if (danceIdle)
 			{
 				danced = !danced;
 
@@ -292,36 +302,32 @@ class Character extends FlxSprite
 				else
 					playAnim('danceLeft' + idleSuffix);
 			}
-			else if(animOffsets.exists('idle' + idleSuffix)) {
-					playAnim('idle' + idleSuffix);
+			else if (animOffsets.exists('idle' + idleSuffix))
+			{
+				playAnim('idle' + idleSuffix);
 			}
 		}
 	}
 
-	public function playAnim(AnimName:String, Force:Bool = false, Reversed:Bool = false, Frame:Int = 0):Void
+	override function playAnim(name:String, forced:Bool = false, ?reserve:Bool = false, ?startFrame:Int = 0):Void
 	{
-		if (!animationExists(AnimName)) return;
+		if (!animationExists(name))
+			return;
 
 		specialAnim = false;
-		animation.play(AnimName, Force, Reversed, Frame);
-
-		if (animOffsets.exists(AnimName))
-		{
-			var daOffset:Array<Float> = animOffsets.get(AnimName);
-			offset.set(daOffset[0], daOffset[1]);
-		}
 
 		if (curCharacter.startsWith('gf'))
 		{
-			if (AnimName == 'singLEFT')
+			if (name == 'singLEFT')
 				danced = true;
-
-			else if (AnimName == 'singRIGHT')
+			else if (name == 'singRIGHT')
 				danced = false;
 
-			if (AnimName == 'singUP' || AnimName == 'singDOWN')
+			if (name == 'singUP' || name == 'singDOWN')
 				danced = !danced;
 		}
+
+		super.playAnim(name, forced, reserve, startFrame);
 	}
 
 	function sortAnims(Obj1:Array<Dynamic>, Obj2:Array<Dynamic>):Int
@@ -330,19 +336,22 @@ class Character extends FlxSprite
 	}
 
 	public var danceEveryNumBeats:Int = 2;
+
 	private var settingCharacterUp:Bool = true;
-	public function recalculateDanceIdle() {
+
+	public function recalculateDanceIdle()
+	{
 		var lastDanceIdle:Bool = danceIdle;
 		danceIdle = (animOffsets.exists('danceLeft' + idleSuffix) && animOffsets.exists('danceRight' + idleSuffix));
 
-		if(settingCharacterUp)
+		if (settingCharacterUp)
 		{
 			danceEveryNumBeats = (danceIdle ? 1 : 2);
 		}
-		else if(lastDanceIdle != danceIdle)
+		else if (lastDanceIdle != danceIdle)
 		{
 			var calc:Float = danceEveryNumBeats;
-			if(danceIdle)
+			if (danceIdle)
 				calc /= 2;
 			else
 				calc *= 2;
@@ -350,11 +359,6 @@ class Character extends FlxSprite
 			danceEveryNumBeats = Math.round(Math.max(calc, 1));
 		}
 		settingCharacterUp = false;
-	}
-
-	public function addOffset(name:String, x:Float = 0, y:Float = 0)
-	{
-		animOffsets[name] = [x, y];
 	}
 
 	public function quickAnimAdd(name:String, anim:String)

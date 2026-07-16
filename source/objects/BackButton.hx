@@ -10,11 +10,11 @@ class BackButton extends Button
 
 	var instant:Bool;
 
-    var _confirming:Bool = false;
+	var _confirming:Bool = false;
 
 	public function new(x:Float = 0, y:Float = 0, color:FlxColor = FlxColor.WHITE, instant:Bool = false)
-    {
-        super(x, y);
+	{
+		super(x, y);
 
 		this.instant = instant;
 
@@ -25,7 +25,7 @@ class BackButton extends Button
 		animation.play("idle");
 		antialiasing = false;
 
-        this.color = color;
+		this.color = color;
 
 		scale.set(0.7, 0.7);
 		updateHitbox();
@@ -34,58 +34,61 @@ class BackButton extends Button
 		onRelease.add(playConfirm);
 		onUnhover.add(playIdle);
 		animation.onFinish.add(animEnd);
-    }
+	}
 
-    override function destroy()
-    {
-        super.destroy();
+	override function destroy()
+	{
+		super.destroy();
 
 		onConfirmStart.removeAll();
 		onConfirmEnd.removeAll();
-    }
+	}
 
-    function playIdle()
-    {
-		if (!enabled || _confirming) return;
+	function playIdle()
+	{
+		if (!enabled || _confirming)
+			return;
 
 		animation.play('idle');
-    }
+	}
 
-    function playHold()
-    {
-		if (!enabled || _confirming) return;
+	function playHold()
+	{
+		if (!enabled || _confirming)
+			return;
 
 		animation.play('hold');
-    }
+	}
 
-    function playConfirm()
-    {
-		if (!enabled || _confirming) return;
+	function playConfirm()
+	{
+		if (!enabled || _confirming)
+			return;
 
 		_confirming = true;
-        enabled = false;
+		enabled = false;
 		FlxG.sound.play(Paths.sound('cancelMenu'));
 		onConfirmStart.dispatch();
 
-        if (instant)
-        {
+		if (instant)
+		{
 			_confirming = false;
 			onConfirmEnd.dispatch();
-            return;
-        }
+			return;
+		}
 
 		animation.play('confirm');
-    }
+	}
 
 	function animEnd(anim:String)
-    {
+	{
 		if (anim == 'confirm')
-        {
+		{
 			_confirming = false;
 			onConfirmEnd.dispatch();
 
 			animation.play('idle');
-        }
-    }
+		}
+	}
 }
 #end

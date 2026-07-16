@@ -1,12 +1,12 @@
 package states;
 
-import backend.WeekData;
 import backend.Highscore;
 import backend.Song;
+import backend.WeekData;
 
-import flixel.group.FlxGroup;
-import flixel.graphics.FlxGraphic;
 import flixel.effects.FlxFlicker;
+import flixel.graphics.FlxGraphic;
+import flixel.group.FlxGroup;
 
 import objects.MenuItem;
 
@@ -24,11 +24,13 @@ class StoryMenuState extends MusicBeatState
 	var scoreText:FlxText;
 
 	private static var lastDifficultyName:String = '';
+
 	var curDifficulty:Int = 1;
 
 	var txtWeekTitle:FlxText;
 
 	static var curWeek:Int = 0;
+
 	var curWeekFloat:Float = 0;
 
 	var txtTracklist:FlxText;
@@ -47,7 +49,8 @@ class StoryMenuState extends MusicBeatState
 
 		PlayState.isStoryMode = true;
 		WeekData.reloadWeekFiles(true);
-		if (curWeek >= WeekData.weeksList.length) curWeek = 0;
+		if (curWeek >= WeekData.weeksList.length)
+			curWeek = 0;
 
 		scoreText = new FlxText(10, 10, 0, "SCORE: 49324858", 36);
 		scoreText.setFormat(Paths.font("vcr"), 32, FlxColor.BLACK);
@@ -110,18 +113,18 @@ class StoryMenuState extends MusicBeatState
 				grpWeekOptions.add(weekThing);
 
 				/*
-				// Needs an offset thingie
-				if (isLocked)
-				{
-					var lock:FlxSprite = new FlxSprite(weekThing.width + 10 + weekThing.x);
-					lock.antialiasing = ClientPrefs.data.antialiasing;
-					lock.loadGraphic(ui_tex);
-					lock.animation.addByPrefix('lock', 'lock');
-					lock.animation.play('lock');
-					lock.ID = i;
-					grpLocks.add(lock);
-				}
-				*/
+					// Needs an offset thingie
+					if (isLocked)
+					{
+						var lock:FlxSprite = new FlxSprite(weekThing.width + 10 + weekThing.x);
+						lock.antialiasing = ClientPrefs.data.antialiasing;
+						lock.loadGraphic(ui_tex);
+						lock.animation.addByPrefix('lock', 'lock');
+						lock.animation.play('lock');
+						lock.ID = i;
+						grpLocks.add(lock);
+					}
+				 */
 				num++;
 			}
 		}
@@ -135,7 +138,7 @@ class StoryMenuState extends MusicBeatState
 		leftArrow.screenCenter(Y);
 
 		Difficulty.resetList();
-		if(lastDifficultyName == '')
+		if (lastDifficultyName == '')
 		{
 			lastDifficultyName = Difficulty.getDefault();
 		}
@@ -199,10 +202,12 @@ class StoryMenuState extends MusicBeatState
 	var moveLength:Float = 0;
 	#end
 	var usingControls:Bool = true;
+
 	override function update(elapsed:Float)
 	{
 		lerpScore = Math.floor(FlxMath.lerp(intendedScore, lerpScore, Math.exp(-elapsed * 30)));
-		if (Math.abs(intendedScore - lerpScore) < 10) lerpScore = intendedScore;
+		if (Math.abs(intendedScore - lerpScore) < 10)
+			lerpScore = intendedScore;
 
 		scoreText.text = "WEEK SCORE: " + lerpScore;
 
@@ -265,7 +270,11 @@ class StoryMenuState extends MusicBeatState
 		curWeekFloat = FlxMath.bound(curWeekFloat, 0, loadedWeeks.length - 1);
 		curWeek = Math.round(curWeekFloat);
 
-		if (PointerUtil.overlaps(grpWeekOptions.members[curWeek]) && !(overlapLeft || overlapRight) && !swiping && !SwipeUtil.justSwipedAny && PointerUtil.justReleased)
+		if (PointerUtil.overlaps(grpWeekOptions.members[curWeek])
+			&& !(overlapLeft || overlapRight)
+			&& !swiping
+			&& !SwipeUtil.justSwipedAny
+			&& PointerUtil.justReleased)
 			selectWeek();
 
 		if (PointerUtil.justReleased)
@@ -308,7 +317,7 @@ class StoryMenuState extends MusicBeatState
 			{
 				persistentUpdate = false;
 				openSubState(new ResetScoreSubState('', curDifficulty, '', curWeek));
-				//FlxG.sound.play(Paths.sound('scrollMenu'));
+				// FlxG.sound.play(Paths.sound('scrollMenu'));
 			}
 			else if (controls.ACCEPT)
 			{
@@ -326,17 +335,18 @@ class StoryMenuState extends MusicBeatState
 		super.update(elapsed);
 
 		/*
-		grpLocks.forEach(function(lock:FlxSprite)
-		{
-			lock.y = grpWeekOptions.members[lock.ID].y;
-			lock.visible = (lock.y > FlxG.height / 2);
-		});
-		*/
+			grpLocks.forEach(function(lock:FlxSprite)
+			{
+				lock.y = grpWeekOptions.members[lock.ID].y;
+				lock.visible = (lock.y > FlxG.height / 2);
+			});
+		 */
 	}
 
 	var movedBack:Bool = false;
 	var selectedWeek:Bool = false;
 	var stopspamming:Bool = false;
+
 	function selectWeek()
 	{
 		if (loadedWeeks[curWeek].fileName != 'soon' && !weekIsLocked(loadedWeeks[curWeek].fileName))
@@ -344,7 +354,8 @@ class StoryMenuState extends MusicBeatState
 			// We can't use Dynamic Array .copy() because that crashes HTML5, here's a workaround.
 			var songArray:Array<String> = [];
 			var leWeek:Array<Dynamic> = loadedWeeks[curWeek].songs;
-			for (i in 0...leWeek.length) {
+			for (i in 0...leWeek.length)
+			{
 				songArray.push(leWeek[i][0]);
 			}
 
@@ -362,17 +373,18 @@ class StoryMenuState extends MusicBeatState
 					PlayState.storyPlaylist = songArray;
 					PlayState.isStoryMode = true;
 					selectedWeek = true;
-		
+
 					var diffic = Difficulty.getFilePath(curDifficulty);
-					if(diffic == null) diffic = '';
-		
+					if (diffic == null)
+						diffic = '';
+
 					PlayState.storyDifficulty = curDifficulty;
-		
+
 					PlayState.SONG = Song.loadFromJson(PlayState.storyPlaylist[0].toLowerCase() + diffic, PlayState.storyPlaylist[0].toLowerCase());
 					PlayState.campaignScore = 0;
 					PlayState.campaignMisses = 0;
 				}
-				catch(e:Dynamic)
+				catch (e:Dynamic)
 				{
 					trace('ERROR! $e');
 					return;
@@ -380,13 +392,10 @@ class StoryMenuState extends MusicBeatState
 
 				LoadingState.loadState(() -> new PlayState(), true);
 				FreeplayState.destroyFreeplayVocals();
-
-				#if (MODS_ALLOWED && DISCORD_ALLOWED)
-				DiscordClient.loadModRPC();
-				#end
 			});
 		}
-		else FlxG.sound.play(Paths.sound('cancelMenu'));
+		else
+			FlxG.sound.play(Paths.sound('cancelMenu'));
 	}
 
 	var lerpScore:Int = 0;
@@ -396,7 +405,8 @@ class StoryMenuState extends MusicBeatState
 	{
 		curWeek = FlxMath.wrap(curWeek + change, 0, loadedWeeks.length - 1);
 
-		if (change != 0) FlxG.sound.play(Paths.sound('scrollMenu'));
+		if (change != 0)
+			FlxG.sound.play(Paths.sound('scrollMenu'));
 
 		var leWeek:WeekData = loadedWeeks[curWeek];
 		WeekData.setDirectoryFromWeek(leWeek);
@@ -421,14 +431,14 @@ class StoryMenuState extends MusicBeatState
 		}
 
 		Difficulty.loadFromWeek();
-		if(Difficulty.list.contains(Difficulty.getDefault()))
+		if (Difficulty.list.contains(Difficulty.getDefault()))
 			curDifficulty = Math.round(Math.max(0, Difficulty.defaultList.indexOf(Difficulty.getDefault())));
 		else
 			curDifficulty = 0;
 
 		var newPos:Int = Difficulty.list.indexOf(lastDifficultyName);
-		//trace('Pos of ' + lastDifficultyName + ' is ' + newPos);
-		if(newPos > -1)
+		// trace('Pos of ' + lastDifficultyName + ' is ' + newPos);
+		if (newPos > -1)
 		{
 			curDifficulty = newPos;
 		}
@@ -493,9 +503,12 @@ class StoryMenuState extends MusicBeatState
 		}
 	}
 
-	function weekIsLocked(name:String):Bool {
+	function weekIsLocked(name:String):Bool
+	{
 		var leWeek:WeekData = WeekData.weeksLoaded.get(name);
-		return (!leWeek.startUnlocked && leWeek.weekBefore.length > 0 && (!weekCompleted.exists(leWeek.weekBefore) || !weekCompleted.get(leWeek.weekBefore)));
+		return (!leWeek.startUnlocked
+			&& leWeek.weekBefore.length > 0
+			&& (!weekCompleted.exists(leWeek.weekBefore) || !weekCompleted.get(leWeek.weekBefore)));
 	}
 
 	function updateText()
@@ -503,26 +516,31 @@ class StoryMenuState extends MusicBeatState
 		var weekArray:Array<String> = loadedWeeks[curWeek].weekCharacters;
 		var leWeek:WeekData = loadedWeeks[curWeek];
 		var stringThing:Array<String> = [];
-		for (i in 0...leWeek.songs.length) {
+		for (i in 0...leWeek.songs.length)
+		{
 			stringThing.push(leWeek.songs[i][0]);
 		}
 
 		// This capitalization part looks rlly ugly but im still proud i made it to work :) -polo
 
 		txtTracklist.text = '';
-		for (i in 0...stringThing.length) {
+		for (i in 0...stringThing.length)
+		{
 			txtTracklist.text += CoolUtil.capitalize(stringThing[i]) + '\n';
 		}
 
 		var txtTracklistAll:Array<String> = txtTracklist.text.split('\n');
-		for(i => txt in txtTracklistAll) {
+		for (i => txt in txtTracklistAll)
+		{
 			txt = txt.replace('-', ' ');
 			txt = txt.replace('_', ' ');
-			if(txt.contains(' ')) {
+			if (txt.contains(' '))
+			{
 				var nameStrings:Array<String> = txt.split(' ');
 				var txtResult:String = '';
 
-				for(str in nameStrings) {
+				for (str in nameStrings)
+				{
 					var str2:String = CoolUtil.capitalize(str);
 					txtResult += str2 + ' ';
 				}
@@ -531,7 +549,7 @@ class StoryMenuState extends MusicBeatState
 		}
 
 		txtTracklist.text = '';
-		for(txt in txtTracklistAll)
+		for (txt in txtTracklistAll)
 			txtTracklist.text += txt + '\n';
 
 		#if !switch

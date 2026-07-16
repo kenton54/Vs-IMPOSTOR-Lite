@@ -1,12 +1,13 @@
 package debug;
 
-import openfl.display.BitmapData;
-import openfl.display.Bitmap;
 import flixel.FlxG;
+
+import openfl.display.Bitmap;
+import openfl.display.BitmapData;
+import openfl.display.Sprite;
+import openfl.system.System;
 import openfl.text.TextField;
 import openfl.text.TextFormat;
-import openfl.system.System;
-import openfl.display.Sprite;
 
 /**
 	The FPS class provides an easy-to-use monitor to display
@@ -15,7 +16,7 @@ import openfl.display.Sprite;
 class FPSCounter extends Sprite
 {
 	public var updating:Bool = true;
-	
+
 	public var text:TextField;
 	public var underlay:Bitmap;
 
@@ -93,7 +94,8 @@ class FPSCounter extends Sprite
 
 	function __updateTxt()
 	{
-		if (!updating) return;
+		if (!updating)
+			return;
 
 		text.text = 'FPS: $currentFPS';
 
@@ -102,17 +104,12 @@ class FPSCounter extends Sprite
 		#end
 
 		text.textColor = 0xFFFFFFFF;
-		if (currentFPS < FlxG.drawFramerate * 0.5) text.textColor = 0xFFFF0000;
+		if (currentFPS < FlxG.drawFramerate * 0.5)
+			text.textColor = 0xFFFF0000;
 	}
 
 	inline function get_memoryMegas():Float
 	{
-		#if cpp
-		return cpp.vm.Gc.memInfo64(cpp.vm.Gc.MEM_INFO_USAGE);
-		#elseif (openfl >= "9.4.0")
-		return cast(System.totalMemoryNumber, UInt);
-		#else
-		return cast(System.totalMemory, UInt);
-		#end
+		return System.totalMemoryNumber;
 	}
 }

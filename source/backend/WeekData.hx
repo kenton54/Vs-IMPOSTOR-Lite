@@ -19,9 +19,11 @@ typedef WeekFile =
 	var difficulties:String;
 }
 
-class WeekData {
+class WeekData
+{
 	public static var weeksLoaded:Map<String, WeekData> = new Map<String, WeekData>();
 	public static var weeksList:Array<String> = [];
+
 	public var folder:String = '';
 
 	// JSON variables
@@ -74,14 +76,6 @@ class WeekData {
 		var directories:Array<String> = [Paths.getLitePath()];
 		var originalLength:Int = directories.length;
 
-		#if MODS_ALLOWED
-		directories.push(Paths.mods());
-		originalLength = directories.length;
-
-		for (mod in Mods.parseList().enabled)
-			directories.push(Paths.mods(mod + '/'));
-		#end
-
 		var sexList:Array<String> = CoolUtil.coolTextFile(Paths.getPath('weeks/weekList.txt'));
 		for (i in 0...sexList.length)
 		{
@@ -95,11 +89,6 @@ class WeekData {
 					{
 						var weekFile:WeekData = new WeekData(week, sexList[i]);
 
-						#if MODS_ALLOWED
-						if (j >= originalLength)
-							weekFile.folder = directories[j].substring(Paths.mods().length, directories[j].length-1);
-						#end
-
 						if (weekFile != null && (isStoryMode ? !weekFile.hideStoryMode : !weekFile.hideFreeplay))
 						{
 							weeksLoaded.set(sexList[i], weekFile);
@@ -109,30 +98,6 @@ class WeekData {
 				}
 			}
 		}
-
-		#if MODS_ALLOWED
-		for (i in 0...directories.length)
-		{
-			var directory:String = directories[i] + 'weeks/';
-			if (FileSystem.exists(directory))
-			{
-				var listOfWeeks:Array<String> = CoolUtil.coolTextFile(directory + 'weekList.txt');
-				for (daWeek in listOfWeeks)
-				{
-					var path:String = directory + daWeek + '.json';
-					if (FileSystem.exists(path))
-						addWeek(daWeek, path, directories[i], i, originalLength);
-				}
-
-				for (file in Assets.readDirectory(directory))
-				{
-					var path = haxe.io.Path.join([directory, file]);
-					if (!FileSystem.isDirectory(path) && file.endsWith('.json'))
-						addWeek(file.substr(0, file.length - 5), path, directories[i], i, originalLength);
-				}
-			}
-		}
-		#end
 	}
 
 	private static function addWeek(weekToCheck:String, path:String, directory:String, i:Int, originalLength:Int)
@@ -143,12 +108,6 @@ class WeekData {
 			if (week != null)
 			{
 				var weekFile:WeekData = new WeekData(week, weekToCheck);
-				if (i >= originalLength)
-				{
-					#if MODS_ALLOWED
-					weekFile.folder = directory.substring(Paths.mods().length, directory.length-1);
-					#end
-				}
 				if ((PlayState.isStoryMode && !weekFile.hideStoryMode) || (!PlayState.isStoryMode && !weekFile.hideFreeplay))
 				{
 					weeksLoaded.set(weekToCheck, weekFile);
@@ -161,13 +120,8 @@ class WeekData {
 	private static function getWeekFile(path:String):WeekFile
 	{
 		var jsonData:Dynamic = null;
-		#if MODS_ALLOWED
-		if (FileSystem.exists(path))
-			jsonData = haxe.Json.parse(File.getContent(path));
-		#else
 		if (Assets.exists(path))
 			jsonData = haxe.Json.parse(Assets.getText(path));
-		#end
 
 		if (jsonData != null)
 		{
@@ -191,12 +145,11 @@ class WeekData {
 	}
 
 	//   FUNCTIONS YOU WILL PROBABLY NEVER NEED TO USE
-
-	//To use on PlayState.hx or Highscore stuff
+	// To use on PlayState.hx or Highscore stuff
 	public static function getWeekFileName():String
 		return weeksList[PlayState.storyWeek];
 
-	//Used on LoadingState, nothing really too relevant
+	// Used on LoadingState, nothing really too relevant
 	public static function getCurrentWeek():WeekData
 		return weeksLoaded.get(weeksList[PlayState.storyWeek]);
 

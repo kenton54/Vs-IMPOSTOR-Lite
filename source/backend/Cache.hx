@@ -1,20 +1,21 @@
 package backend;
 
-import flixel.util.FlxStringUtil;
 import flixel.FlxState;
-import openfl.media.Sound;
 import flixel.graphics.FlxGraphic;
+import flixel.util.FlxStringUtil;
+
 import openfl.display.BitmapData;
+import openfl.media.Sound;
 import openfl.utils.Assets as OpenFLAssets;
 
 @:access(openfl.display.BitmapData)
 @:allow(backend.Assets)
 class Cache
 {
-    public var graphics(default, null):Map<String, FlxGraphic>;
+	public var graphics(default, null):Map<String, FlxGraphic>;
 	public var sounds(default, null):Map<String, Sound>;
 
-    public final permanentCache:Array<String> = [
+	public final permanentCache:Array<String> = [
 		'assets/lite/images/cursor.png',
 		'assets/lite/images/healthBar.png',
 		'assets/lite/images/switchState.png',
@@ -43,10 +44,9 @@ class Cache
 		'assets/lite/images/ingame/num8.png',
 		'assets/lite/images/ingame/num9.png',
 		'assets/lite/images/characters/bf.png',
-        #if mobile
-	    'assets/lite/images/backButton.png',
-		'assets/lite/images/pauseButton.png',
-        #end
+		#if mobile
+		'assets/lite/images/backButton.png', 'assets/lite/images/pauseButton.png',
+		#end
 		'assets/lite/sounds/confirmMenu.ogg',
 		'assets/lite/sounds/scrollMenu.ogg',
 		'assets/lite/sounds/cancelMenu.ogg',
@@ -59,38 +59,39 @@ class Cache
 		'assets/lite/sounds/missnote3.ogg',
 		'assets/lite/music/freakyMenu.ogg',
 		'assets/lite/music/pause.ogg',
-    ];
+	];
 
-    static var initialized:Bool = false;
+	static var initialized:Bool = false;
 
-    function startupCache()
-    {
-		if (initialized) return;
+	function startupCache()
+	{
+		if (initialized)
+			return;
 
 		for (asset2Cache in permanentCache)
-        {
+		{
 			var ext:String = haxe.io.Path.extension(asset2Cache);
-            switch(ext)
-            {
-                case 'png':
+			switch (ext)
+			{
+				case 'png':
 					Assets.getGraphic(asset2Cache);
 
 				case 'ogg' | 'wav':
 					Assets.getSound(asset2Cache);
-            }
-        }
+			}
+		}
 
 		initialized = true;
-    }
+	}
 
-    public function new()
-    {
+	public function new()
+	{
 		graphics = new Map<String, FlxGraphic>();
 		sounds = new Map<String, Sound>();
 
 		FlxG.signals.preStateSwitch.add(prepareClearMemory);
 		FlxG.signals.preStateCreate.add(clearMemoryOnStateSwitch);
-    }
+	}
 
 	var _lastState:Null<String> = null;
 
@@ -110,8 +111,8 @@ class Cache
 		}
 	}
 
-    public function clearStoredMemory()
-    {
+	public function clearStoredMemory()
+	{
 		var allKeys:Array<String> = [for (key in graphics.keys()) key].concat([for (key in sounds.keys()) key]);
 
 		for (key in allKeys)
@@ -125,19 +126,19 @@ class Cache
 		#end
 
 		performGarbageCollection();
-    }
+	}
 
-    public function removeFromCache(key:String, dispose:Bool = true):Bool
-    {
-        if (graphics.exists(key))
-        {
+	public function removeFromCache(key:String, dispose:Bool = true):Bool
+	{
+		if (graphics.exists(key))
+		{
 			if (dispose)
 				disposeGraphic(graphics.get(key));
 
 			graphics.remove(key);
 
-            return true;
-        }
+			return true;
+		}
 		else if (sounds.exists(key))
 		{
 			if (dispose)
@@ -148,20 +149,16 @@ class Cache
 			return true;
 		}
 
-        return false;
-    }
+		return false;
+	}
 
-    public function cacheBitmap(key:String, bitmap:BitmapData, allowGPU:Bool = true):FlxGraphic
-    {
+	public function cacheBitmap(key:String, bitmap:BitmapData, allowGPU:Bool = true):FlxGraphic
+	{
 		if (graphics.exists(key))
-        {
 			return graphics.get(key);
-        }
 
-        if (allowGPU && ClientPrefs.data.cacheOnGPU)
-        {
-            bitmap.disposeImage();
-        }
+		if (allowGPU && ClientPrefs.data.cacheOnGPU)
+			bitmap.disposeImage();
 
 		var newGraphic:FlxGraphic = FlxGraphic.fromBitmapData(bitmap, false, key);
 		newGraphic.persist = true;
@@ -170,35 +167,33 @@ class Cache
 		graphics.set(key, newGraphic);
 
 		return newGraphic;
-    }
+	}
 
-    public function cacheSound(key:String, sound:Sound):Sound
-    {
+	public function cacheSound(key:String, sound:Sound):Sound
+	{
 		if (sounds.exists(key))
-		{
 			return sounds.get(key);
-		}
 
 		sounds.set(key, sound);
-        return sound;
-    }
+		return sound;
+	}
 
-    public function disposeGraphic(graphic:FlxGraphic)
-    {
+	public function disposeGraphic(graphic:FlxGraphic)
+	{
 		if (graphic != null && graphic.bitmap != null && graphic.bitmap.__texture != null)
 			graphic.bitmap.__texture.dispose();
 
 		FlxG.bitmap.remove(graphic);
-    }
+	}
 
-    function performGarbageCollection()
-    {
-        #if java
-        // this one will probably never run lol, but just in case
-        java.vm.Gc.run(true);
-        #else
-        // openfl garbage collection runs for Hashlink, Neko and C++
-        openfl.system.System.gc();
-        #end
-    }
+	function performGarbageCollection()
+	{
+		#if java
+		// this one will probably never run lol, but just in case
+		java.vm.Gc.run(true);
+		#else
+		// openfl garbage collection runs for Hashlink, Neko and C++
+		openfl.system.System.gc();
+		#end
+	}
 }

@@ -8,25 +8,25 @@ import sys.FileSystem;
 
 class CoolUtil
 {
-	inline public static function quantize(f:Float, snap:Float){
+	inline public static function quantize(f:Float, snap:Float):Float
+	{
 		// changed so this actually works lol
 		var m:Float = Math.fround(f * snap);
 		return (m / snap);
 	}
 
-	inline public static function capitalize(text:String)
+	inline public static function capitalize(text:String):String
+	{
 		return text.charAt(0).toUpperCase() + text.substr(1).toLowerCase();
+	}
 
 	inline public static function coolTextFile(path:String):Array<String>
 	{
 		var daList:String = null;
-		#if (sys && MODS_ALLOWED)
-		var formatted:Array<String> = path.split(':'); //prevent "shared:", "preload:" and other library names on file path
-		path = formatted[formatted.length-1];
-		if(FileSystem.exists(path)) daList = File.getContent(path);
-		#else
-		if(Assets.exists(path)) daList = Assets.getText(path);
-		#end
+
+		if (Assets.exists(path))
+			daList = Assets.getText(path);
+
 		return daList != null ? listFromString(daList) : [];
 	}
 
@@ -34,10 +34,14 @@ class CoolUtil
 	{
 		var hideChars = ~/[\t\n\r]/;
 		var color:String = hideChars.split(color).join('').trim();
-		if(color.startsWith('0x')) color = color.substring(color.length - 6);
+
+		if (color.startsWith('0x'))
+			color = color.substring(color.length - 6);
 
 		var colorNum:Null<FlxColor> = FlxColor.fromString(color);
-		if(colorNum == null) colorNum = FlxColor.fromString('#$color');
+		if (colorNum == null)
+			colorNum = FlxColor.fromString('#$color');
+
 		return colorNum != null ? colorNum : FlxColor.WHITE;
 	}
 
@@ -54,7 +58,7 @@ class CoolUtil
 
 	public static function floorDecimal(value:Float, decimals:Int):Float
 	{
-		if(decimals < 1)
+		if (decimals < 1)
 			return Math.floor(value);
 
 		var tempMult:Float = 1;
@@ -65,40 +69,40 @@ class CoolUtil
 		return newValue / tempMult;
 	}
 
-	inline public static function dominantColor(sprite:flixel.FlxSprite):Int
+	public static function dominantColor(sprite:flixel.FlxSprite):FlxColor
 	{
-		var countByColor:Map<Int, Int> = [];
-		for(col in 0...sprite.frameWidth) {
-			for(row in 0...sprite.frameHeight) {
-				var colorOfThisPixel:Int = sprite.pixels.getPixel32(col, row);
-				if(colorOfThisPixel != 0) {
-					if(countByColor.exists(colorOfThisPixel))
-						countByColor[colorOfThisPixel] = countByColor[colorOfThisPixel] + 1;
-					else if(countByColor[colorOfThisPixel] != 13520687 - (2*13520687))
-						countByColor[colorOfThisPixel] = 1;
-				}
+		var colorMap:Map<FlxColor, Int> = [];
+
+		for (x in 0...sprite.pixels.width)
+		{
+			for (y in 0...sprite.pixels.height)
+			{
+				var color:FlxColor = sprite.pixels.getPixel32(x, y);
+				if ((color >> 24 & 0xFF) == 0)
+					continue;
+
+				var count:Int = colorMap.exists(color) ? colorMap.get(color) + 1 : 1;
+				colorMap.set(color, count);
 			}
 		}
 
-		var maxCount = 0;
-		var maxKey:Int = 0; //after the loop this will store the max color
-		countByColor[FlxColor.BLACK] = 0;
-		for(key in countByColor.keys()) {
-			if(countByColor[key] >= maxCount) {
-				maxCount = countByColor[key];
-				maxKey = key;
+		var maxCount:Int = 0;
+		var domColor:FlxColor = 0;
+		for (color => count in colorMap)
+		{
+			if (count >= maxCount)
+			{
+				maxCount = count;
+				domColor = color;
 			}
 		}
-		countByColor = [];
-		return maxKey;
+
+		return domColor;
 	}
 
 	inline public static function numberArray(max:Int, ?min = 0):Array<Int>
 	{
-		var dumbArray:Array<Int> = [];
-		for (i in min...max) dumbArray.push(i);
-
-		return dumbArray;
+		return [for (i in min...max) i];
 	}
 
 	public inline static function boundInt(value:Int, min:Int, max:Int):Int
@@ -111,7 +115,8 @@ class CoolUtil
 		return FlxMath.lerp(a, b, FlxMath.getElapsedLerp(ratio, FlxG.elapsed));
 	}
 
-	inline public static function browserLoad(site:String) {
+	inline public static function browserLoad(site:String)
+	{
 		#if linux
 		Sys.command('/usr/bin/xdg-open', [site]);
 		#else
@@ -140,21 +145,23 @@ class CoolUtil
 		Sys.command('open', [folder]);
 		#elseif linux
 		var exitCode:Int = Sys.command("xdg-open", [folder]);
-		if (exitCode == 0) return;
+		if (exitCode == 0)
+			return;
 
 		for (fileManager in ["dolphin", "nautilus", "nemo", "thunar", "caja", "konqueror", "spacefm", "pcmanfm"])
 		{
 			if (Sys.command("which", [fileManager]) == 0)
 			{
 				exitCode = Sys.command(fileManager, [folder]);
-				if (exitCode == 0) return;
+				if (exitCode == 0)
+					return;
 			}
 		}
 
 		FlxG.log.warn('No compatible file manager found for Linux.');
 		#end
 		#else
-		FlxG.log.error("Platform is not supported for CoolUtil.openFolder");
+		FlxG.log.error("Platform is not supported for CoolUtil.openFolder!");
 		#end
 	}
 
@@ -168,7 +175,8 @@ class CoolUtil
 		@crowplexus
 	**/
 	@:access(flixel.util.FlxSave.validate)
-	inline public static function getSavePath():String {
+	inline public static function getSavePath():String
+	{
 		final company:String = FlxG.stage.application.meta.get('company');
 		// #if (flixel < "5.0.0") return company; #else
 		return '${company}/${flixel.util.FlxSave.validate(FlxG.stage.application.meta.get('file'))}';
@@ -177,28 +185,30 @@ class CoolUtil
 
 	public static function setTextBorderFromString(text:FlxText, border:String)
 	{
-		switch(border.toLowerCase().trim())
+		switch (border.toLowerCase().trim())
 		{
 			case 'shadow':
 				text.borderStyle = SHADOW;
+
 			case 'outline':
 				text.borderStyle = OUTLINE;
+
 			case 'outline_fast', 'outlinefast':
 				text.borderStyle = OUTLINE_FAST;
+
 			default:
 				text.borderStyle = NONE;
 		}
 	}
 
-	public static inline function centerWindowOnPoint(?point:FlxPoint) {
+	public static inline function centerWindowOnPoint(?point:FlxPoint)
+	{
 		Lib.application.window.x = Std.int(point.x - (Lib.application.window.width / 2));
 		Lib.application.window.y = Std.int(point.y - (Lib.application.window.height / 2));
 	}
 
-	public static inline function getCenterWindowPoint():FlxPoint {
-		return FlxPoint.get(
-			Lib.application.window.x + (Lib.application.window.width / 2),
-			Lib.application.window.y + (Lib.application.window.height / 2)
-		);
-	}	
+	public static inline function getCenterWindowPoint():FlxPoint
+	{
+		return FlxPoint.get(Lib.application.window.x + (Lib.application.window.width / 2), Lib.application.window.y + (Lib.application.window.height / 2));
+	}
 }

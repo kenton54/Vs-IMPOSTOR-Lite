@@ -1,51 +1,52 @@
 #if !macro
-//Discord API
+// Discord API
 #if DISCORD_ALLOWED
 import backend.Discord;
 #end
 
-//Psych
+// Psych
 #if LUA_ALLOWED
 import llua.*;
+
 import llua.Lua;
 #end
 
 #if ACHIEVEMENTS_ALLOWED
 import backend.Achievements;
 #end
-
 import backend.Assets;
-import backend.Paths;
-import backend.Controls;
-import backend.PointerUtil;
-import backend.SwipeUtil;
-import backend.CoolUtil;
-import backend.MusicBeatState;
-import backend.MusicBeatSubstate;
 import backend.ClientPrefs;
 import backend.Conductor;
+import backend.Controls;
+import backend.CoolUtil;
 import backend.Difficulty;
 import backend.Mods;
+import backend.MusicBeatState;
+import backend.MusicBeatSubstate;
+import backend.Paths;
+import backend.PointerUtil;
+import backend.SwipeUtil;
 
-import objects.Alphabet;
-
-import states.PlayState;
-import states.LoadingState;
-
-//Flixel
-import flixel.sound.FlxSound;
+import flixel.FlxCamera;
 import flixel.FlxG;
 import flixel.FlxSprite;
-import flixel.FlxCamera;
+import flixel.group.FlxGroup;
+import flixel.group.FlxSpriteGroup;
 import flixel.math.FlxMath;
 import flixel.math.FlxPoint;
-import flixel.util.FlxColor;
-import flixel.util.FlxTimer;
+import flixel.sound.FlxSound;
 import flixel.text.FlxText;
 import flixel.tweens.FlxEase;
 import flixel.tweens.FlxTween;
-import flixel.group.FlxSpriteGroup;
-import flixel.group.FlxGroup;
+import flixel.util.FlxColor;
+import flixel.util.FlxTimer;
+
+import objects.Alphabet;
+
+import states.LoadingState;
+import states.PlayState;
 
 using StringTools;
+
+// Flixel
 #end

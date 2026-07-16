@@ -1,9 +1,11 @@
 package;
 
 import backend.CrashHandler;
+
 import debug.FPSCounter;
 
 import flixel.FlxGame;
+
 import openfl.Lib;
 import openfl.display.Sprite;
 import openfl.events.Event;
@@ -12,6 +14,7 @@ import states.InitState;
 
 #if HSCRIPT_ALLOWED
 import crowplexus.iris.Iris;
+
 import psychlua.HScript.HScriptInfos;
 #end
 
@@ -60,21 +63,15 @@ class Main extends Sprite
 		#end
 
 		if (stage != null)
-		{
 			init();
-		}
 		else
-		{
 			addEventListener(Event.ADDED_TO_STAGE, init);
-		}
 	}
 
 	private function init(?E:Event)
 	{
 		if (hasEventListener(Event.ADDED_TO_STAGE))
-		{
 			removeEventListener(Event.ADDED_TO_STAGE, init);
-		}
 
 		#if (sys && !mobile)
 		Lib.current.stage.window.onClose.add(function()
@@ -113,8 +110,11 @@ class Main extends Sprite
 		Iris.warn = function(x, ?pos:haxe.PosInfos)
 		{
 			Iris.logLevel(WARN, x, pos);
+
 			var newPos:HScriptInfos = cast pos;
-			if (newPos.showLine == null) newPos.showLine = true;
+			if (newPos.showLine == null)
+				newPos.showLine = true;
+
 			var msgInfo:String = (newPos.functionName != null ? '(${newPos.functionName}) - ' : '') + '${newPos.fileName}:';
 
 			#if LUA_ALLOWED
@@ -125,19 +125,22 @@ class Main extends Sprite
 			}
 			#end
 
-			if (newPos.showLine == true)
-			{
+			if (newPos.showLine)
 				msgInfo += '${newPos.lineNumber}:';
-			}
+
 			msgInfo += ' $x';
+
 			if (PlayState.instance != null)
 				PlayState.instance.addTextToDebug('WARNING: $msgInfo', FlxColor.YELLOW);
 		}
 		Iris.error = function(x, ?pos:haxe.PosInfos)
 		{
 			Iris.logLevel(ERROR, x, pos);
+
 			var newPos:HScriptInfos = cast pos;
-			if (newPos.showLine == null) newPos.showLine = true;
+			if (newPos.showLine == null)
+				newPos.showLine = true;
+
 			var msgInfo:String = (newPos.functionName != null ? '(${newPos.functionName}) - ' : '') + '${newPos.fileName}:';
 
 			#if LUA_ALLOWED
@@ -148,19 +151,22 @@ class Main extends Sprite
 			}
 			#end
 
-			if (newPos.showLine == true)
-			{
+			if (newPos.showLine)
 				msgInfo += '${newPos.lineNumber}:';
-			}
+
 			msgInfo += ' $x';
+
 			if (PlayState.instance != null)
 				PlayState.instance.addTextToDebug('ERROR: $msgInfo', FlxColor.RED);
 		}
 		Iris.fatal = function(x, ?pos:haxe.PosInfos)
 		{
 			Iris.logLevel(FATAL, x, pos);
+
 			var newPos:HScriptInfos = cast pos;
-			if (newPos.showLine == null) newPos.showLine = true;
+			if (newPos.showLine == null)
+				newPos.showLine = true;
+
 			var msgInfo:String = (newPos.functionName != null ? '(${newPos.functionName}) - ' : '') + '${newPos.fileName}:';
 
 			#if LUA_ALLOWED
@@ -171,11 +177,11 @@ class Main extends Sprite
 			}
 			#end
 
-			if (newPos.showLine == true)
-			{
+			if (newPos.showLine)
 				msgInfo += '${newPos.lineNumber}:';
-			}
+
 			msgInfo += ' $x';
+
 			if (PlayState.instance != null)
 				PlayState.instance.addTextToDebug('FATAL: $msgInfo', 0xFFBB0000);
 		}
@@ -207,22 +213,26 @@ class Main extends Sprite
 		#end
 
 		// shader coords fix
-		FlxG.signals.gameResized.add(function (w, h) {
-		     if (FlxG.cameras != null) {
-			   for (cam in FlxG.cameras.list) {
-				if (cam != null && cam.filters != null)
-					resetSpriteCache(cam.flashSprite);
-			   }
+		FlxG.signals.gameResized.add(function(w, h)
+		{
+			if (FlxG.cameras != null)
+			{
+				for (cam in FlxG.cameras.list)
+				{
+					if (cam != null && cam.filters != null)
+						resetSpriteCache(cam.flashSprite);
+				}
 			}
 
 			if (FlxG.game != null)
-			resetSpriteCache(FlxG.game);
+				resetSpriteCache(FlxG.game);
 		});
 	}
 
-	static function resetSpriteCache(sprite:Sprite):Void {
+	static function resetSpriteCache(sprite:Sprite):Void
+	{
 		@:privateAccess {
-		        sprite.__cacheBitmap = null;
+			sprite.__cacheBitmap = null;
 			sprite.__cacheBitmapData = null;
 		}
 	}

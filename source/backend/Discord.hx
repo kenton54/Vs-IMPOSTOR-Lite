@@ -1,16 +1,19 @@
 package backend;
 
 #if DISCORD_ALLOWED
-import lime.app.Application;
 import hxdiscord_rpc.Discord;
 import hxdiscord_rpc.Types;
 
+import lime.app.Application;
+
 class DiscordClient
 {
-	public static var isInitialized:Bool = false;
-	private static final _defaultID:String = "1300111893691633664";
+	public static var isInitialized(default, null):Bool = false;
+
 	public static var clientID(default, set):String = _defaultID;
+
 	private static var presence:DiscordRichPresence = new DiscordRichPresence();
+	private static final _defaultID:String = "1300111893691633664";
 
 	public static function check()
 	{
@@ -25,8 +28,10 @@ class DiscordClient
 		if (!isInitialized && ClientPrefs.data.discordRPC)
 			initialize();
 
-		Application.current.window.onClose.add(function() {
-			if(isInitialized) shutdown();
+		Application.current.window.onClose.add(function()
+		{
+			if (isInitialized)
+				shutdown();
 		});
 	}
 
@@ -36,28 +41,32 @@ class DiscordClient
 		isInitialized = false;
 	}
 
-	private static function onReady(request:cpp.RawConstPointer<DiscordUser>):Void {
+	private static function onReady(request:cpp.RawConstPointer<DiscordUser>):Void
+	{
 		var requestPtr:cpp.Star<DiscordUser> = cpp.ConstPointer.fromRaw(request).ptr;
 
-		if (Std.parseInt(cast(requestPtr.discriminator, String)) != 0) //New Discord IDs/Discriminator system
-			trace('(Discord) Connected to User (${cast(requestPtr.username, String)}#${cast(requestPtr.discriminator, String)})');
-		else //Old discriminators
-			trace('(Discord) Connected to User (${cast(requestPtr.username, String)})');
+		if (Std.parseInt(cast(requestPtr.discriminator, String)) != 0) // New Discord IDs/Discriminator system
+			trace('(Discord) Connected to User (${cast (requestPtr.username, String)}#${cast (requestPtr.discriminator, String)})');
+		else // Old discriminators
+			trace('(Discord) Connected to User (${cast (requestPtr.username, String)})');
 
 		changePresence();
 	}
 
-	private static function onError(errorCode:Int, message:cpp.ConstCharStar):Void {
-		trace('Discord: Error ($errorCode: ${cast(message, String)})');
+	private static function onError(errorCode:Int, message:cpp.ConstCharStar):Void
+	{
+		trace('Discord: Error ($errorCode: ${cast (message, String)})');
 	}
 
-	private static function onDisconnected(errorCode:Int, message:cpp.ConstCharStar):Void {
-		trace('Discord: Disconnected ($errorCode: ${cast(message, String)})');
+	private static function onDisconnected(errorCode:Int, message:cpp.ConstCharStar):Void
+	{
+		trace('Discord: Disconnected ($errorCode: ${cast (message, String)})');
 	}
 
 	public static function initialize()
 	{
-		if (isInitialized) return;
+		if (isInitialized)
+			return;
 
 		var discordHandlers:DiscordEventHandlers = new DiscordEventHandlers();
 		discordHandlers.ready = cpp.Function.fromStaticFunction(onReady);
@@ -85,11 +94,13 @@ class DiscordClient
 		isInitialized = true;
 	}
 
-	public static function changePresence(?details:String = 'Looking at one of the menus', ?state:Null<String>, ?smallImageKey : String = 'icon', ?hasStartTimestamp : Bool, ?endTimestamp: Float)
+	public static function changePresence(?details:String = 'Looking at one of the menus', ?state:Null<String>, ?smallImageKey:String = 'icon', ?hasStartTimestamp:Bool, ?endTimestamp:Float)
 	{
 		var startTimestamp:Float = 0;
-		if (hasStartTimestamp) startTimestamp = Date.now().getTime();
-		if (endTimestamp > 0) endTimestamp = startTimestamp + endTimestamp;
+		if (hasStartTimestamp)
+			startTimestamp = Date.now().getTime();
+		if (endTimestamp > 0)
+			endTimestamp = startTimestamp + endTimestamp;
 
 		presence.details = details;
 		presence.state = state;
@@ -101,50 +112,41 @@ class DiscordClient
 		presence.endTimestamp = Std.int(endTimestamp / 1000);
 		updatePresence();
 
-		//trace('Discord RPC Updated. Arguments: $details, $state, $smallImageKey, $hasStartTimestamp, $endTimestamp');
+		// trace('Discord RPC Updated. Arguments: $details, $state, $smallImageKey, $hasStartTimestamp, $endTimestamp');
 	}
 
 	public static function updatePresence()
 		Discord.UpdatePresence(cpp.RawConstPointer.addressOf(presence));
-	
+
 	public static function resetClientID()
 		clientID = _defaultID;
 
 	private static function set_clientID(newID:String)
 	{
-		var change:Bool = (clientID != newID);
-		clientID = newID;
+		var change:Bool = clientID != newID;
 
-		if(change && isInitialized)
+		if (change && isInitialized)
 		{
-			shutdown();
-			initialize();
+			clientID = newID;
 			updatePresence();
 		}
+
 		return newID;
 	}
-
-	#if MODS_ALLOWED
-	public static function loadModRPC()
-	{
-		var pack:Dynamic = Mods.getPack();
-		if(pack != null && pack.discordRPC != null && pack.discordRPC != clientID)
-		{
-			clientID = pack.discordRPC;
-			//trace('Changing clientID! $clientID, $_defaultID');
-		}
-	}
-	#end
 
 	#if LUA_ALLOWED
 	public static function addLuaCallbacks(lua:State)
 	{
-		Lua_helper.add_callback(lua, "changeDiscordPresence", function(details:String, state:Null<String>, ?smallImageKey:String, ?hasStartTimestamp:Bool, ?endTimestamp:Float) {
+		Lua_helper.add_callback(lua, "changeDiscordPresence", function(details:String, ?state:String, ?smallImageKey:String, ?hasStartTimestamp:Bool, ?endTimestamp:Float)
+		{
 			changePresence(details, state, smallImageKey, hasStartTimestamp, endTimestamp);
 		});
 
-		Lua_helper.add_callback(lua, "changeDiscordClientID", function(?newID:String = null) {
-			if(newID == null) newID = _defaultID;
+		Lua_helper.add_callback(lua, "changeDiscordClientID", function(?newID:String = null)
+		{
+			if (newID == null)
+				newID = _defaultID;
+
 			clientID = newID;
 		});
 	}

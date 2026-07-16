@@ -45,7 +45,9 @@ class Bar extends FlxSpriteGroup
 	}
 
 	public var enabled:Bool = true;
-	override function update(elapsed:Float) {
+
+	override function update(elapsed:Float)
+	{
 		if (!enabled)
 		{
 			super.update(elapsed);
@@ -57,7 +59,8 @@ class Bar extends FlxSpriteGroup
 			var value:Null<Float> = FlxMath.remapToRange(FlxMath.bound(valueFunction(), bounds.min, bounds.max), bounds.min, bounds.max, 0, 100);
 			percent = (value != null ? value : 0);
 		}
-		else percent = 0;
+		else
+			percent = 0;
 		super.update(elapsed);
 	}
 
@@ -77,14 +80,17 @@ class Bar extends FlxSpriteGroup
 
 	public function updateBar()
 	{
-		if (leftBar == null || rightBar == null) return;
+		if (leftBar == null || rightBar == null)
+			return;
 
 		leftBar.setPosition(bg.x, bg.y);
 		rightBar.setPosition(bg.x, bg.y);
 
 		var leftSize:Float = 0;
-		if (leftToRight) leftSize = FlxMath.lerp(0, barWidth, percent / 100);
-		else leftSize = FlxMath.lerp(0, barWidth, 1 - percent / 100);
+		if (leftToRight)
+			leftSize = FlxMath.lerp(0, barWidth, percent / 100);
+		else
+			leftSize = FlxMath.lerp(0, barWidth, 1 - percent / 100);
 
 		var leftBarClip:FlxRect = new FlxRect(barOffset.x, barOffset.y, leftSize, barHeight);
 		var rightBarClip:FlxRect = new FlxRect(barOffset.x + leftSize, barOffset.y, barWidth - leftSize, barHeight);
@@ -117,10 +123,12 @@ class Bar extends FlxSpriteGroup
 	private function set_percent(value:Float)
 	{
 		var doUpdate:Bool = false;
-		if (value != percent) doUpdate = true;
+		if (value != percent)
+			doUpdate = true;
 		percent = value;
 
-		if (doUpdate) updateBar();
+		if (doUpdate)
+			updateBar();
 		return value;
 	}
 

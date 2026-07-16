@@ -30,18 +30,18 @@ class Option
 	 */
 	public var type(default, null):OptionType = Boolean;
 
-	public var scrollSpeed:Float = 50; //Only works on int/float, defines how fast it scrolls per second while holding left/right
-	public var variable(default, null):String = null; //Variable from ClientPrefs.hx
+	public var scrollSpeed:Float = 50; // Only works on int/float, defines how fast it scrolls per second while holding left/right
+	public var variable(default, null):String = null; // Variable from ClientPrefs.hx
 	public var defaultValue:Dynamic = null;
 
-	public var curOption:Int = 0; //Don't change this
-	public var options:Array<String> = null; //Only used in string type
-	public var changeValue:Dynamic = 1; //Only used in int/float/percent type, how much is changed when you PRESS
-	public var minValue:Dynamic = null; //Only used in int/float/percent type
-	public var maxValue:Dynamic = null; //Only used in int/float/percent type
-	public var decimals:Int = 1; //Only used in float/percent type
+	public var curOption:Int = 0; // Don't change this
+	public var options:Array<String> = null; // Only used in string type
+	public var changeValue:Dynamic = 1; // Only used in int/float/percent type, how much is changed when you PRESS
+	public var minValue:Dynamic = null; // Only used in int/float/percent type
+	public var maxValue:Dynamic = null; // Only used in int/float/percent type
+	public var decimals:Int = 1; // Only used in float/percent type
 
-	public var displayFormat:String = '%v'; //How String/Float/Percent/Int values are shown, %v = Current value, %d = Default value
+	public var displayFormat:String = '%v'; // How String/Float/Percent/Int values are shown, %v = Current value, %d = Default value
 
 	/**
 	 * The name of the option.
@@ -65,16 +65,20 @@ class Option
 		this.options = options;
 
 		this.defaultValue = Reflect.getProperty(ClientPrefs.defaultData, variable);
-		switch(this.type)
+
+		switch (this.type)
 		{
 			case Boolean:
-				if (defaultValue == null) defaultValue = false;
+				if (defaultValue == null)
+					defaultValue = false;
 
 			case Number:
-				if (defaultValue == null) defaultValue = 0;
+				if (defaultValue == null)
+					defaultValue = 0;
 
 			case Percentage:
-				if (defaultValue == null) defaultValue = 1;
+				if (defaultValue == null)
+					defaultValue = 1;
 				displayFormat = '%v%';
 				changeValue = 0.01;
 				minValue = 0;
@@ -83,8 +87,10 @@ class Option
 				decimals = 2;
 
 			case Choice:
-				if (defaultValue == null) defaultValue = '';
-				if (options.length > 0) {
+				if (defaultValue == null)
+					defaultValue = '';
+				if (options.length > 0)
+				{
 					defaultValue = options[0];
 				}
 
@@ -93,26 +99,27 @@ class Option
 
 		try
 		{
-			if (getValue() == null) {
+			if (getValue() == null)
+			{
 				setValue(defaultValue);
 			}
-	
-			switch(this.type)
+
+			switch (this.type)
 			{
 				case Choice:
 					var num:Int = options.indexOf(getValue());
 					if (num > -1)
 						curOption = num;
-				
+
 				default:
 			}
 		}
-		catch(e) {}
+		catch (e) {}
 	}
 
 	public function change()
 	{
-		//nothing lol
+		// nothing lol
 		if (onChange != null)
 			onChange();
 	}
@@ -129,17 +136,21 @@ class Option
 
 	function get_text():Null<String>
 	{
-		if(child != null) {
+		if (child != null)
+		{
 			return child.text;
 		}
+
 		return null;
 	}
 
 	function set_text(newValue:String):Null<String>
 	{
-		if(child != null) {
+		if (child != null)
+		{
 			child.text = newValue;
 		}
+
 		return null;
 	}
 }

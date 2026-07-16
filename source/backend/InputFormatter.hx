@@ -1,14 +1,16 @@
 package backend;
 
-import flixel.input.keyboard.FlxKey;
 import flixel.input.gamepad.FlxGamepad;
 import flixel.input.gamepad.FlxGamepadInputID;
 import flixel.input.gamepad.FlxGamepadManager;
+import flixel.input.keyboard.FlxKey;
 
-class InputFormatter {
+class InputFormatter
+{
 	public static function getKeyName(key:FlxKey):String
 	{
-		switch (key) {
+		switch (key)
+		{
 			case BACKSPACE:
 				return "BckSpc";
 			case CONTROL:
@@ -75,13 +77,13 @@ class InputFormatter {
 				return ",";
 			case PERIOD:
 				return ".";
-			//case SLASH:
+			// case SLASH:
 			//	return "/";
 			case GRAVEACCENT:
 				return "`";
 			case LBRACKET:
 				return "[";
-			//case BACKSLASH:
+			// case BACKSLASH:
 			//	return "\\";
 			case RBRACKET:
 				return "]";
@@ -93,10 +95,12 @@ class InputFormatter {
 				return '---';
 			default:
 				var label:String = Std.string(key);
-				if(label.toLowerCase() == 'null') return '---';
+				if (label.toLowerCase() == 'null')
+					return '---';
 
 				var arr:Array<String> = label.split('_');
-				for (i in 0...arr.length) arr[i] = CoolUtil.capitalize(arr[i]);
+				for (i in 0...arr.length)
+					arr[i] = CoolUtil.capitalize(arr[i]);
 				return arr.join(' ');
 		}
 	}
@@ -106,7 +110,7 @@ class InputFormatter {
 		var gamepad:FlxGamepad = FlxG.gamepads.firstActive;
 		var model:FlxGamepadModel = gamepad != null ? gamepad.detectedModel : UNKNOWN;
 
-		return switch(button)
+		return switch (button)
 		{
 			// Analogs
 			case LEFT_STICK_DIGITAL_LEFT: "Left";
@@ -151,10 +155,12 @@ class InputFormatter {
 
 			default:
 				var label:String = Std.string(button);
-				if (label.toLowerCase() == 'null') return '---';
+				if (label.toLowerCase() == 'null')
+					return '---';
 
 				var arr:Array<String> = label.split('_');
-				for (i in 0...arr.length) arr[i] = CoolUtil.capitalize(arr[i]);
+				for (i in 0...arr.length)
+					arr[i] = CoolUtil.capitalize(arr[i]);
 				return arr.join(' ');
 		}
 	}

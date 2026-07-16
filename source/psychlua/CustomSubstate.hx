@@ -22,7 +22,10 @@ class CustomSubstate extends MusicBeatSubstate
 		if (pauseGame)
 		{
 			FlxG.camera.followLerp = 0;
-			if (PlayState.instance.cameraTween != null) PlayState.instance.cameraTween.active = false;
+
+			if (PlayState.instance.cameraTween != null)
+				PlayState.instance.cameraTween.active = false;
+
 			PlayState.instance.persistentUpdate = false;
 			PlayState.instance.persistentDraw = true;
 			PlayState.instance.paused = true;

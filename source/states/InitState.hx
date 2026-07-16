@@ -1,15 +1,17 @@
 package states;
 
 import backend.Highscore;
-import flixel.addons.transition.FlxTransitionableState;
+
 import flixel.FlxState;
+import flixel.addons.transition.FlxTransitionableState;
+
 import lime.app.Application;
 
 class InitState extends FlxState
 {
-    override function create()
-    {
-        super.create();
+	override function create()
+	{
+		super.create();
 
 		if (TitleState.isSteginiteBuildLol)
 			Application.current.window.title = Application.current.meta["title"] + " - The Steginite Build";
@@ -24,11 +26,6 @@ class InitState extends FlxState
 		if (FlxG.save.data != null && FlxG.save.data.fullscreen)
 			FlxG.fullscreen = FlxG.save.data.fullscreen;
 
-		#if LUA_ALLOWED
-		Mods.pushGlobalMods();
-		#end
-		Mods.loadTopMod();
-
 		FlxG.save.bind('funkin', CoolUtil.getSavePath());
 		ClientPrefs.loadPrefs();
 		Highscore.load();
@@ -39,9 +36,10 @@ class InitState extends FlxState
 		Assets.init();
 
 		FlxTransitionableState.skipNextTransOut = true;
+
 		if (!FlxG.save.data.seenWarning)
 			FlxG.switchState(() -> new WarningState());
-        else
+		else
 			FlxG.switchState(() -> new TitleState());
-    }
+	}
 }

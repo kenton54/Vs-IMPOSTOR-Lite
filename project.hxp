@@ -91,11 +91,6 @@ class Project extends HXProject
     static final VIDEOS_ALLOWED:Bool = true;
 
     /**
-     * Whether to build with the Modding API on targets that support it.
-     */
-    static final MODS_ALLOWED:Bool = false;
-
-    /**
      * Whether to build with the HScript API.
      */
     static final HSCRIPT_ALLOWED:Bool = true;
@@ -260,11 +255,6 @@ class Project extends HXProject
         if (VIDEOS_ALLOWED)
         {
             setHaxeDefine("VIDEOS_ALLOWED");
-        }
-
-        if (MODS_ALLOWED)
-        {
-            setHaxeDefine("MODS_ALLOWED");
         }
 
         if (HSCRIPT_ALLOWED)
