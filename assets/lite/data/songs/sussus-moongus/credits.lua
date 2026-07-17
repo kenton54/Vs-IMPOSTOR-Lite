@@ -1,7 +1,7 @@
-local songTitle = "CREWICIDE"
+local songTitle = "SUSSUS MOONGUS"
 local artist = "SliceOfBred"
-local charter = "Kenton"
-local iconColor = "6C5CE7"
+local charter = "Moxt"
+local iconColor = "FF7E7E"
 local skipped = false
 local shown = false
 
@@ -10,7 +10,16 @@ local boxH = 220
 local boxX = (1280 - boxW) / 2
 local boxY = (720 - boxH) / 2
 
-function onSongStart()
+local titleSize = 75
+if #songTitle > 14 then
+	titleSize = 34
+elseif #songTitle > 10 then
+	titleSize = 44
+elseif #songTitle > 7 then
+	titleSize = 58
+end
+
+function showCredits()
 	if shown then return end
 	shown = true
 
@@ -28,8 +37,8 @@ function onSongStart()
 	setProperty('creditsAccent.y', boxY)
 	setProperty('creditsAccent.alpha', 0)
 
-	makeLuaText('creditsTitle', songTitle, boxW - 80, boxX + 40, boxY + 55)
-	setTextSize('creditsTitle', 75)
+	makeLuaText('creditsTitle', songTitle, boxW - 40, boxX + 20, boxY + 55)
+	setTextSize('creditsTitle', titleSize)
 	setTextAlignment('creditsTitle', 'center')
 	setTextColor('creditsTitle', '#' .. iconColor)
 	setTextBorder('creditsTitle', 2, '#000000')
@@ -64,10 +73,12 @@ function onSongStart()
 	runTimer('creditsHide', 3.5)
 end
 
-function onUpdate()
-	if shown and not skipped and (keyJustPressed('accept') or keyJustPressed('space')) then
-		hideCredits()
-	end
+function goodNoteHit(id)
+	showCredits()
+end
+
+function opponentNoteHit(id)
+	showCredits()
 end
 
 function hideCredits()

@@ -1,7 +1,7 @@
-local songTitle = "CREWICIDE"
-local artist = "SliceOfBred"
+local songTitle = "SABOTAGED"
+local artist = "Snuts"
 local charter = "Kenton"
-local iconColor = "6C5CE7"
+local iconColor = "FF7E7E"
 local skipped = false
 local shown = false
 
