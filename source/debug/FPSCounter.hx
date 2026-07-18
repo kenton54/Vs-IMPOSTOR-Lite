@@ -76,7 +76,7 @@ class FPSCounter extends Sprite
 			return;
 		}
 
-		currentFPS = times.length < FlxG.updateFramerate ? times.length : FlxG.updateFramerate;
+		currentFPS = times.length; // times.length < FlxG.updateFramerate ? times.length : FlxG.updateFramerate;
 
 		updateText();
 		underlay.width = text.width + 10;

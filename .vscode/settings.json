@@ -29,5 +29,54 @@
 	"haxe.displayPort": "auto",
 	"haxe.enableCompilationServer": true,
 	"haxe.enableCodeLens": true,
-	"lime.projectFile": "project.hxp"
+	"lime.projectFile": "project.hxp",
+	"lime.targets": [
+		{ "name": "windows", "enabled": true, "label": "Windows" },
+		{ "name": "linux", "enabled": true, "label": "Linux" },
+		{ "name": "mac", "enabled": true, "label": "macOS" },
+		{ "name": "html5", "enabled": true, "label": "HTML5" },
+		{ "name": "android", "enabled": true, "label": "Android" },
+		{ "name": "ios", "enabled": true, "label": "iOS" },
+		{ "name": "hl", "enabled": false },
+		{ "name": "air", "enabled": false },
+		{ "name": "electron", "enabled": false },
+		{ "name": "flash", "enabled": false },
+		{ "name": "neko", "enabled": false },
+		{ "name": "tvos", "enabled": false }
+	],
+	"lime.targetConfigurations": [
+		{
+			"label": "Windows (Launch to Song)",
+			"target": "windows",
+			"args": ["-DSONG=\"sussus-moongus\""]
+		},
+		{
+			"label": "Windows (Launch to Week)",
+			"target": "windows",
+			"args": ["-DWEEK=\"week1\""]
+		},
+		{
+			"label": "Linux (Launch to Song)",
+			"target": "linux",
+			"args": ["-DSONG=\"sussus-moongus\""]
+		},
+		{
+			"label": "Linux (Launch to Week)",
+			"target": "linux",
+			"args": ["-DWEEK=\"week1\""]
+		},
+		{
+			"label": "macOS (Launch to Song)",
+			"target": "mac",
+			"args": ["-DSONG=\"sussus-moongus\""]
+		},
+		{
+			"label": "macOS (Launch to Week)",
+			"target": "mac",
+			"args": ["-DWEEK=\"week1\""]
+		}
+	],
+	"Lua.diagnostics.disable": ["lowercase-global"],
+	"Lua.codeLens.enable": true,
+	"Lua.workspace.library": ["./setup/lua"]
 }

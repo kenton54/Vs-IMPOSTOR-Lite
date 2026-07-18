@@ -1,8 +1,6 @@
 package psychlua.functions;
 
 #if LUA_ALLOWED
-import flixel.FlxBasic;
-
 class SoundFunctions
 {
 	public static function implement(funk:FunkinLua)
@@ -220,16 +218,21 @@ class SoundFunctions
 			else
 				return getSoundObject(tag)?.getActualVolume() ?? 0;
 		});
+
+		Lua_helper.add_callback(lua, "luaSoundExists", function(tag:String)
+		{
+			return LuaUtils.luaObjectExists('sound_$tag', FlxSound);
+		});
 	}
 
 	static function getSoundObject(tag:String):Null<FlxSound>
 	{
-		var basic:FlxBasic = LuaUtils.getObject('sound_$tag');
+		var obj:Dynamic = LuaUtils.getLuaProperty('sound_$tag');
 
-		if (basic == null || !Std.isOfType(basic, FlxSound))
+		if (obj == null || !Std.isOfType(obj, FlxSound))
 			return null;
 
-		return cast basic;
+		return cast obj;
 	}
 }
 #end

@@ -8,44 +8,28 @@ import flixel.util.typeLimit.OneOfTwo;
 
 import haxe.Constraints;
 
-import substates.GameOverSubstate;
-
 //
 // Functions that use a high amount of Reflections, which are somewhat CPU intensive
 // These functions are held together by duct tape (LMFAO shadow mario)
 //
 class ReflectionFunctions
 {
-	static final instanceStr:Dynamic = "##PSYCHLUA_STRINGTOOBJ";
-
 	@:access(flixel.group.FlxTypedGroup)
 	public static function implement(funk:FunkinLua)
 	{
 		var lua:State = funk.lua;
 
-		Lua_helper.add_callback(lua, "getProperty", function(variable:String, ?allowMaps:Bool = false):Dynamic
+		Lua_helper.add_callback(lua, "getProperty", function(variable:String, ?checkForMaps:Bool = false):Dynamic
 		{
-			var split:Array<String> = variable.split('.');
-			if (split.length > 1)
-				return LuaUtils.getVarInArray(LuaUtils.getPropertyLoop(split, true, allowMaps), split[split.length - 1], allowMaps);
-
-			return LuaUtils.getVarInArray(LuaUtils.getTargetInstance(), variable, allowMaps);
+			return LuaUtils.getLuaProperty(variable, checkForMaps);
 		});
-		Lua_helper.add_callback(lua, "setProperty", function(variable:String, value:Dynamic, allowMaps:Bool = false):Dynamic
+		Lua_helper.add_callback(lua, "setProperty", function(variable:String, value:Dynamic, checkForMaps:Bool = false):Dynamic
 		{
-			var split:Array<String> = variable.split('.');
-			if (split.length > 1)
-			{
-				LuaUtils.setVarInArray(LuaUtils.getPropertyLoop(split, true, allowMaps), split[split.length - 1], value, allowMaps);
-				return value;
-			}
-
-			LuaUtils.setVarInArray(LuaUtils.getTargetInstance(), variable, value, allowMaps);
-			return value;
+			return LuaUtils.setLuaProperty(variable, value, checkForMaps);
 		});
-		Lua_helper.add_callback(lua, "getPropertyFromClass", function(classVar:String, variable:String, ?allowMaps:Bool = false):Dynamic
+		Lua_helper.add_callback(lua, "getPropertyFromClass", function(classVar:String, variable:String, ?checkForMaps:Bool = false):Dynamic
 		{
-			var myClass:Dynamic = Type.resolveClass(classVar);
+			var myClass:Class<Dynamic> = Type.resolveClass(classVar);
 			if (myClass == null)
 			{
 				FunkinLua.luaTrace('getPropertyFromClass: Class $classVar not found', false, false, FlxColor.RED);
@@ -55,44 +39,46 @@ class ReflectionFunctions
 			var split:Array<String> = variable.split('.');
 			if (split.length > 1)
 			{
-				var obj:Dynamic = LuaUtils.getVarInArray(myClass, split[0], allowMaps);
-				for (i in 1...split.length - 1)
-					obj = LuaUtils.getVarInArray(obj, split[i], allowMaps);
+				var obj:Dynamic = LuaUtils.getDynamicProperty(myClass, split[0], checkForMaps);
+				for (i in 1...(split.length - 1))
+					obj = LuaUtils.getDynamicProperty(obj, split[i], checkForMaps);
 
-				return LuaUtils.getVarInArray(obj, split[split.length - 1], allowMaps);
+				return LuaUtils.getDynamicProperty(obj, split[split.length - 1], checkForMaps);
 			}
-
-			return LuaUtils.getVarInArray(myClass, variable, allowMaps);
+			else
+				return LuaUtils.getDynamicProperty(myClass, variable, checkForMaps);
 		});
-		Lua_helper.add_callback(lua, "setPropertyFromClass", function(classVar:String, variable:String, value:Dynamic, ?allowMaps:Bool = false):Dynamic
+		Lua_helper.add_callback(lua, "setPropertyFromClass", function(classVar:String, variable:String, value:Dynamic, ?checkForMaps:Bool = false):Dynamic
 		{
-			var myClass:Dynamic = Type.resolveClass(classVar);
+			var myClass:Class<Dynamic> = Type.resolveClass(classVar);
 			if (myClass == null)
 			{
-				FunkinLua.luaTrace('getPropertyFromClass: Class $classVar not found', false, false, FlxColor.RED);
+				FunkinLua.luaTrace('setPropertyFromClass: Class $classVar not found', false, false, FlxColor.RED);
 				return null;
 			}
 
 			var split:Array<String> = variable.split('.');
 			if (split.length > 1)
 			{
-				var obj:Dynamic = LuaUtils.getVarInArray(myClass, split[0], allowMaps);
-				for (i in 1...split.length - 1)
-					obj = LuaUtils.getVarInArray(obj, split[i], allowMaps);
+				var obj:Dynamic = LuaUtils.getDynamicProperty(myClass, split[0], checkForMaps);
+				for (i in 1...(split.length - 1))
+					obj = LuaUtils.getDynamicProperty(obj, split[i], checkForMaps);
 
-				LuaUtils.setVarInArray(obj, split[split.length - 1], value, allowMaps);
+				LuaUtils.getDynamicProperty(obj, split[split.length - 1], checkForMaps);
 				return value;
 			}
-
-			LuaUtils.setVarInArray(myClass, variable, value, allowMaps);
-			return value;
+			else
+			{
+				LuaUtils.setDynamicProperty(myClass, variable, value, checkForMaps);
+				return value;
+			}
 		});
 		Lua_helper.add_callback(lua, "getPropertyFromGroup", function(group:String, index:Int, variable:Dynamic, ?allowMaps:Bool = false):Dynamic
 		{
 			var split:Array<String> = group.split('.');
 			var realObject:Dynamic = null;
 			if (split.length > 1)
-				realObject = LuaUtils.getPropertyLoop(split, false, allowMaps);
+				realObject = LuaUtils.getPropertyLoop(split, allowMaps);
 			else
 				realObject = Reflect.getProperty(LuaUtils.getTargetInstance(), group);
 
@@ -128,7 +114,7 @@ class ReflectionFunctions
 			var split:Array<String> = group.split('.');
 			var realObject:Dynamic = null;
 			if (split.length > 1)
-				realObject = LuaUtils.getPropertyLoop(split, false, allowMaps);
+				realObject = LuaUtils.getPropertyLoop(split, allowMaps);
 			else
 				realObject = Reflect.getProperty(LuaUtils.getTargetInstance(), group);
 
@@ -142,14 +128,14 @@ class ReflectionFunctions
 						{
 							if (Type.typeof(variable) == ValueType.TInt)
 							{
-								leArray[variable] = allowInstances ? parseInstances(value) : value;
+								leArray[variable] = allowInstances ? LuaUtils.parseArguments(value) : value;
 								return value;
 							}
-							LuaUtils.setGroupStuff(leArray, variable, allowInstances ? parseInstances(value) : value, allowMaps);
+							LuaUtils.setGroupStuff(leArray, variable, allowInstances ? LuaUtils.parseArguments(value) : value, allowMaps);
 						}
 
 					default: // Is Group
-						LuaUtils.setGroupStuff(realObject.members[index], variable, allowInstances ? parseInstances(value) : value, allowMaps);
+						LuaUtils.setGroupStuff(realObject.members[index], variable, allowInstances ? LuaUtils.parseArguments(value) : value, allowMaps);
 				}
 			}
 			else
@@ -159,7 +145,7 @@ class ReflectionFunctions
 		});
 		Lua_helper.add_callback(lua, "addToGroup", function(group:String, tag:String, ?index:Int = -1)
 		{
-			var basic:FlxBasic = LuaUtils.getObject(tag);
+			var basic:FlxBasic = LuaUtils.getLuaProperty(tag);
 
 			if (basic == null)
 			{
@@ -206,7 +192,7 @@ class ReflectionFunctions
 			var basic:FlxBasic = null;
 			if (tag != null)
 			{
-				basic = LuaUtils.getObject(tag);
+				basic = LuaUtils.getLuaProperty(tag);
 
 				if (basic == null)
 				{
@@ -263,145 +249,32 @@ class ReflectionFunctions
 			}
 
 			if (funcToRun.length > 0)
-				return callMethodFromObject(parent, funcToRun, parseInstances(args));
+				return callMethodFromObject(parent, funcToRun, LuaUtils.parseArguments(args));
 
-			return Reflect.callMethod(null, parent, parseInstances(args));
+			return Reflect.callMethod(null, parent, LuaUtils.parseArguments(args));
 		});
 		Lua_helper.add_callback(lua, "callMethodFromClass", function(className:String, funcToRun:String, ?args:Array<Dynamic>):Dynamic
 		{
-			return callMethodFromObject(Type.resolveClass(className), funcToRun, parseInstances(args));
-		});
-
-		Lua_helper.add_callback(lua, "createInstance", function(variableToSave:String, className:String, ?args:Array<Dynamic>):Bool
-		{
-			if (!Std.isOfType(args, Array))
-				args = [];
-
-			variableToSave = variableToSave.trim().replace('.', '');
-			if (MusicBeatState.getVariables().get(variableToSave) == null)
-			{
-				if (args == null)
-					args = [];
-
-				var myType:Class<Dynamic> = Type.resolveClass(className);
-
-				if (myType == null)
-				{
-					FunkinLua.luaTrace('createInstance: Class $className not found!', false, false, FlxColor.RED);
-					return false;
-				}
-
-				var obj:Dynamic = Type.createInstance(myType, parseInstances(args));
-				if (obj != null)
-					MusicBeatState.getVariables().set(variableToSave, obj);
-				else
-					FunkinLua.luaTrace('createInstance: Failed to create $variableToSave, arguments are possibly wrong.', false, false, FlxColor.RED);
-
-				return obj != null;
-			}
-			else
-				FunkinLua.luaTrace('createInstance: Variable $variableToSave is already being used and cannot be replaced!', false, false, FlxColor.RED);
-
-			return false;
-		});
-		Lua_helper.add_callback(lua, "addInstance", function(objectName:String, ?inFront:Bool = false)
-		{
-			var savedObj:Dynamic = MusicBeatState.getVariables().get(objectName);
-			if (savedObj != null)
-			{
-				var obj:Dynamic = savedObj;
-				if (inFront)
-					LuaUtils.getTargetInstance().add(obj);
-				else
-				{
-					if (!PlayState.instance.isDead)
-						PlayState.instance.insert(PlayState.instance.members.indexOf(LuaUtils.getLowestCharacterGroup()), obj);
-					else
-						GameOverSubstate.instance.insert(GameOverSubstate.instance.members.indexOf(GameOverSubstate.instance.boyfriend), obj);
-				}
-			}
-			else
-				FunkinLua.luaTrace('addInstance: Can\'t add what doesn\'t exist~ ($objectName)', false, false, FlxColor.RED);
-		});
-		Lua_helper.add_callback(lua, "instanceArg", function(instanceName:String, ?className:String = null):String
-		{
-			var retStr:String = '$instanceStr::$instanceName';
-
-			if (className != null)
-				retStr += '::$className';
-
-			return retStr;
+			return callMethodFromObject(Type.resolveClass(className), funcToRun, LuaUtils.parseArguments(args));
 		});
 	}
 
-	static function parseInstances(?args:Array<Dynamic>)
+	static function callMethodFromObject(classObj:Dynamic, funcStr:String, ?args:Array<Dynamic>):Null<Dynamic>
 	{
-		if (args == null)
+		if (classObj == null)
 			return null;
 
-		if (Std.isOfType(args, Array))
-			return parseInstanceArray(args);
-		else
-			return parseSingleInstance(args);
-	}
-
-	static function parseInstanceArray(args:Array<Dynamic>)
-	{
-		var newArray:Array<Dynamic> = [];
-
-		for (val in args)
-			newArray.push(parseInstances(val));
-
-		return newArray;
-	}
-
-	public static function parseSingleInstance(args:Dynamic)
-	{
-		var argStr:String = cast args;
-		if (argStr != null && argStr.length > instanceStr.length)
-		{
-			var index:Int = argStr.indexOf('::');
-			if (index > -1)
-			{
-				argStr = argStr.substring(index + 2);
-				// trace('Op1: $argStr');
-				var lastIndex:Int = argStr.lastIndexOf('::');
-
-				var split:Array<String> = (lastIndex > -1) ? argStr.substring(0, lastIndex).split('.') : argStr.split('.');
-				args = (lastIndex > -1) ? Type.resolveClass(argStr.substring(lastIndex + 2)) : PlayState.instance;
-				for (j in 0...split.length)
-				{
-					// trace('Op2: ${Type.getClass(args[i])}, ${split[j]}');
-					args = LuaUtils.getVarInArray(args, split[j].trim());
-					// trace('Op3: ${args[i] != null ? Type.getClass(args[i]) : null}');
-				}
-			}
-		}
-		return args;
-	}
-
-	static function callMethodFromObject(classObj:Dynamic, funcStr:String, args:Array<Dynamic> = null):Null<Dynamic>
-	{
 		if (args == null)
 			args = [];
 
 		var split:Array<String> = funcStr.split('.');
 		var funcToRun:Function = null;
 		var obj:Dynamic = classObj;
-		// trace('start: ' + obj);
-		if (obj == null)
-		{
-			return null;
-		}
 
 		for (i in 0...split.length)
-		{
-			obj = LuaUtils.getVarInArray(obj, split[i].trim());
-			// trace(obj, split[i]);
-		}
+			obj = LuaUtils.getDynamicProperty(obj, split[i].trim());
 
 		funcToRun = cast obj;
-		// trace('end: $obj');
 		return funcToRun != null ? Reflect.callMethod(obj, funcToRun, args) : null;
 	}
 }

@@ -3,6 +3,7 @@ package psychlua.functions;
 #if LUA_ALLOWED
 import flixel.FlxBasic;
 import flixel.FlxObject;
+import flixel.util.FlxStringUtil;
 
 import objects.StrumNote;
 
@@ -19,7 +20,7 @@ class TweenFunctions
 
 		Lua_helper.add_callback(lua, "startTween", function(tag:String, vars:String, values:Any = null, duration:Float, ?options:Dynamic)
 		{
-			var target:FlxBasic = LuaUtils.tweenPrepare(tag, vars);
+			var target:Dynamic = LuaUtils.tweenPrepare(tag, vars);
 			if (target == null)
 			{
 				FunkinLua.luaTrace('startTween: Couldnt find object: ' + vars, false, false, FlxColor.RED);
@@ -33,7 +34,7 @@ class TweenFunctions
 			}
 
 			var myOptions:LuaTweenOptions = LuaUtils.getLuaTween(options);
-			if (tag != null)
+			if (tag != null && tag.length > 0)
 			{
 				var originalTag:String = tag;
 				tag = LuaUtils.formatVariable('tween_$tag');
@@ -138,7 +139,7 @@ class TweenFunctions
 		});
 		Lua_helper.add_callback(lua, "doTweenColor", function(tag:String, vars:String, targetColor:String, duration:Float, ease:String)
 		{
-			var target:FlxBasic = LuaUtils.tweenPrepare(tag, vars);
+			var target:Dynamic = LuaUtils.tweenPrepare(tag, vars);
 			if (target == null || !Std.isOfType(target, FlxSprite))
 			{
 				FunkinLua.luaTrace('doTweenColor: Couldnt find object: ' + vars, false, false, FlxColor.RED);
@@ -172,7 +173,7 @@ class TweenFunctions
 		});
 		Lua_helper.add_callback(lua, "doTweenShake", function(tag:String, vars:String, intensity:Float, duration:Float, axes:String, ease:String)
 		{
-			var target:FlxBasic = LuaUtils.tweenPrepare(tag, vars);
+			var target:Dynamic = LuaUtils.tweenPrepare(tag, vars);
 			if (target == null || !Std.isOfType(target, FlxSprite))
 			{
 				FunkinLua.luaTrace('doTweenShake: Couldnt find object: ' + vars, false, false, FlxColor.RED);
@@ -203,12 +204,14 @@ class TweenFunctions
 		});
 		Lua_helper.add_callback(lua, "doTweenFlicker", function(tag:String, vars:String, period:Float, duration:Float, endVisibility:Bool, ease:String)
 		{
-			var target:FlxBasic = LuaUtils.tweenPrepare(tag, vars);
-			if (target == null)
+			var target:Dynamic = LuaUtils.tweenPrepare(tag, vars);
+			if (target == null || !Std.isOfType(target, FlxBasic))
 			{
 				FunkinLua.luaTrace('doTweenFlicker: Couldnt find object: ' + vars, false, false, FlxColor.RED);
 				return;
 			}
+
+			var basic:FlxBasic = cast target;
 
 			if (tag != null && tag.length > 0)
 			{
@@ -216,7 +219,7 @@ class TweenFunctions
 				tag = LuaUtils.formatVariable('tween_$tag');
 
 				var variables = MusicBeatState.getVariables();
-				variables.set(tag, FlxTween.flicker(target, duration, period, {
+				variables.set(tag, FlxTween.flicker(basic, duration, period, {
 					endVisibility: endVisibility,
 					ease: LuaUtils.getTweenEaseByString(ease),
 					onComplete: _ ->
@@ -229,14 +232,14 @@ class TweenFunctions
 				}));
 			}
 			else
-				FlxTween.flicker(target, duration, period, {
+				FlxTween.flicker(basic, duration, period, {
 					endVisibility: endVisibility,
 					ease: LuaUtils.getTweenEaseByString(ease)
 				});
 		});
 		Lua_helper.add_callback(lua, "doTweenLinearMotion", function(tag:String, vars:String, start:Array<Float>, end:Array<Float>, duration:Float, durationAsSpeed:Bool, ease:String)
 		{
-			var target:FlxBasic = LuaUtils.tweenPrepare(tag, vars);
+			var target:Dynamic = LuaUtils.tweenPrepare(tag, vars);
 			if (target == null || !Std.isOfType(target, FlxObject))
 			{
 				FunkinLua.luaTrace('doTweenLinearMotion: Couldnt find object: ' + vars, false, false, FlxColor.RED);
@@ -267,7 +270,7 @@ class TweenFunctions
 		});
 		Lua_helper.add_callback(lua, "doTweenLinearPath", function(tag:String, vars:String, points:Array<Array<Float>>, duration:Float, durationAsSpeed:Bool, ease:String)
 		{
-			var target:FlxBasic = LuaUtils.tweenPrepare(tag, vars);
+			var target:Dynamic = LuaUtils.tweenPrepare(tag, vars);
 			if (target == null || !Std.isOfType(target, FlxObject))
 			{
 				FunkinLua.luaTrace('doTweenLinearPath: Couldnt find object: ' + vars, false, false, FlxColor.RED);
@@ -298,7 +301,7 @@ class TweenFunctions
 		});
 		Lua_helper.add_callback(lua, "doTweenQuadMotion", function(tag:String, vars:String, start:Array<Float>, control:Array<Float>, end:Array<Float>, duration:Float, durationAsSpeed:Bool, ease:String)
 		{
-			var target:FlxBasic = LuaUtils.tweenPrepare(tag, vars);
+			var target:Dynamic = LuaUtils.tweenPrepare(tag, vars);
 			if (target == null || !Std.isOfType(target, FlxObject))
 			{
 				FunkinLua.luaTrace('doTweenQuadMotion: Couldnt find object: ' + vars, false, false, FlxColor.RED);
@@ -329,7 +332,7 @@ class TweenFunctions
 		});
 		Lua_helper.add_callback(lua, "doTweenQuadPath", function(tag:String, vars:String, points:Array<Array<Float>>, duration:Float, durationAsSpeed:Bool, ease:String)
 		{
-			var target:FlxBasic = LuaUtils.tweenPrepare(tag, vars);
+			var target:Dynamic = LuaUtils.tweenPrepare(tag, vars);
 			if (target == null || !Std.isOfType(target, FlxObject))
 			{
 				FunkinLua.luaTrace('doTweenQuadPath: Couldnt find object: ' + vars, false, false, FlxColor.RED);
@@ -384,16 +387,23 @@ class TweenFunctions
 
 		// ----- tween checks ----- //
 
-		Lua_helper.add_callback(lua, "isTweening", function(vars:String):Bool
+		Lua_helper.add_callback(lua, "isTweening", function(tag:String):Bool
+		{
+			return MusicBeatState.getVariables().get(LuaUtils.formatVariable('tween_$tag')) != null;
+		});
+		Lua_helper.add_callback(lua, "isTweeningObject", function(vars:String):Bool
 		{
 			var result:Bool = false;
-			var basic:FlxBasic = LuaUtils.getObject(vars);
+			var obj:Dynamic = LuaUtils.getLuaProperty(vars);
+
+			if (obj == null)
+				return false;
 
 			FlxTween.globalManager.forEach((twn:FlxTween) ->
 			{
 				@:privateAccess
 				{
-					if (twn.isTweenOf(basic))
+					if (twn.isTweenOf(obj))
 						result = true;
 				}
 			});
@@ -411,32 +421,33 @@ class TweenFunctions
 
 	static function commonTween(tag:String, vars:String, tweenValue:Dynamic, duration:Float = 1, ease:String = '', ?funcName:String)
 	{
-		var target:FlxBasic = LuaUtils.tweenPrepare(tag, vars);
-		if (target != null)
+		var target:Dynamic = LuaUtils.tweenPrepare(tag, vars);
+		trace([FlxStringUtil.getClassName(target), tweenValue]);
+		if (target == null)
 		{
-			if (tag != null && tag.length > 0)
-			{
-				var originalTag:String = tag;
-				tag = LuaUtils.formatVariable('tween_$tag');
-				LuaUtils.cancelTween(tag);
+			FunkinLua.luaTrace('${funcName != null ? '$funcName: ' : ''}Couldn\'t find object: $vars', false, false, FlxColor.RED);
+			return;
+		}
 
-				var variables = MusicBeatState.getVariables();
-				variables.set(tag, FlxTween.tween(target, tweenValue, duration, {
-					ease: LuaUtils.getTweenEaseByString(ease),
-					onComplete: _ ->
-					{
-						variables.remove(tag);
+		if (tag != null && tag.length > 0)
+		{
+			var originalTag:String = tag;
+			tag = LuaUtils.formatVariable('tween_$tag');
 
-						if (PlayState.instance != null)
-							PlayState.instance.callOnLuas('onTweenCompleted', [originalTag, vars]);
-					}
-				}));
-			}
-			else
-				FlxTween.tween(target, tweenValue, duration, {ease: LuaUtils.getTweenEaseByString(ease)});
+			var variables = MusicBeatState.getVariables();
+			variables.set(tag, FlxTween.tween(target, tweenValue, duration, {
+				ease: LuaUtils.getTweenEaseByString(ease),
+				onComplete: _ ->
+				{
+					variables.remove(tag);
+
+					if (PlayState.instance != null)
+						PlayState.instance.callOnLuas('onTweenCompleted', [originalTag, vars]);
+				}
+			}));
 		}
 		else
-			FunkinLua.luaTrace('${funcName != null ? funcName : ''}: Couldn\'t find object: $vars', false, false, FlxColor.RED);
+			FlxTween.tween(target, tweenValue, duration, {ease: LuaUtils.getTweenEaseByString(ease)});
 	}
 
 	static function noteTween(tag:String, note:Int, data:Dynamic, duration:Float, ease:String)

@@ -8,10 +8,14 @@ import flixel.FlxBasic;
 import flixel.FlxState;
 import flixel.group.FlxContainer;
 import flixel.util.FlxAxes;
+import flixel.util.FlxStringUtil;
+import flixel.util.typeLimit.OneOfTwo;
 
 import objects.Character;
 
 import openfl.display.BlendMode;
+
+import psychlua.functions.SpriteFunctions;
 
 import substates.GameOverSubstate;
 
@@ -26,6 +30,7 @@ typedef LuaTweenOptions =
 	ease:EaseFunction
 }
 
+@:access(psychlua.functions.SpriteFunctions)
 class LuaUtils
 {
 	public static final Function_Stop:Dynamic = "##PSYCHLUA_FUNCTIONSTOP";
@@ -47,86 +52,72 @@ class LuaUtils
 		} : null;
 	}
 
-	public static function setVarInArray(instance:Dynamic, variable:String, value:Dynamic, allowMaps:Bool = false):Any
+	public static function getDynamicProperty(instance:Dynamic, variable:String, checkForMaps:Bool = false):Dynamic
 	{
-		var splitProps:Array<String> = variable.split('[');
-		if (splitProps.length > 1)
+		var arrayCheck:Array<String> = variable.split('[');
+		if (arrayCheck.length > 1)
 		{
-			var target:Dynamic = null;
-			if (MusicBeatState.getVariables().exists(splitProps[0]))
+			var target:Dynamic = getDynamicProperty(instance, arrayCheck[0], false);
+
+			for (i in 1...arrayCheck.length)
 			{
-				var retVal:Dynamic = MusicBeatState.getVariables().get(splitProps[0]);
-				if (retVal != null)
-					target = retVal;
-			}
-			else
-				target = Reflect.getProperty(instance, splitProps[0]);
-
-			for (i in 1...splitProps.length)
-			{
-				var j:Dynamic = splitProps[i].substr(0, splitProps[i].length - 1);
-				if (i >= splitProps.length - 1) // Last array
-					target[j] = value;
-				else // Anything else
-					target = target[j];
-			}
-
-			return target;
-		}
-
-		if (allowMaps && isMap(instance))
-		{
-			instance.set(variable, value);
-			return value;
-		}
-
-		if (instance is MusicBeatState && MusicBeatState.getVariables().exists(variable))
-		{
-			MusicBeatState.getVariables().set(variable, value);
-			return value;
-		}
-
-		Reflect.setProperty(instance, variable, value);
-		return value;
-	}
-
-	public static function getVarInArray(instance:Dynamic, variable:String, allowMaps:Bool = false):Any
-	{
-		var splitProps:Array<String> = variable.split('[');
-		if (splitProps.length > 1)
-		{
-			var target:Dynamic = null;
-			if (MusicBeatState.getVariables().exists(splitProps[0]))
-			{
-				var retVal:Dynamic = MusicBeatState.getVariables().get(splitProps[0]);
-				if (retVal != null)
-					target = retVal;
-			}
-			else
-				target = Reflect.getProperty(instance, splitProps[0]);
-
-			for (i in 1...splitProps.length)
-			{
-				var j:Dynamic = splitProps[i].substr(0, splitProps[i].length - 1);
+				var j:Dynamic = arrayCheck[i].substr(0, arrayCheck[i].length - 1);
 				target = target[j];
 			}
 
 			return target;
 		}
 
-		if (allowMaps && isMap(instance))
+		if (MusicBeatState.getVariables().exists(variable))
 		{
-			return instance.get(variable);
+			var val:Null<Dynamic> = MusicBeatState.getVariables().get(variable);
+			if (val != null)
+				return val;
 		}
 
-		if ((instance is MusicBeatState) && MusicBeatState.getVariables().exists(variable))
+		if (checkForMaps && isMap(instance))
 		{
-			var retVal:Dynamic = MusicBeatState.getVariables().get(variable);
-			if (retVal != null)
-				return retVal;
+			var map:Map<Dynamic, Dynamic> = cast instance;
+			return map.get(variable);
 		}
 
 		return Reflect.getProperty(instance, variable);
+	}
+
+	public static function setDynamicProperty(instance:Dynamic, variable:String, value:Dynamic, checkForMaps:Bool = false):Dynamic
+	{
+		var arrayCheck:Array<String> = variable.split('[');
+		if (arrayCheck.length > 1)
+		{
+			var target:Dynamic = getDynamicProperty(instance, arrayCheck[0], false);
+
+			for (i in 1...arrayCheck.length)
+			{
+				var j:Dynamic = arrayCheck[i].substr(0, arrayCheck[i].length - 1);
+				if (i == arrayCheck.length - 1)
+					target[j] = value;
+				else
+					target = target[j];
+			}
+
+			return target;
+		}
+
+		if (MusicBeatState.getVariables().exists(variable))
+		{
+			MusicBeatState.getVariables().set(variable, value);
+			return value;
+		}
+
+		if (checkForMaps && isMap(instance))
+		{
+			var map:Map<Dynamic, Dynamic> = cast instance;
+			map.set(variable, value);
+			return value;
+		}
+
+		Reflect.setProperty(instance, variable, value);
+		return value;
 	}
 
 	public static function isMap(variable:Dynamic):Bool
@@ -179,49 +170,92 @@ class LuaUtils
 		return Reflect.getProperty(leArray, variable);
 	}
 
-	public static function getPropertyLoop(split:Array<String>, ?getProperty:Bool = true, ?allowMaps:Bool = false):Dynamic
+	// TODO: get rid of this
+	public static function getPropertyLoop(split:Array<String>, getProperty:Bool = true, ?checkForMaps:Bool = false):Dynamic
 	{
-		var obj:Dynamic = getObjectDirectly(split[0]);
-		var end = split.length;
+		var obj:Dynamic = getObject(split[0]);
 
-		if (getProperty)
-			end = split.length - 1;
+		if (split.length == 2 && getProperty)
+			obj = getDynamicProperty(obj, split[1], checkForMaps);
+		else if (split.length > 1)
+		{
+			var endIndex:Int = split.length - 1;
 
-		for (i in 1...end)
-			obj = getVarInArray(obj, split[i], allowMaps);
+			if (getProperty)
+				endIndex--;
+
+			for (i in 1...endIndex)
+			{
+				obj = getDynamicProperty(obj, split[i], checkForMaps);
+			}
+		}
 
 		return obj;
 	}
 
-	public static function getObjectDirectly(objectName:String, ?allowMaps:Bool = false):FlxBasic
+	public static function getObject(variable:String, ?checkForMaps:Bool = false):Null<Dynamic>
 	{
-		switch (objectName)
+		switch (variable)
 		{
 			case 'this' | 'instance' | 'game':
 				return getTargetInstance();
 
 			default:
-				var obj:Dynamic = MusicBeatState.getVariables().get(objectName);
+				var obj:Dynamic = MusicBeatState.getVariables().get(variable);
 
 				if (obj == null)
-					obj = getVarInArray(MusicBeatState.getState(), objectName, allowMaps);
+					obj = getDynamicProperty(getTargetInstance(), variable, checkForMaps);
 
-				if (Std.isOfType(obj, FlxBasic))
-					return cast obj;
+				return obj;
 		}
 
 		return null;
 	}
 
-	public static function getObject(object:String, ?allowMaps:Bool = false):FlxBasic
+	public static function getLuaProperty(variable:String, ?checkForMaps:Bool = false):Dynamic
 	{
-		var split:Array<String> = object.split('.');
-		var basic:FlxBasic = getObjectDirectly(split[0], allowMaps);
-
+		var split:Array<String> = variable.split('.');
 		if (split.length > 1)
-			basic = getVarInArray(getPropertyLoop(split), split[split.length - 1], allowMaps);
+		{
+			if (split.length == 2)
+			{
+				var target:Dynamic = getObject(split[0], checkForMaps);
+				return getDynamicProperty(target, split[1], checkForMaps);
+			}
+			else
+			{
+				var target:Dynamic = getObject(split[0], checkForMaps);
+				for (i in 1...(split.length - 1))
+					target = getDynamicProperty(target, split[i], checkForMaps);
 
-		return basic;
+				return getDynamicProperty(target, split[split.length - 1], checkForMaps);
+			}
+		}
+		else
+			return getObject(variable, checkForMaps);
+	}
+
+	public static function setLuaProperty(variable:String, value:Dynamic, ?checkForMaps:Bool = false):Dynamic
+	{
+		var split:Array<String> = variable.split('.');
+		if (split.length > 1)
+		{
+			if (split.length == 2)
+			{
+				var target:Dynamic = getObject(split[0], checkForMaps);
+				return setDynamicProperty(target, split[1], value, checkForMaps);
+			}
+			else
+			{
+				var target:Dynamic = getObject(split[0], checkForMaps);
+				for (i in 1...(split.length - 1))
+					target = getDynamicProperty(target, split[i], checkForMaps);
+
+				return setDynamicProperty(target, split[split.length - 1], value, checkForMaps);
+			}
+		}
+		else
+			return setDynamicProperty(getTargetInstance(), variable, value, checkForMaps);
 	}
 
 	public static function isOfTypes(value:Any, types:Array<Dynamic>):Bool
@@ -231,6 +265,7 @@ class LuaUtils
 			if (Std.isOfType(value, type))
 				return true;
 		}
+
 		return false;
 	}
 
@@ -249,7 +284,12 @@ class LuaUtils
 
 	public static function getObjectParent(tag:String):FlxContainer
 	{
-		var basic:FlxBasic = getObject(tag);
+		var object:Dynamic = getLuaProperty(tag);
+
+		if (!Std.isOfType(object, FlxBasic))
+			return null;
+
+		var basic:FlxBasic = cast object;
 
 		if (Std.isOfType(basic, FlxState))
 			return cast basic;
@@ -286,22 +326,18 @@ class LuaUtils
 
 	public static function addAnimDynamic(obj:String, name:String, ?prefix:String, ?indices:Any, framerate:Float = 24, loop:Bool = false, flipX:Bool = false, flipY:Bool = false):Bool
 	{
-		var obj:FlxBasic = getObjectDirectly(obj);
+		var obj:FlxBasic = getObject(obj);
 
 		if (obj == null || !Std.isOfType(obj, FlxSprite))
 			return false;
 
 		var spr:FlxSprite = cast obj;
-
 		var parsedIndices:Array<Int> = [];
 
 		if (indices != null)
 		{
 			if (indices is String)
-			{
-				var indicesStr:Array<Null<Int>> = cast(indices, String).trim().split(',').map(i -> Std.parseInt(i.trim()));
-				parsedIndices = indicesStr.filter(i -> i != null);
-			}
+				parsedIndices = parseStringToIntArray(indices);
 			else
 				parsedIndices = cast indices;
 		}
@@ -345,6 +381,17 @@ class LuaUtils
 		}
 	}
 
+	public static function luaObjectExists(tag:String, ?typeCheck:Dynamic):Bool
+	{
+		var obj:Dynamic = MusicBeatState.getVariables().get(tag);
+		var result:Bool = obj != null;
+
+		if (typeCheck != null)
+			result = result && Std.isOfType(obj, typeCheck);
+
+		return result;
+	}
+
 	public static function destroyObject(tag:String):Bool
 	{
 		var variables = MusicBeatState.getVariables();
@@ -373,14 +420,15 @@ class LuaUtils
 			tag = "tween_" + formatVariable(tag);
 
 		var variables = MusicBeatState.getVariables();
-		var tween:FlxTween = cast variables.get(tag);
+		var obj:Dynamic = variables.get(tag);
 
-		if (tween != null)
-		{
-			tween.cancel();
-			tween.destroy();
-			variables.remove(tag);
-		}
+		if (obj == null || !Std.isOfType(obj, FlxTween))
+			return;
+
+		var tween:FlxTween = cast obj;
+		tween.cancel();
+		tween.destroy();
+		variables.remove(tag);
 	}
 
 	public static function cancelTimer(tag:String)
@@ -399,14 +447,71 @@ class LuaUtils
 		}
 	}
 
-	public static function tweenPrepare(tag:String, vars:String):FlxBasic
+	public static function tweenPrepare(tag:String, vars:String):Dynamic
 	{
 		cancelTween(tag);
-		return getObject(vars);
+		return getLuaProperty(vars);
+	}
+
+	public static function parseStringToIntArray(numArrStr:String):Array<Int>
+	{
+		if (numArrStr == null || numArrStr.length < 1 || !numArrStr.contains(','))
+			return [];
+
+		var indicesStr:Array<Null<Int>> = numArrStr.trim().split(',').map(i -> Std.parseInt(i.trim()));
+		return indicesStr.filter(i -> i != null);
+	}
+
+	public static function parseStringToFloatArray(numArrStr:String):Array<Float>
+	{
+		if (numArrStr == null || numArrStr.length < 1 || !numArrStr.contains(','))
+			return [];
+
+		var indicesStr:Array<Null<Float>> = numArrStr.trim().split(',').map(i -> Std.parseFloat(i.trim()));
+		return indicesStr.filter(i -> i != null);
+	}
+
+	public static function parseArguments(whatever:Dynamic):Array<Dynamic>
+	{
+		if (whatever == null)
+			return [];
+
+		if (whatever is Array)
+		{
+			var arr:Array<Dynamic> = cast whatever;
+			return [for (i in arr) parseArgument(i)];
+		}
+		else
+			return parseArgument(whatever);
+	}
+
+	public static function parseArgument(arg:Dynamic):Dynamic
+	{
+		var argStr:String = Std.string(arg);
+
+		if (argStr != null && argStr.length > SpriteFunctions.instanceStr.length)
+		{
+			var i:Int = argStr.indexOf('::');
+			if (i >= 0)
+			{
+				argStr = argStr.substr(i + 2);
+				var j:Int = argStr.lastIndexOf('::');
+
+				var split:Array<String> = j >= 0 ? argStr.substring(0, j).split('.') : argStr.split('.');
+				arg = j >= 0 ? Type.resolveClass(argStr.substring(j + 2)) : getTargetInstance();
+
+				for (p in 0...split.length)
+					arg = getDynamicProperty(arg, split[p].trim());
+			}
+		}
+
+		return arg;
 	}
 
 	public static inline function formatVariable(tag:String):String
+	{
 		return tag.trim().replace(' ', '_').replace('.', '');
+	}
 
 	public static function getBuildTarget():String
 	{

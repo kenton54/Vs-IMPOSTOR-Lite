@@ -19,11 +19,6 @@ import psychlua.LuaUtils;
 import psychlua.FunkinLua;
 #end
 
-#if sys
-import sys.FileSystem;
-import sys.io.File;
-#end
-
 typedef HScriptInfos =
 {
 	> haxe.PosInfos,
@@ -38,7 +33,6 @@ typedef HScriptInfos =
 class HScript extends Iris
 {
 	public var filePath:String;
-	public var modFolder:String;
 	public var returnValue:Dynamic;
 
 	#if LUA_ALLOWED
@@ -130,10 +124,7 @@ class HScript extends Iris
 		#if LUA_ALLOWED
 		parentLua = parent;
 		if (parent != null)
-		{
 			this.origin = parent.scriptName;
-			this.modFolder = parent.modFolder;
-		}
 		#end
 
 		preset();
@@ -396,24 +387,23 @@ class HScript extends Iris
 	#if LUA_ALLOWED
 	public static function implement(funk:FunkinLua)
 	{
-		funk.addLocalCallback("runHaxeCode",
-			function(codeToRun:String, ?varsToBring:Any = null, ?funcToRun:String = null, ?funcArgs:Array<Dynamic> = null):Dynamic
+		funk.addLocalCallback("runHaxeCode", function(codeToRun:String, ?varsToBring:Any = null, ?funcToRun:String = null, ?funcArgs:Array<Dynamic> = null):Dynamic
+		{
+			initHaxeModuleCode(funk, codeToRun, varsToBring);
+			if (funk.hscript != null)
 			{
-				initHaxeModuleCode(funk, codeToRun, varsToBring);
-				if (funk.hscript != null)
+				final retVal:IrisCall = funk.hscript.call(funcToRun, funcArgs);
+				if (retVal != null)
 				{
-					final retVal:IrisCall = funk.hscript.call(funcToRun, funcArgs);
-					if (retVal != null)
-					{
-						return LuaUtils.isLuaSupported(retVal.returnValue) ? retVal.returnValue : null;
-					}
-					else if (funk.hscript.returnValue != null)
-					{
-						return funk.hscript.returnValue;
-					}
+					return LuaUtils.isLuaSupported(retVal.returnValue) ? retVal.returnValue : null;
 				}
-				return null;
-			});
+				else if (funk.hscript.returnValue != null)
+				{
+					return funk.hscript.returnValue;
+				}
+			}
+			return null;
+		});
 
 		funk.addLocalCallback("runHaxeFunction", function(funcToRun:String, ?funcArgs:Array<Dynamic> = null)
 		{

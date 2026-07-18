@@ -6,7 +6,7 @@ function onCreatePost()
     setProperty('camHUD.alpha', 0)
 
     makeLuaSprite('whiteThing', nil, 0, 0)
-    makeGraphic('whiteThing', screenWidth, screenHeight, 'FFFFFF')
+    makeSolid('whiteThing', screenWidth, screenHeight, 'FFFFFF')
     setObjectCamera('whiteThing', 'camOther')
     setProperty('whiteThing.alpha', 1)
     addLuaSprite('whiteThing', true)
@@ -33,7 +33,6 @@ function onStepHit()
         if curStep >= 32 and not tweened then
             tweened = true
             doTweenY('tweenY', 'camGame.scroll', 100, 9, 'quadInOut')
-            setProperty('camFollow.y', 0)
         end
         if curStep >= 112 and not hudvisible then
             hudvisible = true

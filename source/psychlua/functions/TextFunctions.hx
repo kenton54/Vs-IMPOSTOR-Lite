@@ -1,8 +1,6 @@
 package psychlua.functions;
 
 #if LUA_ALLOWED
-import flixel.FlxBasic;
-
 class TextFunctions
 {
 	public static function implement(funk:FunkinLua)
@@ -269,16 +267,20 @@ class TextFunctions
 				MusicBeatState.getVariables().remove(tag);
 			}
 		});
+		Lua_helper.add_callback(lua, "luaTextExists", function(tag:String)
+		{
+			return LuaUtils.luaObjectExists(tag, FlxText);
+		});
 	}
 
 	static function getTextObject(tag:String):Null<FlxText>
 	{
-		var basic:FlxBasic = LuaUtils.getObject(tag);
+		var obj:Dynamic = LuaUtils.getLuaProperty(tag);
 
-		if (basic == null || !Std.isOfType(basic, FlxText))
+		if (obj == null || !Std.isOfType(obj, FlxText))
 			return null;
 
-		return cast basic;
+		return cast obj;
 	}
 }
 #end

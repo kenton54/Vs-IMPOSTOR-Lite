@@ -25,6 +25,7 @@ import objects.*;
 import objects.Note.EventNote;
 
 import openfl.events.KeyboardEvent;
+import openfl.media.Sound;
 
 import states.FreeplayState;
 import states.StoryMenuState;
@@ -474,6 +475,8 @@ class PlayState extends MusicBeatState
 				gf.visible = false;
 		}
 
+		loadSongMusic();
+
 		comboGroup = new FlxSpriteGroup();
 		add(comboGroup);
 
@@ -770,28 +773,11 @@ class PlayState extends MusicBeatState
 	#if (LUA_ALLOWED || HSCRIPT_ALLOWED)
 	function startCharacterScripts(name:String)
 	{
-		// Lua
 		#if LUA_ALLOWED
 		var doPush:Bool = false;
-		var luaFile:String = 'characters/$name.lua';
-		#if MODS_ALLOWED
-		var replacePath:String = Paths.modFolders(luaFile);
-		if (FileSystem.exists(replacePath))
-		{
-			luaFile = replacePath;
-			doPush = true;
-		}
-		else
-		{
-			luaFile = Paths.getPath(luaFile);
-			if (FileSystem.exists(luaFile))
-				doPush = true;
-		}
-		#else
-		luaFile = Paths.getPath(luaFile);
+		var luaFile:String = Paths.getPath('characters/$name.lua');
 		if (Assets.exists(luaFile))
 			doPush = true;
-		#end
 
 		if (doPush)
 		{
@@ -808,28 +794,11 @@ class PlayState extends MusicBeatState
 		}
 		#end
 
-		// HScript
 		#if HSCRIPT_ALLOWED
 		var doPush:Bool = false;
-		var scriptFile:String = 'characters/$name.hx';
-		#if MODS_ALLOWED
-		var replacePath:String = Paths.modFolders(scriptFile);
-		if (FileSystem.exists(replacePath))
-		{
-			scriptFile = replacePath;
-			doPush = true;
-		}
-		else
-		{
-			scriptFile = Paths.getPath(scriptFile);
-			if (FileSystem.exists(scriptFile))
-				doPush = true;
-		}
-		#else
-		scriptFile = Paths.getPath(scriptFile);
+		var scriptFile:String = Paths.getPath('characters/$name.hx');
 		if (Assets.exists(scriptFile))
 			doPush = true;
-		#end
 
 		if (doPush)
 		{
@@ -1385,23 +1354,60 @@ class PlayState extends MusicBeatState
 		callOnScripts('onSkipDialogue', [dialogueCount]);
 	}
 
+	function loadSongMusic()
+	{
+		vocals = new FlxSound();
+		opponentVocals = new FlxSound();
+
+		try
+		{
+			if (SONG.needsVoices)
+			{
+				var playerVocals:String = Paths.voicesPath(SONG.song, (boyfriend.vocalsFile == null || boyfriend.vocalsFile.length < 1) ? 'Player' : boyfriend.vocalsFile);
+				vocals.loadEmbedded(Assets.exists(playerVocals) ? Assets.getMusic(playerVocals) : Paths.voices(SONG.song), false);
+
+				var oppVocals:String = Paths.voicesPath(SONG.song, (dad.vocalsFile == null || dad.vocalsFile.length < 1) ? 'Opponent' : dad.vocalsFile);
+				if (Assets.exists(oppVocals))
+					opponentVocals.loadEmbedded(Assets.getMusic(oppVocals), false);
+			}
+		}
+		catch (e:Dynamic)
+		{
+			FlxG.log.warn('Couldn\'t load the song\'s vocals! Error: $e');
+		}
+
+		FlxG.sound.list.add(vocals);
+		FlxG.sound.list.add(opponentVocals);
+
+		FlxG.sound.music = inst = new FlxSound();
+		try
+		{
+			inst.loadEmbedded(Paths.inst(SONG.song), false);
+		}
+		catch (e:Dynamic) {}
+		FlxG.sound.music.volume = 1;
+		FlxG.sound.defaultMusicGroup.add(inst);
+	}
+
 	function startSong():Void
 	{
 		startingSong = false;
 
-		@:privateAccess
-		FlxG.sound.playMusic(inst._sound, 1, false);
-
 		#if FLX_PITCH
 		FlxG.sound.music.pitch = playbackRate;
+		vocals.pitch = playbackRate;
+		opponentVocals.pitch = playbackRate;
 		#end
 
 		FlxG.sound.music.onComplete = finishSong.bind();
+
+		FlxG.sound.music.play();
 		vocals.play();
 		opponentVocals.play();
 
 		if (startOnTime > 0)
 			setSongTime(startOnTime - 500);
+
 		startOnTime = 0;
 
 		if (paused)
@@ -1422,6 +1428,7 @@ class PlayState extends MusicBeatState
 		if (autoUpdateRPC)
 			DiscordClient.changePresence(detailsText, SONG.song, iconP2.getCharacter());
 		#end
+
 		setOnScripts('songLength', songLength);
 		callOnScripts('onSongStart');
 	}
@@ -1447,35 +1454,6 @@ class PlayState extends MusicBeatState
 		Conductor.bpm = songData.bpm;
 
 		curSong = songData.song;
-
-		vocals = new FlxSound();
-		opponentVocals = new FlxSound();
-		try
-		{
-			if (songData.needsVoices)
-			{
-				var playerVocals:String = Paths.voicesPath(songData.song, (boyfriend.vocalsFile == null || boyfriend.vocalsFile.length < 1) ? 'Player' : boyfriend.vocalsFile);
-				vocals.loadEmbedded(Assets.exists(playerVocals) ? playerVocals : Paths.voices(songData.song));
-
-				var oppVocals:String = Paths.voicesPath(songData.song, (dad.vocalsFile == null || dad.vocalsFile.length < 1) ? 'Opponent' : dad.vocalsFile);
-				if (Assets.exists(oppVocals))
-					opponentVocals.loadEmbedded(oppVocals);
-			}
-		}
-		catch (e:Dynamic) {}
-
-		#if FLX_PITCH
-		vocals.pitch = playbackRate;
-		opponentVocals.pitch = playbackRate;
-		#end
-		FlxG.sound.list.add(vocals);
-		FlxG.sound.list.add(opponentVocals);
-
-		inst = new FlxSound();
-		try
-		{
-			inst.loadEmbedded(Paths.inst(songData.song));
-		}
 
 		notes = new FlxTypedGroup<Note>();
 		noteGroup.add(notes);
@@ -2630,15 +2608,7 @@ class PlayState extends MusicBeatState
 			case 'Set Property':
 				try
 				{
-					var split:Array<String> = value1.split('.');
-					if (split.length > 1)
-					{
-						LuaUtils.setVarInArray(LuaUtils.getPropertyLoop(split), split[split.length - 1], value2);
-					}
-					else
-					{
-						LuaUtils.setVarInArray(this, value1, value2);
-					}
+					LuaUtils.setLuaProperty(value1, value2);
 				}
 				catch (e:Dynamic)
 				{

@@ -38,7 +38,6 @@ class FunkinLua
 	public var lua:State = null;
 	public var camTarget:FlxCamera;
 	public var scriptName:String = '';
-	public var modFolder:String = null;
 	public var closed:Bool = false;
 
 	#if HSCRIPT_ALLOWED
@@ -59,42 +58,47 @@ class FunkinLua
 		if (game != null)
 			game.luaArray.push(this);
 
-		// Lua shit
+		set('luaDebugMode', false);
+		set('luaDeprecatedWarnings', true);
+		set('scriptName', scriptName);
+
+		set('version', MainMenuState.psychEngineVersion.trim());
+		set('buildTarget', LuaUtils.getBuildTarget());
+		set('platformTarget', LuaUtils.getPlatformTarget());
+
 		set('Function_StopLua', LuaUtils.Function_StopLua);
 		set('Function_StopHScript', LuaUtils.Function_StopHScript);
 		set('Function_StopAll', LuaUtils.Function_StopAll);
 		set('Function_Stop', LuaUtils.Function_Stop);
 		set('Function_Continue', LuaUtils.Function_Continue);
-		set('luaDebugMode', false);
-		set('luaDeprecatedWarnings', true);
-		set('version', MainMenuState.psychEngineVersion.trim());
-		set('modFolder', this.modFolder);
 
-		// Song/Week shit
-		set('curBpm', Conductor.bpm);
-		set('bpm', PlayState.SONG.bpm);
-		set('scrollSpeed', PlayState.SONG.speed);
-		set('crochet', Conductor.crochet);
-		set('stepCrochet', Conductor.stepCrochet);
-		set('songLength', FlxG.sound.music.length);
-		set('songName', PlayState.SONG.song);
-		set('songPath', Paths.formatToSongPath(PlayState.SONG.song));
-		set('startedCountdown', false);
-		set('curStage', PlayState.SONG.stage);
-
-		set('isStoryMode', PlayState.isStoryMode);
-		set('difficulty', PlayState.storyDifficulty);
-
-		set('difficultyName', Difficulty.getString());
-		set('difficultyPath', Paths.formatToSongPath(Difficulty.getString()));
-		set('weekRaw', PlayState.storyWeek);
-		set('week', WeekData.weeksList[PlayState.storyWeek]);
-		set('seenCutscene', PlayState.seenCutscene);
-		set('hasVocals', PlayState.SONG.needsVoices);
-
-		// Screen stuff
 		set('screenWidth', FlxG.width);
 		set('screenHeight', FlxG.height);
+
+		set('songName', PlayState.SONG.song);
+		set('songPath', Paths.formatToSongPath(PlayState.SONG.song));
+
+		set('bpm', PlayState.SONG.bpm);
+		set('songLength', 0);
+		set('startedCountdown', false);
+		set('seenCutscene', PlayState.seenCutscene);
+		set('inGameOver', GameOverSubstate.instance != null);
+
+		set('curStage', PlayState.SONG.stage);
+		set('scrollSpeed', PlayState.SONG.speed);
+		set('hasVocals', PlayState.SONG.needsVoices);
+
+		set('difficulty', PlayState.storyDifficulty);
+		set('difficultyName', Difficulty.getString());
+		set('difficultyPath', Paths.formatToSongPath(Difficulty.getString()));
+
+		set('isStoryMode', PlayState.isStoryMode);
+		set('weekRaw', PlayState.storyWeek);
+		set('week', WeekData.weeksList[PlayState.storyWeek]);
+
+		set('curBpm', Conductor.bpm);
+		set('crochet', Conductor.crochet);
+		set('stepCrochet', Conductor.stepCrochet);
 
 		// PlayState variables
 		if (game != null)
@@ -117,7 +121,6 @@ class FunkinLua
 			set('ratingName', game.ratingName);
 			set('ratingFC', game.ratingFC);
 
-			set('inGameOver', GameOverSubstate.instance != null);
 			set('mustHitSection', curSectionData != null ? (curSectionData.mustHitSection == true) : false);
 			set('altAnim', curSectionData != null ? (curSectionData.altAnim == true) : false);
 			set('gfSection', curSectionData != null ? (curSectionData.gfSection == true) : false);
@@ -174,7 +177,6 @@ class FunkinLua
 		set('noResetButton', ClientPrefs.data.noReset);
 		set('lowQuality', ClientPrefs.data.lowQuality);
 		set('shadersEnabled', ClientPrefs.data.shaders);
-		set('scriptName', scriptName);
 
 		// Noteskin/Splash
 		set('noteSkin', ClientPrefs.data.noteSkin);
@@ -183,11 +185,6 @@ class FunkinLua
 		set('splashSkinPostfix', NoteSplash.getSplashSkinPostfix());
 		set('splashAlpha', ClientPrefs.data.splashAlpha);
 
-		// build target (windows, mac, linux, etc.)
-		set('buildTarget', LuaUtils.getBuildTarget());
-		set('platformTarget', LuaUtils.getPlatformTarget());
-
-		//
 		Lua_helper.add_callback(lua, "getRunningScripts", function()
 		{
 			var runningScripts:Array<String> = [];
@@ -284,7 +281,7 @@ class FunkinLua
 
 		Lua_helper.add_callback(lua, "setVar", function(varName:String, value:Dynamic)
 		{
-			MusicBeatState.getVariables().set(varName, ReflectionFunctions.parseSingleInstance(value));
+			MusicBeatState.getVariables().set(varName, LuaUtils.parseArgument(value));
 			return value;
 		});
 		Lua_helper.add_callback(lua, "getVar", function(varName:String)
@@ -726,31 +723,6 @@ class FunkinLua
 			game.timeBar.setColors(left_color, right_color);
 		});
 
-		Lua_helper.add_callback(lua, "setObjectCamera", function(obj:String, camera:String = '')
-		{
-			var real:FlxBasic = game.getLuaObject(obj);
-			if (real != null)
-			{
-				real.cameras = [LuaUtils.cameraFromString(camera)];
-				return true;
-			}
-
-			var split:Array<String> = obj.split('.');
-			var object:FlxBasic = LuaUtils.getObjectDirectly(split[0]);
-			if (split.length > 1)
-			{
-				object = LuaUtils.getVarInArray(LuaUtils.getPropertyLoop(split), split[split.length - 1]);
-			}
-
-			if (object != null)
-			{
-				object.cameras = [LuaUtils.cameraFromString(camera)];
-				return true;
-			}
-			luaTrace("setObjectCamera: Object " + obj + " doesn't exist!", false, false, FlxColor.RED);
-			return false;
-		});
-
 		Lua_helper.add_callback(lua, "changeUIStyle", function(?style:String)
 		{
 			game.changeUIStyle(style);
@@ -963,14 +935,13 @@ class FunkinLua
 
 	public static function luaTrace(text:String, ignoreCheck:Bool = false, deprecated:Bool = false, color:FlxColor = FlxColor.WHITE)
 	{
-		if (ignoreCheck || getBool('luaDebugMode'))
-		{
-			if (deprecated && !getBool('luaDeprecatedWarnings'))
-			{
-				return;
-			}
-			PlayState.instance.addTextToDebug(text, color);
-		}
+		if (!getBool('luaDebugMode') && !ignoreCheck)
+			return;
+
+		if (deprecated && !getBool('luaDeprecatedWarnings'))
+			return;
+
+		PlayState.instance.addTextToDebug(text, color);
 	}
 
 	public static function getBool(variable:String)

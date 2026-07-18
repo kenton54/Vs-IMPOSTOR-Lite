@@ -3,8 +3,6 @@ package psychlua.functions;
 #if LUA_ALLOWED
 import backend.FunkinRuntimeShader;
 
-import flixel.FlxBasic;
-
 class ShaderFunctions
 {
 	public static function implement(funk:FunkinLua)
@@ -31,23 +29,23 @@ class ShaderFunctions
 				return false;
 			}
 
-			var basic:FlxBasic = LuaUtils.getObject(tag);
+			var obj:Dynamic = LuaUtils.getLuaProperty(tag);
 
-			if (basic == null || !Std.isOfType(basic, FlxSprite))
+			if (obj == null || !Std.isOfType(obj, FlxSprite))
 				return false;
 
 			var data = funk.runtimeShaders.get(shader);
-			cast(basic, FlxSprite).shader = new FunkinRuntimeShader(data.frag, data.vert, data.glslVersion);
+			cast(obj, FlxSprite).shader = new FunkinRuntimeShader(data.frag, data.vert, data.glslVersion);
 			return true;
 		});
 		Lua_helper.add_callback(lua, "removeSpriteShader", function(tag:String):Bool
 		{
-			var basic:FlxBasic = LuaUtils.getObject(tag);
+			var obj:Dynamic = LuaUtils.getLuaProperty(tag);
 
-			if (basic == null || !Std.isOfType(basic, FlxSprite))
+			if (obj == null || !Std.isOfType(obj, FlxSprite))
 				return false;
 
-			cast(basic, FlxSprite).shader = null;
+			cast(obj, FlxSprite).shader = null;
 			return true;
 		});
 
@@ -228,15 +226,15 @@ class ShaderFunctions
 
 	public static function getShader(tag:String):FunkinRuntimeShader
 	{
-		var basic:FlxBasic = LuaUtils.getObject(tag);
+		var obj:Dynamic = LuaUtils.getLuaProperty(tag);
 
-		if (basic == null || !Std.isOfType(basic, FlxSprite))
+		if (obj == null || !Std.isOfType(obj, FlxSprite))
 		{
 			FunkinLua.luaTrace('Error on getting shader: Object $tag not found', false, false, FlxColor.RED);
 			return null;
 		}
 
-		var spr:FlxSprite = cast basic;
+		var spr:FlxSprite = cast obj;
 
 		if (spr.shader == null)
 		{
