@@ -30,26 +30,26 @@ jobs:
             hitlistRawFile += forkUrl + "\n";
             hitlistRawFile += forkDate.toLocaleDateString("en-US", {month: "long", day: "numeric", year: "numeric", hour: "2-digit", minute: "2-digit"}) + "\n";
 
-            const latestRef = github.rest.git.getRef({
+            const {data: latestRef} = await github.rest.git.getRef({
               owner: context.repo.owner,
               repo: context.repo.repo,
               ref: "heads/main",
             });
 
-            const latestCommit = github.rest.git.getCommit({
+            const {data: latestCommit} = await github.rest.git.getCommit({
               owner: context.repo.owner,
               repo: context.repo.repo,
               commit_sha: latestRef.object.sha
             });
 
-            const hitlistBlob = github.rest.git.createBlob({
+            const {data: hitlistBlob} = await github.rest.git.createBlob({
               owner: context.repo.owner,
               repo: context.repo.repo,
               content: hitlistRawFile,
               encoding: "utf-8"
             });
 
-            const newTree = github.rest.git.createTree({
+            const {data: newTree} = await github.rest.git.createTree({
               owner: context.repo.owner,
               repo: context.repo.repo,
               base_tree: latestCommit.tree.sha,
@@ -61,7 +61,7 @@ jobs:
               }],
             });
 
-            const newCommit = github.rest.git.createCommit({
+            const {data: newCommit} await = github.rest.git.createCommit({
               owner: context.repo.owner,
               repo: context.repo.repo,
               tree: newTree.sha,
@@ -69,7 +69,7 @@ jobs:
               parents: [latestRef.object.sha]
             });
 
-            github.rest.git.updateRef({
+            await github.rest.git.updateRef({
               owner: context.repo.owner,
               repo: context.repo.repo,
               ref: "heads/main",
