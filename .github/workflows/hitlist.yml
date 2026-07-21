@@ -61,7 +61,7 @@ jobs:
               }],
             });
 
-            const {data: newCommit} await = github.rest.git.createCommit({
+            const {data: newCommit} = await github.rest.git.createCommit({
               owner: context.repo.owner,
               repo: context.repo.repo,
               tree: newTree.sha,
