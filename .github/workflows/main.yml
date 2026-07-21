@@ -9,7 +9,6 @@ on:
       - setup/
       - .gitattributes
       - .gitignore
-      - hmm.json
       - hxformat.json
       - LICENSE
       - README.md

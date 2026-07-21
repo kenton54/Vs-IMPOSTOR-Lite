@@ -14,6 +14,8 @@ import llua.Lua;
 #if ACHIEVEMENTS_ALLOWED
 import backend.Achievements;
 #end
+
+// Psych
 import backend.Assets;
 import backend.ClientPrefs;
 import backend.Conductor;
@@ -27,6 +29,12 @@ import backend.Paths;
 import backend.PointerUtil;
 import backend.SwipeUtil;
 
+import objects.Alphabet;
+
+import states.LoadingState;
+import states.PlayState;
+
+// Flixel
 import flixel.FlxCamera;
 import flixel.FlxG;
 import flixel.FlxSprite;
@@ -41,12 +49,6 @@ import flixel.tweens.FlxTween;
 import flixel.util.FlxColor;
 import flixel.util.FlxTimer;
 
-import objects.Alphabet;
-
-import states.LoadingState;
-import states.PlayState;
-
 using StringTools;
 
-// Flixel
 #end

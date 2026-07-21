@@ -193,11 +193,14 @@ class VideoSprite extends FlxSpriteGroup
 		#end
 	}
 
-	public function play() videoSprite.play();
+	public function play()
+		videoSprite.play();
 
-	public function resume() videoSprite.resume();
+	public function resume()
+		videoSprite.resume();
 
-	public function pause() videoSprite.pause();
+	public function pause()
+		videoSprite.pause();
 
 	function get_speed():Float
 	{
