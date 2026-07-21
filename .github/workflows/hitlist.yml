@@ -22,7 +22,7 @@ jobs:
             const forkUrl = context.payload.forkee.html_url;
             const forkDate = new Date();
 
-            const hitlistRawFile = fs.readFileSync("hitlist.md", "utf8");
+            let hitlistRawFile = fs.readFileSync("hitlist.md", "utf8");
 
             // dox the guy that forked the repo muahaahahahah
             hitlistRawFile += "\n";
