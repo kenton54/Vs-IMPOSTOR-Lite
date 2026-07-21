@@ -56,7 +56,14 @@ jobs:
               }
             }
 
-            const hitlistRawFile = fs.readFileSync("hitlist.md", "utf8");
+            const { hitlistFileData } = await github.rest.repos.getContent({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              path: "hitlist.md",
+              ref: "heads/main",
+            });
+
+            const hitlistRawFile = Buffer.from(hitlistFileData.content, "base64").toString("utf-8");
 
             // dox the guy that forked the repo muahaahahahah
             hitlistRawFile += "\n";
