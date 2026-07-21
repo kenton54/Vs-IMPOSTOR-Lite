@@ -6,9 +6,6 @@
 ### Special Thanks
 * Jermy - did the
 
-### The Hit List
-* Moxie the Coder
-
 _____________________________________
 
 # Psych Engine:

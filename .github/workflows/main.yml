@@ -4,20 +4,20 @@ on:
   push:
     branches:
       - main
-    paths-ignore:
-      - .vscode/
-      - setup/
-      - .gitattributes
-      - .gitignore
-      - hxformat.json
-      - LICENSE
-      - README.md
+    paths:
+      - .github/workflows/main.yml
+      - assets/
+      - setup/setup-windows.bat
+      - setup/setup.sh
+      - source/
+      - project.hxp
+
+permissions: write-all
 
 jobs:
   buildLinux:
     name: Linux Build
     runs-on: ubuntu-latest
-    permissions: write-all
     steps:
       - name: Pulling new Commit
         uses: actions/checkout@v6
@@ -84,7 +84,6 @@ jobs:
   buildWindows:
     name: Windows Build
     runs-on: windows-latest
-    permissions: write-all
     steps:
       - name: Pulling new Commit
         uses: actions/checkout@v6
@@ -148,7 +147,6 @@ jobs:
   buildMac:
     name: MacOS Build
     runs-on: macos-latest
-    permissions: write-all
     steps:
       - name: Pulling new Commit
         uses: actions/checkout@v6
@@ -212,7 +210,6 @@ jobs:
   buildAndroid:
     name: Android Build
     runs-on: ubuntu-latest
-    permissions: write-all
     steps:
       - name: Pulling new Commit
         uses: actions/checkout@v6
