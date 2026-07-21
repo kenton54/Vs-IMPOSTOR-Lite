@@ -23,7 +23,7 @@ jobs:
 
             if (forks.length < 1) {
               console.log("No forks exist for the repository");
-              process.exit(1);
+              process.exit(0);
               return;
             }
 
