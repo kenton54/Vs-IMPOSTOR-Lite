@@ -16,7 +16,7 @@ jobs:
         uses: actions/github-script@v8
         with:
           script: |
-            const fs = require("fs");
+            import fs from node:fs;
 
             const forks = github.rest.repos.listForks({
               owner: context.repo.owner,
