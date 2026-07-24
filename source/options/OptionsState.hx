@@ -1,7 +1,8 @@
 package options;
 
-import states.MainMenuState;
 import backend.StageData;
+
+import states.MainMenuState;
 
 #if mobile
 import objects.BackButton;
@@ -11,6 +12,7 @@ class OptionsState extends MusicBeatState
 {
 	var options:Array<String> = ['Note Colors', 'Controls', 'Adjust Delay', 'Graphics', 'Visuals and UI', 'Gameplay'];
 	private var grpOptions:FlxTypedGroup<Alphabet>;
+
 	private static var curSelected:Int = 0;
 	public static var menuBG:FlxSprite;
 	public static var onPlayState:Bool = false;
@@ -19,7 +21,8 @@ class OptionsState extends MusicBeatState
 	{
 		selectedSomethin = true;
 
-		switch(label) {
+		switch (label)
+		{
 			case 'Note Colors':
 				openSubState(new NotesColorSubState());
 			case 'Controls':
@@ -99,22 +102,26 @@ class OptionsState extends MusicBeatState
 	}
 
 	var selectedSomethin:Bool = false;
+
 	override function update(elapsed:Float)
 	{
 		if (!selectedSomethin)
 		{
 			#if mobile
 			var overlap:Bool = false;
-			grpOptions.forEach(function(spr) {
+			for (option in grpOptions)
+			{
 				for (touch in FlxG.touches.list)
 				{
-					if (touch.overlaps(spr))
+					if (touch.overlaps(option))
 					{
 						overlap = true;
 
 						var lastSelect:Int = curSelected;
-						curSelected = spr.ID;
-						if (lastSelect != curSelected) FlxG.sound.play(Paths.sound('scrollMenu'));
+						curSelected = option.ID;
+
+						if (lastSelect != curSelected)
+							FlxG.sound.play(Paths.sound('scrollMenu'));
 
 						updateOptions();
 
@@ -122,7 +129,7 @@ class OptionsState extends MusicBeatState
 							openSelectedSubstate(options[curSelected]);
 					}
 				}
-			});
+			}
 
 			if (!overlap)
 			{
@@ -136,10 +143,12 @@ class OptionsState extends MusicBeatState
 			#end
 			#end
 
-			if (controls.UI_UP_P) {
+			if (controls.UI_UP_P)
+			{
 				changeSelection(-1);
 			}
-			if (controls.UI_DOWN_P) {
+			if (controls.UI_DOWN_P)
+			{
 				changeSelection(1);
 			}
 
@@ -152,7 +161,8 @@ class OptionsState extends MusicBeatState
 					LoadingState.loadState(() -> new PlayState(), true);
 					FlxG.sound.music.volume = 0;
 				}
-				else FlxG.switchState(() -> new MainMenuState());
+				else
+					FlxG.switchState(() -> new MainMenuState());
 			}
 
 			if (controls.ACCEPT)

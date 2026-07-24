@@ -947,7 +947,7 @@ class PlayState extends MusicBeatState
 			if (stageUI == "normal")
 				path = "noteSkins";
 
-			notes.forEach(function(note)
+			for (note in notes.members)
 			{
 				note.texture = '${path}/NOTE_assets';
 
@@ -975,7 +975,7 @@ class PlayState extends MusicBeatState
 					if (Paths.fileExists('images/ingame/${stageUI}UI/noteSplashes/noteSplashes.png', IMAGE))
 						note.noteSplashData.texture = 'ingame/${stageUI}UI/noteSplashes/noteSplashes';
 				}
-			});
+			}
 
 			for (note in unspawnNotes)
 			{
@@ -1007,10 +1007,10 @@ class PlayState extends MusicBeatState
 				}
 			}
 
-			strumLineNotes.forEach(function(strum)
+			for (strum in strumLineNotes.members)
 			{
 				strum.texture = '${path}/NOTE_assets';
-			});
+			}
 		}
 	}
 
@@ -2773,13 +2773,13 @@ class PlayState extends MusicBeatState
 		// Should kill you if you tried to cheat
 		if (!startingSong)
 		{
-			notes.forEach(function(daNote:Note)
+			for (daNote in notes.members)
 			{
 				if (daNote.strumTime < songLength - Conductor.safeZoneOffset)
 				{
 					health -= 0.05 * healthLoss;
 				}
-			});
+			}
 			for (daNote in unspawnNotes)
 			{
 				if (daNote.strumTime < songLength - Conductor.safeZoneOffset)

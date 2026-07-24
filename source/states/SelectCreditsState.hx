@@ -85,33 +85,20 @@ class SelectCreditsState extends MusicBeatState
 			if (PointerUtil.justMoved)
 				PointerUtil.visible = true;
 
-			logosGrp.forEach(function(spr:FlxSprite)
+			for (logo in logosGrp.members)
 			{
-				#if mobile
-				for (touch in FlxG.touches.list)
-				{
-					if (touch.overlaps(spr))
-					{
-						prevCurCredit = curCredit;
-						curCredit = spr.ID;
-						if (prevCurCredit != curCredit)
-							FlxG.sound.play(Paths.sound('scrollMenu'));
-						if (touch.justReleased)
-							enterCredits();
-					}
-				}
-				#else
-				if (FlxG.mouse.overlaps(spr) && FlxG.mouse.visible)
+				if (PointerUtil.overlaps(logo) && PointerUtil.visible)
 				{
 					prevCurCredit = curCredit;
-					curCredit = spr.ID;
+					curCredit = logo.ID;
+
 					if (prevCurCredit != curCredit)
 						FlxG.sound.play(Paths.sound('scrollMenu'));
-					if (FlxG.mouse.justPressed)
+
+					if (PointerUtil.justReleased)
 						enterCredits();
 				}
-				#end
-			});
+			}
 
 			if (controls.ACCEPT)
 				enterCredits();
@@ -130,21 +117,21 @@ class SelectCreditsState extends MusicBeatState
 			FlxG.switchState(() -> new MainMenuState());
 		#end
 
-		logosGrp.forEach(function(spr:FlxSprite)
+		for (logo in logosGrp.members)
 		{
-			if (spr.ID == curCredit)
+			if (logo.ID == curCredit)
 			{
-				spr.scale.x = FlxMath.lerp(spr.scale.x, teamsList[curCredit][2][0] + 0.1, FlxMath.bound(elapsed * 12, 0, 1));
-				spr.scale.y = FlxMath.lerp(spr.scale.y, teamsList[curCredit][2][1] + 0.1, FlxMath.bound(elapsed * 12, 0, 1));
-				spr.alpha = FlxMath.lerp(spr.alpha, 1, FlxMath.bound(elapsed * 10, 0, 1));
+				logo.scale.x = FlxMath.lerp(logo.scale.x, teamsList[curCredit][2][0] + 0.1, FlxMath.bound(elapsed * 12, 0, 1));
+				logo.scale.y = FlxMath.lerp(logo.scale.y, teamsList[curCredit][2][1] + 0.1, FlxMath.bound(elapsed * 12, 0, 1));
+				logo.alpha = FlxMath.lerp(logo.alpha, 1, FlxMath.bound(elapsed * 10, 0, 1));
 			}
 			else
 			{
-				spr.scale.x = FlxMath.lerp(spr.scale.x, teamsList[spr.ID][2][0], FlxMath.bound(elapsed * 12, 0, 1));
-				spr.scale.y = FlxMath.lerp(spr.scale.y, teamsList[spr.ID][2][1], FlxMath.bound(elapsed * 12, 0, 1));
-				spr.alpha = FlxMath.lerp(spr.alpha, 0.8, FlxMath.bound(elapsed * 10, 0, 1));
+				logo.scale.x = FlxMath.lerp(logo.scale.x, teamsList[logo.ID][2][0], FlxMath.bound(elapsed * 12, 0, 1));
+				logo.scale.y = FlxMath.lerp(logo.scale.y, teamsList[logo.ID][2][1], FlxMath.bound(elapsed * 12, 0, 1));
+				logo.alpha = FlxMath.lerp(logo.alpha, 0.8, FlxMath.bound(elapsed * 10, 0, 1));
 			}
-		});
+		}
 
 		super.update(elapsed);
 	}
