@@ -90,7 +90,7 @@ class HScript extends Iris
 
 	public var origin:String;
 
-	override public function new(?parent:FunkinLua, ?file:String, varsToBring:Any = null, manualRun:Bool = false)
+	override public function new(?parent:FunkinLua, ?file:String, ?varsToBring:Any, ?manualRun:Bool = false)
 	{
 		if (file == null)
 			file = '';
@@ -387,7 +387,7 @@ class HScript extends Iris
 	#if LUA_ALLOWED
 	public static function implement(funk:FunkinLua)
 	{
-		funk.addLocalCallback("runHaxeCode", function(codeToRun:String, ?varsToBring:Any = null, ?funcToRun:String = null, ?funcArgs:Array<Dynamic> = null):Dynamic
+		funk.addLocalCallback("runHaxeCode", function(codeToRun:String, ?varsToBring:Any, ?funcToRun:String, ?funcArgs:Array<Dynamic>):Dynamic
 		{
 			initHaxeModuleCode(funk, codeToRun, varsToBring);
 			if (funk.hscript != null)
@@ -402,17 +402,18 @@ class HScript extends Iris
 					return funk.hscript.returnValue;
 				}
 			}
+
 			return null;
 		});
 
-		funk.addLocalCallback("runHaxeFunction", function(funcToRun:String, ?funcArgs:Array<Dynamic> = null)
+		funk.addLocalCallback("runHaxeFunction", function(funcToRun:String, ?funcArgs:Array<Dynamic>):Dynamic
 		{
 			if (funk.hscript != null)
 			{
 				final retVal:IrisCall = funk.hscript.call(funcToRun, funcArgs);
 				if (retVal != null)
 				{
-					return (LuaUtils.isLuaSupported(retVal.returnValue)) ? retVal.returnValue : null;
+					return LuaUtils.isLuaSupported(retVal.returnValue) ? retVal.returnValue : null;
 				}
 			}
 			else
@@ -420,8 +421,10 @@ class HScript extends Iris
 				var pos:HScriptInfos = cast {fileName: funk.scriptName, showLine: false};
 				if (funk.lastCalledFunction != '')
 					pos.functionName = funk.lastCalledFunction;
+
 				Iris.error("runHaxeFunction: HScript has not been initialized yet! Use \"runHaxeCode\" to initialize it", pos);
 			}
+
 			return null;
 		});
 		// This function is unnecessary because import already exists in SScript as a native feature

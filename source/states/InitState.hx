@@ -40,9 +40,6 @@ class InitState extends FlxState
 
 		FlxTransitionableState.skipNextTransOut = true;
 
-		// remove these when mod releases
-		// and only leave "startGame()"
-		// these are only meant for testing
 		#if SONG
 		startSong(Macros.getDefine('SONG'));
 		#elseif WEEK

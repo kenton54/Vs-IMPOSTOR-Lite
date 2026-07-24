@@ -18,6 +18,7 @@ class Cache
 	public final permanentCache:Array<String> = [
 		'assets/lite/images/cursor.png',
 		'assets/lite/images/healthBar.png',
+		'assets/lite/images/logo.png',
 		'assets/lite/images/switchState.png',
 		'assets/lite/images/runbfrun.png',
 		'assets/lite/images/sketch.png',
@@ -89,19 +90,27 @@ class Cache
 		graphics = new Map<String, FlxGraphic>();
 		sounds = new Map<String, Sound>();
 
+		#if !web
 		FlxG.signals.preStateSwitch.add(prepareClearMemory);
+		#end
+
 		FlxG.signals.preStateCreate.add(clearMemoryOnStateSwitch);
 	}
 
+	#if !web
 	var _lastState:Null<String> = null;
 
 	function prepareClearMemory()
 	{
 		_lastState = FlxStringUtil.getClassName(@:privateAccess FlxG.game._state);
 	}
+	#end
 
 	function clearMemoryOnStateSwitch(newState:FlxState)
 	{
+		#if web
+		clearStoredMemory();
+		#else
 		var newStateStr:String = FlxStringUtil.getClassName(newState);
 
 		if (_lastState == null || newStateStr != _lastState)
@@ -109,6 +118,7 @@ class Cache
 			clearStoredMemory();
 			_lastState = null;
 		}
+		#end
 	}
 
 	public function clearStoredMemory()

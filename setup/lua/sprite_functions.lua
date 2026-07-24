@@ -60,6 +60,40 @@ end
 function makeSolid(tag, width, height, color)
 end
 
+---Adds an animation to a sprite by matching frame names.
+---@param tag string The tag of the sprite.
+---@param name string The name of the animation.
+---@param prefix string The characters that the internal animation name starts with.
+---@param framerate? number The speed of the animation, in frames per second. Defaults to `24`.
+---@param loop? boolean Whether the animation should loop indefinitely. Defaults to `true`.
+---@param flipX? boolean Whether the animation should be flipped horizontally. Defaults to `false`.
+---@param flipY? boolean Whether the animation should be flipped vertically. Defaults to `false`.
+function addAnimationByPrefix(tag, name, prefix, framerate, loop, flipX, flipY)
+end
+
+---Adds an animation to a sprite by a specific set of frame indexes.
+---@param tag string The tag of the sprite.
+---@param name string The name of the animation.
+---@param frames table The frames indexes that will be added to the animation.
+---@param framerate? number The speed of the animation, in frames per second. Defaults to `24`.
+---@param loop? boolean Whether the animation should loop indefinitely. Defaults to `true`.
+---@param flipX? boolean Whether the animation should be flipped horizontally. Defaults to `false`.
+---@param flipY? boolean Whether the animation should be flipped vertically. Defaults to `false`.
+function addAnimation(tag, name, frames, framerate, loop, flipX, flipY)
+end
+
+---Adds an animation to a sprite by a specific set of frame indexes.
+---@param tag string The tag of the sprite.
+---@param name string The name of the animation.
+---@param prefix string The characters that the internal animation name starts with.
+---@param indices any The frames indexes that will be added to the animation.
+---@param framerate? number The speed of the animation, in frames per second. Defaults to `24`.
+---@param loop? boolean Whether the animation should loop indefinitely. Defaults to `true`.
+---@param flipX? boolean Whether the animation should be flipped horizontally. Defaults to `false`.
+---@param flipY? boolean Whether the animation should be flipped vertically. Defaults to `false`.
+function addAnimationByIndices(tag, name, prefix, indices, framerate, loop, flipX, flipY)
+end
+
 ---Plays an object's animation.
 ---@param tag string The tag of the object.
 ---@param anim string The name of the animation.
@@ -83,16 +117,16 @@ end
 
 ---Sets the relative scroll of the object.
 ---
----`==0` = The object stays in place, no mather if the camera's view moves.
+---`==0` = The object stays in place, no mather if the camera moves.
 ---
----`<1` = The object moves less than the camera's view, adding depth to the world.
+---`<1` = The object moves less than the camera, adding depth to the world.
 ---
----`==1` = The object stays in place, like it's part of the world.
+---`==1` = The object stays in place and moves along the camera, like it's part of the world.
 ---
----`>1` = The object moves more than the camera moves's view, adding depth to the world.
+---`>1` = The object moves more than the camera, adding depth to the world.
 ---@param tag string
----@param scrollX number How much the object scrolls horizontally relative to the camera's view.
----@param scrollY number How much the object scrolls vertically relative to the camera's view.
+---@param scrollX number How much the object scrolls horizontally relative to the camera.
+---@param scrollY number How much the object scrolls vertically relative to the camera.
 function setScrollFactor(tag, scrollX, scrollY)
 end
 

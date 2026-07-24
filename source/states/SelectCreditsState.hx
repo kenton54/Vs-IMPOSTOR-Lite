@@ -8,51 +8,56 @@ import objects.BackButton;
 
 class SelectCreditsState extends MusicBeatState
 {
-    public static var prevCurCredit:Int = 0;
-    public static var curCredit:Int = 0;
+	public static var prevCurCredit:Int = 0;
+	public static var curCredit:Int = 0;
 
-    public var logosGrp:FlxTypedGroup<FlxSprite>;
+	public var logosGrp:FlxTypedGroup<FlxSprite>;
 
-    // ARRAY: [Team Name - Position Add[X/Y] - Scale[X/Y] - Devs]
-    public var teamsList:Array<Dynamic> = haxe.Json.parse(Assets.getText(Paths.getLitePath("data/credits.json"))).credits;
+	// ARRAY: [Team Name - Position Add[X/Y] - Scale[X/Y] - Devs]
+	public var teamsList:Array<Dynamic> = haxe.Json.parse(Assets.getText(Paths.getLitePath("data/credits.json"))).credits;
 
-    override function create()
-    {
-        #if DISCORD_ALLOWED
+	override function create()
+	{
+		#if DISCORD_ALLOWED
 		// Updating Discord Rich Presence
 		DiscordClient.changePresence("Choosing a team...", null);
 		#end
 
 		persistentUpdate = true;
 
-        #if !mobile
-        PointerUtil.visible = true;
-        #end
+		#if !mobile
+		PointerUtil.visible = true;
+		#end
 
 		var bg:FlxSprite = new FlxSprite().loadGraphic(Paths.image('storymode/bg'));
 		bg.antialiasing = false;
-        bg.screenCenter();
+		bg.screenCenter();
 		add(bg);
 
-        var titleTxt = new FlxText(0, 1, FlxG.width, "Select a Team!", 40);
+		var titleTxt = new FlxText(0, 1, FlxG.width, "Select a Team!", 40);
 		titleTxt.setFormat(Paths.font("vcr"), 40, FlxColor.BLACK, CENTER);
 		add(titleTxt);
 
-        logosGrp = new FlxTypedGroup<FlxSprite>();
+		logosGrp = new FlxTypedGroup<FlxSprite>();
 		add(logosGrp);
 
-        for(i in 0...teamsList.length)
-        {
-            var logo:FlxSprite = new FlxSprite().loadGraphic(Paths.image('credits/${teamsList[i][0]}'));
-            logo.antialiasing = false;
-            logo.scale.set(teamsList[i][2][0], teamsList[i][2][1]);
-            logo.updateHitbox();
-            logo.screenCenter();
-            logo.x += teamsList[i][1][0];
-            logo.y += teamsList[i][1][1];
-            logo.ID = i;
-            logosGrp.add(logo);
-        }
+		var funkinLogo:FlxSprite = new FlxSprite().loadGraphic(Paths.image('funkin-logo'));
+		funkinLogo.scale.set(teamsList[0][2][0], teamsList[0][2][1]);
+		funkinLogo.updateHitbox();
+		funkinLogo.screenCenter();
+		funkinLogo.x += teamsList[0][1][0];
+		funkinLogo.y += teamsList[0][1][1];
+		funkinLogo.ID = 0;
+		logosGrp.add(funkinLogo);
+
+		var impostorLogo:FlxSprite = new FlxSprite().loadGraphic(Paths.image('logo'));
+		impostorLogo.scale.set(teamsList[1][2][0], teamsList[1][2][1]);
+		impostorLogo.updateHitbox();
+		impostorLogo.screenCenter();
+		impostorLogo.x += teamsList[1][1][0];
+		impostorLogo.y += teamsList[1][1][1];
+		impostorLogo.ID = 1;
+		logosGrp.add(impostorLogo);
 
 		#if mobile
 		var backButton:BackButton = new BackButton();
@@ -63,56 +68,62 @@ class SelectCreditsState extends MusicBeatState
 		add(backButton);
 		#end
 
-        super.create();
-    }
+		super.create();
+	}
 
-    var selected:Bool = false;
-    override function update(elapsed:Float)
-    {
-        if (!selected)
-        {
-            if (controls.UI_LEFT_P)
+	var selected:Bool = false;
+
+	override function update(elapsed:Float)
+	{
+		if (!selected)
+		{
+			if (controls.UI_LEFT_P)
 				changeItem(-1);
 			if (controls.UI_RIGHT_P)
 				changeItem(1);
 
-            if (PointerUtil.justMoved)
+			if (PointerUtil.justMoved)
 				PointerUtil.visible = true;
 
-            logosGrp.forEach(function(spr:FlxSprite) {
-                #if mobile
-                for (touch in FlxG.touches.list)
-                {
-                    if (touch.overlaps(spr))
-                    {
+			logosGrp.forEach(function(spr:FlxSprite)
+			{
+				#if mobile
+				for (touch in FlxG.touches.list)
+				{
+					if (touch.overlaps(spr))
+					{
 						prevCurCredit = curCredit;
 						curCredit = spr.ID;
-						if (prevCurCredit != curCredit) FlxG.sound.play(Paths.sound('scrollMenu'));
-						if (touch.justReleased) enterCredits();
-                    }
-                }
-                #else
-                if (FlxG.mouse.overlaps(spr) && FlxG.mouse.visible)
-                {
-                    prevCurCredit = curCredit;
-                    curCredit = spr.ID;
-                    if (prevCurCredit != curCredit) FlxG.sound.play(Paths.sound('scrollMenu'));
-                    if (FlxG.mouse.justPressed) enterCredits();
-                }
-                #end
-            });
+						if (prevCurCredit != curCredit)
+							FlxG.sound.play(Paths.sound('scrollMenu'));
+						if (touch.justReleased)
+							enterCredits();
+					}
+				}
+				#else
+				if (FlxG.mouse.overlaps(spr) && FlxG.mouse.visible)
+				{
+					prevCurCredit = curCredit;
+					curCredit = spr.ID;
+					if (prevCurCredit != curCredit)
+						FlxG.sound.play(Paths.sound('scrollMenu'));
+					if (FlxG.mouse.justPressed)
+						enterCredits();
+				}
+				#end
+			});
 
-            if (controls.ACCEPT)
-                enterCredits();
+			if (controls.ACCEPT)
+				enterCredits();
 
-            if (controls.BACK)
-            {
-                PointerUtil.visible = false;
-                FlxG.sound.play(Paths.sound('cancelMenu'));
-                FlxG.switchState(() -> new MainMenuState());
-                selected = true;
-            }
-        }
+			if (controls.BACK)
+			{
+				PointerUtil.visible = false;
+				FlxG.sound.play(Paths.sound('cancelMenu'));
+				FlxG.switchState(() -> new MainMenuState());
+				selected = true;
+			}
+		}
 
 		#if android
 		if (FlxG.android.justReleased.BACK)
@@ -135,26 +146,27 @@ class SelectCreditsState extends MusicBeatState
 			}
 		});
 
-        super.update(elapsed);
-    }    
+		super.update(elapsed);
+	}
 
-    function enterCredits()
-    {
-        FlxG.sound.play(Paths.sound('confirmMenu'));
-        selected = true;
+	function enterCredits()
+	{
+		FlxG.sound.play(Paths.sound('confirmMenu'));
+		selected = true;
 
 		PointerUtil.visible = false;
 
-        FlxFlicker.flicker(logosGrp.members[curCredit], 1, 0.06, false, false, _ -> FlxG.switchState(() -> new CreditsState(teamsList[curCredit][0], teamsList[curCredit][3])));
-    }
+		FlxFlicker.flicker(logosGrp.members[curCredit], 1, 0.06, false, false, _ -> FlxG.switchState(() -> new CreditsState(teamsList[curCredit][0], teamsList[curCredit][3])));
+	}
 
-    function changeItem(huh:Int = 0)
-    {
-        prevCurCredit = curCredit;
+	function changeItem(huh:Int = 0)
+	{
+		prevCurCredit = curCredit;
 		curCredit = FlxMath.wrap(curCredit + huh, 0, teamsList.length - 1);
 
-		if (curCredit != prevCurCredit) FlxG.sound.play(Paths.sound('scrollMenu'));
+		if (curCredit != prevCurCredit)
+			FlxG.sound.play(Paths.sound('scrollMenu'));
 
 		PointerUtil.visible = false;
-    }
+	}
 }

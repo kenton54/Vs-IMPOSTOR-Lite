@@ -1,3 +1,34 @@
+---Executes Haxe code.
+---
+---Examples of usage:
+---```lua
+---runHaxeCode('game.boyfriend.color = FlxColor.RED;') -- makes the player character red.
+---runHaxeCode('game.boyfriend.scale.y = myValue;', {myValue = 1.5}) -- adds the myValue to the Haxe code and uses its value to set the player character's vertical scale
+---```
+---@param codeToRun string The code to execute.
+---@param varsToBring? table A set of values to add to the haxe code interp.
+---@param funcToRun? string A function to run when the code is executed.
+---@param funcArgs? table The arguments of the function.
+---@return any # The Haxe code's return value.
+function runHaxeCode(codeToRun, varsToBring, funcToRun, funcArgs)
+    return nil
+end
+
+---Calls a function to a previously executed Haxe code with the `runHaxeCode` function.
+---@param funcToRun string The function to call and execute.
+---@param funcArgs? table The arguments of the function.
+---@return any # The function's return value.
+function runHaxeFunction(funcToRun, funcArgs)
+    return nil
+end
+
+---Adds a package to a previously executed Haxe code with the `runHaxeCode` function.
+---@param libName string The class package name.
+---@param libPackage? string The package path leading to the class.
+---@deprecated
+function addHaxeLibrary(libName, libPackage)
+end
+
 ---Checks whether a keyboard key was just pressed.
 ---@param name string The key to check.
 ---@return boolean # Whether the key was just pressed.

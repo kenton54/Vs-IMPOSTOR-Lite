@@ -71,18 +71,18 @@ end
 function removeFromGroup(group, index, tag, destroy)
 end
 
----Calls the function.
+---Calls a specific function in all running scripts.
 ---@param funcToRun string The name of the function.
----@param args? table The arguments of the function. Defaults to an empty table.
+---@param args? table The arguments of the function.
 ---@return any # The returnable value of the function, if it has one.
 function callMethod(funcToRun, args)
     return nil
 end
 
----Calls the function from the class.
+---Calls a function from a class.
 ---@param classVar string The package name of the class.
 ---@param funcToRun string The name of the function.
----@param args? table The arguments of the function. Defaults to an empty table.
+---@param args? table The arguments of the function.
 ---@return any # The returnable value of the function, if it has one.
 function callMethodFromClass(classVar, funcToRun, args)
     return nil

@@ -48,14 +48,13 @@ class MainMenuState extends MusicBeatState
 		transOut = FlxTransitionableState.defaultTransOut;
 		persistentUpdate = true;
 
-		var red:FlxSprite = new FlxSprite();
-		red.frames = Paths.getSparrowAtlas('mainmenu/redmenu');
-		red.animation.addByPrefix('idlered', 'redmenu', 4);
-		red.animation.play('idlered');
+		var red:FlxSprite = new FlxSprite().loadGraphic(Paths.image('mainmenu/redmenu'), true, 602, 490);
+		red.animation.add('idle', [0, 1], 4);
+		red.animation.play('idle');
 		red.antialiasing = false;
-		red.scale.set(1.2, 1.2);
+		red.scale.set(1.3, 1.3);
 		red.updateHitbox();
-		red.x = FlxG.width - red.width + 125;
+		red.x = FlxG.width - red.width + 190;
 		red.y = FlxG.height - red.height + 75;
 		add(red);
 
@@ -70,7 +69,7 @@ class MainMenuState extends MusicBeatState
 		green.y = FlxG.height - green.height + 175;
 		add(green);
 
-		var logo:FlxSprite = new FlxSprite(0, 10).loadGraphic(Paths.image('title/logo'));
+		var logo:FlxSprite = new FlxSprite(0, 10).loadGraphic(Paths.image('logo'));
 		logo.antialiasing = false;
 		logo.scale.set(0.8, 0.8);
 		logo.updateHitbox();

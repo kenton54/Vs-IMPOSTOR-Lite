@@ -91,7 +91,7 @@ class Project extends HXProject
     static final VIDEOS_ALLOWED:Bool = true;
 
     /**
-     * Whether to build with the HScript API.
+     * Whether to build with the Haxe Scripting API.
      */
     static final HSCRIPT_ALLOWED:Bool = true;
 
@@ -104,7 +104,10 @@ class Project extends HXProject
     {
         super();
 
-        displayTarget();
+        if (!isDisplay())
+        {
+            displayBuildInformation();
+        }
 
         setupApplication();
         setupExport();
@@ -133,39 +136,98 @@ class Project extends HXProject
         }
     }
 
-    function displayTarget()
-    {
-        // You know it'd be cool if we could port this mod to console. But sadly it's not possible :(
+    function displayBuildInformation()
+	{
+		var fullInfo:Array<String> = [];
+		fullInfo.push('');
+		fullInfo.push('============================================================');
+		fullInfo.push('');
+		fullInfo.push('                     Build Information');
+		fullInfo.push('');
 
-        var platformStr:String = "";
-        switch(platformType)
-        {
-            case PlatformType.DESKTOP: platformStr = "Desktop";
-            case PlatformType.MOBILE: platformStr = "Mobile";
-            case PlatformType.WEB: platformStr = "Web";
-            case PlatformType.CONSOLE: platformStr = "Console";
-            default: platformStr = "Unknown";
-        }
+		var platformTargetStr:String = '';
+		switch(this.target)
+		{
+			case Platform.WINDOWS: platformTargetStr = 'Windows';
+			case Platform.LINUX: platformTargetStr = 'Linux';
+			case Platform.MAC: platformTargetStr = 'MacOS';
+			case Platform.ANDROID: platformTargetStr = 'Android';
+			case Platform.IOS: platformTargetStr = 'iOS';
+			case Platform.TVOS: platformTargetStr = 'tvOS';
+			case Platform.HTML5: platformTargetStr = 'HTML5';
+			case Platform.WEB_ASSEMBLY: platformTargetStr = 'Web Assembly';
+			case Platform.WEBOS: platformTargetStr = 'webOS';
+			case Platform.AIR: platformTargetStr = 'Adobe AIR';
+			case Platform.FLASH: platformTargetStr = 'Flash';
+			default: platformTargetStr = 'Unknown';
+		}
+		fullInfo.push('Platform Target: $platformTargetStr');
 
-        var targetStr:String = "";
-        switch(target)
-        {
-            case Platform.WINDOWS: targetStr = "Windows";
-            case Platform.LINUX: targetStr = "Linux";
-            case Platform.MAC: targetStr = "macOS";
-            case Platform.ANDROID: targetStr = "Android";
-            case Platform.IOS: targetStr = "iOS";
-            case Platform.HTML5: targetStr = "Browser";
-            case Platform.WIIU: targetStr = "Wii U";
-            case Platform.PS3: targetStr = "PlayStation 3";
-            case Platform.PS4: targetStr = "PlayStation 4";
-            case Platform.VITA: targetStr = "PlayStation Vita";
-            case Platform.XBOX1: targetStr = "XBOX One";
-            default: targetStr = "Unknown";
-        }
+		var platformTypeStr:String = '';
+		switch(this.platformType)
+		{
+			case PlatformType.DESKTOP: platformTypeStr = 'Desktop';
+			case PlatformType.MOBILE: platformTypeStr = 'Mobile';
+			case PlatformType.WEB: platformTypeStr = 'Web';
+			case PlatformType.CONSOLE: platformTypeStr = 'Console';
+			default: platformTypeStr = 'Unknown';
+		}
+		fullInfo.push('Platform Type: $platformTypeStr');
 
-        info('Building for $platformStr, targetting "$targetStr".');
-    }
+		var languageTargetStr:String = '';
+		if (isWeb())
+			languageTargetStr = 'JavaScript (HTML5)';
+		else if (isHashLink())
+			languageTargetStr = 'HashLink';
+		else if (isNeko())
+			languageTargetStr = 'Neko';
+		else if (isCPP())
+			languageTargetStr = 'C++';
+		else if (isCSharp())
+			languageTargetStr = 'C#';
+		else if (isJava())
+			languageTargetStr = 'Java';
+		else if (isNodeJS())
+			languageTargetStr = 'JavaScript (NodeJS)';
+		else
+			error('Unsupported target language!');
+
+		fullInfo.push('Language Target: $languageTargetStr');
+
+		var architecturesStr:Array<String> = [];
+		for (arch in this.architectures)
+		{
+			switch(arch)
+			{
+				case Architecture.ARMV5: architecturesStr.push('ARMv5');
+				case Architecture.ARMV6: architecturesStr.push('ARMv6');
+				case Architecture.ARMV7: architecturesStr.push('ARMv7');
+				case Architecture.ARMV7S: architecturesStr.push('ARMv7S');
+				case Architecture.ARM64: architecturesStr.push('ARMx64');
+				case Architecture.X86: architecturesStr.push('x86');
+				case Architecture.X64: architecturesStr.push('x64');
+				case Architecture.MIPS: architecturesStr.push('MIPS');
+				case Architecture.MIPSEL: architecturesStr.push('MIPSEL');
+				case null: if (isWeb()) architecturesStr.push('Web');
+				default:
+					error('Unsupported architecture! (got $arch)');
+			}
+		}
+
+		if (architecturesStr.length >= 1)
+		{
+			fullInfo.push('Architectures: ${architecturesStr.join(', ')}');
+		}
+
+		fullInfo.push('');
+		fullInfo.push('============================================================');
+		fullInfo.push('');
+
+		for (buildInfo in fullInfo)
+		{
+			infoBlank(buildInfo);
+		}
+	}
 
     function setupApplication()
     {
@@ -221,6 +283,9 @@ class Project extends HXProject
         }
 
         window.background = 0xFFFFFFFF;
+
+        preBuildCallbacks.push(createHaxeCLICommand('setup/scripts/BuildTimeTrackerStart.hx'));
+		postBuildCallbacks.push(createHaxeCLICommand('setup/scripts/BuildTimeTrackerFinish.hx'));
     }
 
     function setupExport()
@@ -257,12 +322,14 @@ class Project extends HXProject
             setHaxeDefine("VIDEOS_ALLOWED");
         }
 
+        // hscript is better than lua, confirmed
         if (HSCRIPT_ALLOWED)
         {
             setHaxeDefine("HSCRIPT_ALLOWED");
         }
 
-        if (LUA_ALLOWED)
+        // lua is not supported on web targets, due to linc_lua only working for C++
+        if (LUA_ALLOWED && !isWeb())
         {
             setHaxeDefine("LUA_ALLOWED");
         }
@@ -280,7 +347,7 @@ class Project extends HXProject
             setHaxeDefine("DISCORD_DISABLE_IO_THREAD");
         }
 
-        if (hasHaxeDefine("VIDEOS_ALLOWED") && isDesktop() && isCPP())
+        if (hasHaxeDefine("VIDEOS_ALLOWED") && (isDesktop() || isMobile()) && isCPP())
         {
             if (isDebug())
             {
@@ -300,11 +367,6 @@ class Project extends HXProject
             setHaxeDefine("NO_PRECOMPILED_HEADERS");
         }
 
-        if (isMobile())
-        {
-            setHaxeDefine("FLX_NO_SOUND_TRAY");
-        }
-
         if (isRelease())
         {
             setHaxeDefine("analyzer-optimize");
@@ -315,7 +377,6 @@ class Project extends HXProject
         setHaxeDefine("lime_disable_assets_version");
         setHaxeDefine("message.reporting", "pretty");
 
-        setHaxeDefine("no-deprecation-warning");
         setHaxeDefine("no-deprecation-warnings");
 
         addHaxeFlag("-dce no");
@@ -395,12 +456,14 @@ class Project extends HXProject
         {
             recursiveCopyDirectory('setup/icons/android/', '${app.path}/android/bin/app/src/main/res/', templateContext);
         }
-
-        addIcon("setup/icons/icon16.png", 16);
-        addIcon("setup/icons/icon64.png", 64);
-        addIcon("setup/icons/icon150.png", 160);
-        addIcon("setup/icons/icon300.png", 320);
-        addIcon("setup/icons/iconOG.png");
+        else
+        {
+            addIcon("setup/icons/icon16.png", 16);
+            addIcon("setup/icons/icon64.png", 64);
+            addIcon("setup/icons/icon150.png", 160);
+            addIcon("setup/icons/icon300.png", 320);
+            addIcon("setup/icons/iconOG.png");
+        }
     }
 
     function setupAndroid()
@@ -581,6 +644,11 @@ class Project extends HXProject
         }
     }
 
+    public function createHaxeCLICommand(path:String):CLICommand
+	{
+		return CommandHelper.interpretHaxe(path);
+	}
+
     public function isDesktop():Bool
     {
         return platformType == PlatformType.DESKTOP;
@@ -639,31 +707,6 @@ class Project extends HXProject
     public function isIOSSimulator():Bool
     {
         return target == Platform.IOS && targetFlags.exists("simulator");
-    }
-
-    public function isWiiU():Bool
-    {
-        return target == Platform.WIIU;
-    }
-
-    public function isPS3():Bool
-    {
-        return target == Platform.PS3;
-    }
-
-    public function isPS4():Bool
-    {
-        return target == Platform.PS4;
-    }
-
-    public function isPSVita():Bool
-    {
-        return target == Platform.VITA;
-    }
-
-    public function isXboxOne():Bool
-    {
-        return target == Platform.XBOX1;
     }
 
     public function isHashLink():Bool
@@ -732,13 +775,18 @@ class Project extends HXProject
         return process.stdout.readLine();
     }
 
-    public function info(message:String)
-    {
-        if (!(isDisplay() || isClean()))
-        {
-            Sys.println('[INFO]: $message');
-        }
-    }
+    public inline function info(message:String)
+	{
+		infoBlank('[INFO]: $message');
+	}
+
+	public function infoBlank(message:String)
+	{
+		if (!(isDisplay() || isClean()))
+		{
+			Sys.println(message);
+		}
+	}
 
     public function warn(message:String)
     {

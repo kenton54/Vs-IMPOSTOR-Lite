@@ -1,5 +1,0 @@
-<?xml version='1.0' encoding='utf-8'?>
-<TextureAtlas imagePath="redmenu.png">
-<SubTexture name="redmenu0000" x="0" y="0" width="586" height="509" frameX="-4" frameY="-2" frameWidth="600" frameHeight="525" />
-<SubTexture name="redmenu0001" x="586" y="0" width="589" height="508" frameX="-2" frameY="-3" frameWidth="600" frameHeight="525" />
-</TextureAtlas>

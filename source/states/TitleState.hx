@@ -9,6 +9,7 @@ class TitleState extends MusicBeatState
 
 	static var seenIntro:Bool = false;
 	static var passedWarning:Bool = false;
+
 	var curWacky:Array<String> = [];
 
 	var whiteFront:FlxSprite;
@@ -49,7 +50,7 @@ class TitleState extends MusicBeatState
 		enter.y = (FlxG.height * 0.95) - enter.height;
 		titleStuff.add(enter);
 
-		logo = new FlxSprite(0, 50).loadGraphic(Paths.image('title/logo'));
+		logo = new FlxSprite(0, 50).loadGraphic(Paths.image('logo'));
 		logo.x = FlxG.width - logo.width - 35;
 		logo.antialiasing = false;
 		titleStuff.add(logo);
@@ -70,19 +71,19 @@ class TitleState extends MusicBeatState
 		logoTTSpr.y = FlxG.height - logoTTSpr.height - 120;
 		logoTTSpr.visible = false;
 		add(logoTTSpr);
-		
+
 		allow = false;
 		new FlxTimer().start((seenIntro ? 0.5 : 0.01), _ ->
 		{
 			allow = true;
 
 			titleStuff.visible = true;
-		
+
 			if (seenIntro)
 			{
 				finishIntro();
-				//FlxTween.cancelTweensOf(FlxG.camera);
-				//FlxG.camera.scroll.y = 0;
+				// FlxTween.cancelTweensOf(FlxG.camera);
+				// FlxG.camera.scroll.y = 0;
 			}
 		});
 
@@ -104,11 +105,14 @@ class TitleState extends MusicBeatState
 
 	var selected:Bool = false;
 	var allow:Bool = false;
+
 	override function update(elapsed:Float)
 	{
-		if (!allow) return;
+		if (!allow)
+			return;
 
-		if (FlxG.sound.music != null) Conductor.songPosition = FlxG.sound.music.time;
+		if (FlxG.sound.music != null)
+			Conductor.songPosition = FlxG.sound.music.time;
 
 		var pressedEnter:Bool = (PointerUtil.justReleased && !SwipeUtil.justSwipedAny) || FlxG.keys.justPressed.ENTER;
 
@@ -123,10 +127,11 @@ class TitleState extends MusicBeatState
 				FlxG.camera.stopFlash();
 				FlxG.camera.flash(FlxColor.WHITE, 1);
 				FlxG.sound.play(Paths.sound('confirmMenu'), 0.7);
-				for(item in titleStuff.members) 
+				for (item in titleStuff.members)
 					FlxTween.tween(item, {y: item.y + 1000}, 1.25, {ease: FlxEase.smootherStepIn, startDelay: 0.06});
 
-				new FlxTimer().start(1.3, function(_) {
+				new FlxTimer().start(1.3, function(_)
+				{
 					FlxG.switchState(() -> new MainMenuState());
 				});
 			}
@@ -143,17 +148,19 @@ class TitleState extends MusicBeatState
 	}
 
 	private var correctBeat:Int = 0;
+
 	override function beatHit()
 	{
 		super.beatHit();
-		if (!allow) return;
-		
+		if (!allow)
+			return;
+
 		logo.scale.set(0.9, 0.9);
 
-		if(!selected && !seenIntro)
+		if (!selected && !seenIntro)
 		{
 			correctBeat++;
-			switch(correctBeat)
+			switch (correctBeat)
 			{
 				case 1:
 					makeIntroText('Original by IMPOSTORM');
@@ -174,16 +181,20 @@ class TitleState extends MusicBeatState
 					makeIntroText(curWacky[0]);
 				case 11:
 					// kenton... hear me out...
-					if (curWacky[1] != null) makeIntroText(curWacky[1]);
-					if (curWacky[2] != null) makeIntroText(curWacky[2]);
-					if (curWacky[3] != null) makeIntroText(curWacky[3]);
+					if (curWacky[1] != null)
+						makeIntroText(curWacky[1]);
+					if (curWacky[2] != null)
+						makeIntroText(curWacky[2]);
+					if (curWacky[3] != null)
+						makeIntroText(curWacky[3]);
 				case 12:
 					removeIntroTexts();
 				case 13:
 					makeIntroText('Vs.');
 				case 14:
 					var txtAlph = makeIntroText('Impostor');
-					for(txt in txtAlph.letters) txt.setColorTransform(1, 1, 1, 1, 231, 114, 121);
+					for (txt in txtAlph.letters)
+						txt.setColorTransform(1, 1, 1, 1, 231, 114, 121);
 				case 15:
 					var txtAlph = makeIntroText('Lite');
 					var colors:Array<Array<Int>> = [
@@ -193,7 +204,7 @@ class TitleState extends MusicBeatState
 						[255, 219, 231]
 					];
 
-					for(i => txt in txtAlph.letters)
+					for (i => txt in txtAlph.letters)
 						txt.setColorTransform(1, 1, 1, 1, colors[i][0] - 25, colors[i][1] - 25, colors[i][2] - 25);
 				case 16:
 					finishIntro();
@@ -222,7 +233,7 @@ class TitleState extends MusicBeatState
 		textsGrp.add(text);
 
 		return text;
-	}	
+	}
 
 	function removeIntroTexts()
 	{
@@ -234,12 +245,16 @@ class TitleState extends MusicBeatState
 	}
 
 	var skippedIntro:Bool = false;
+
 	function finishIntro()
 	{
-		if(!seenIntro) seenIntro = true;
+		if (!seenIntro)
+			seenIntro = true;
 
-		if(skippedIntro) return;
-		if(!skippedIntro) skippedIntro = true;
+		if (skippedIntro)
+			return;
+		if (!skippedIntro)
+			skippedIntro = true;
 
 		logoTTSpr.destroy();
 		remove(logoTTSpr);
