@@ -71,34 +71,39 @@ class Project extends HXProject
     // ---------- FEATURE FLAGS ---------- //
 
     /**
-     * Whether to build with the Crash Handler, has minor impact on performance.
+     * If enabled, compiles with a crash handler, has minor impact on performance.
      */
-    static final CRASH_HANDLER:Bool = true;
+    static final CRASH_HANDLER:FeatureFlag = 'CRASH_HANDLER';
 
     /**
-     * Whether to build with the engine's exclusive debug tools.
+     * If enabled, the engine's exclusive debug tools can be accessed.
      */
-    static final EDITORS_ALLOWED:Bool = true;
+    static final EDITORS_ALLOWED:FeatureFlag = 'EDITORS_ALLOWED';
 
     /**
-     * Whether to build with the Discord Rich Presence API on targets that support it.
+     * If enabled, the Discord Rich Presence API will be accessible on targets that support it.
      */
-    static final DISCORD_ALLOWED:Bool = true;
+    static final DISCORD_ALLOWED:FeatureFlag = 'DISCORD_ALLOWED';
 
     /**
-     * Whether to build with the Video Playback Backend on targets that support it.
+     * If enabled, the Video Playback Backend will be accessible on targets that support it.
      */
-    static final VIDEOS_ALLOWED:Bool = true;
+    static final VIDEOS_ALLOWED:FeatureFlag = 'VIDEOS_ALLOWED';
 
     /**
      * Whether to build with the Haxe Scripting API.
      */
-    static final HSCRIPT_ALLOWED:Bool = true;
+    static final HSCRIPT_ALLOWED:FeatureFlag = 'HSCRIPT_ALLOWED';
 
     /**
      * Whether to build with the Lua Scripting API.
      */
-    static final LUA_ALLOWED:Bool = true;
+    static final LUA_ALLOWED:FeatureFlag = 'LUA_ALLOWED';
+
+    /**
+     * Takes care of making it possible for HXVLC to compile if certain conditions are met.
+     */
+    var canHxvlcCompile:Bool = true;
 
     public function new()
     {
@@ -298,39 +303,16 @@ class Project extends HXProject
         removeHaxeDefine("FLX_RECORD");
         setHaxeDefine("FLX_NO_FOCUS_LOST_SCREEN");
 
-        if (CRASH_HANDLER)
-        {
-            setHaxeDefine("CRASH_HANDLER");
-        }
+        CRASH_HANDLER.apply(this, true);
+        EDITORS_ALLOWED.apply(this, !isMobile());
+        DISCORD_ALLOWED.apply(this, isDesktop() && isCPP());
+        VIDEOS_ALLOWED.apply(this, isWeb() || isDesktop() || isMobile());
+        HSCRIPT_ALLOWED.apply(this, true);
+        LUA_ALLOWED.apply(this, isCPP()); // it only cares if C++ is available
 
-        if (EDITORS_ALLOWED && !isMobile())
-        {
-            setHaxeDefine("EDITORS_ALLOWED");
-        }
+        canHxvlcCompile = VIDEOS_ALLOWED.isEnabled(this) && !isWeb() && isCPP();
 
-        if (DISCORD_ALLOWED && isDesktop() && isCPP())
-        {
-            setHaxeDefine("DISCORD_ALLOWED");
-        }
-
-        if (VIDEOS_ALLOWED)
-        {
-            setHaxeDefine("VIDEOS_ALLOWED");
-        }
-
-        // hscript is better than lua, confirmed
-        if (HSCRIPT_ALLOWED)
-        {
-            setHaxeDefine("HSCRIPT_ALLOWED");
-        }
-
-        // lua is not supported on web targets, due to linc_lua only working for C++
-        if (LUA_ALLOWED && !isWeb())
-        {
-            setHaxeDefine("LUA_ALLOWED");
-        }
-
-        if (hasHaxeDefine("CRASH_HANDLER"))
+        if (CRASH_HANDLER.isEnabled(this))
         {
             setHaxeDefine("openfl-enable-handle-error");
             setHaxeDefine("HXCPP_CHECK_POINTER");
@@ -338,12 +320,12 @@ class Project extends HXProject
             setHaxeDefine("HXCPP_STACK_TRACE");
         }
 
-        if (hasHaxeDefine("DISCORD_ALLOWED"))
+        if (DISCORD_ALLOWED.isEnabled(this))
         {
             setHaxeDefine("DISCORD_DISABLE_IO_THREAD");
         }
 
-        if (hasHaxeDefine("VIDEOS_ALLOWED") && (isDesktop() || isMobile()) && isCPP())
+        if (canHxvlcCompile)
         {
             if (isDebug())
             {
@@ -353,7 +335,7 @@ class Project extends HXProject
             setHaxeDefine("HXVLC_NO_SHARE_DIRECTORY");
         }
 
-        if (hasHaxeDefine("HSCRIPT_ALLOWED"))
+        if (HSCRIPT_ALLOWED.isEnabled(this))
         {
             setHaxeDefine("hscriptPos");
         }
@@ -384,22 +366,22 @@ class Project extends HXProject
         addHaxelib("flixel-addons");
         addHaxelib("flixel-ui");
 
-        if (hasHaxeDefine("LUA_ALLOWED"))
+        if (LUA_ALLOWED.isEnabled(this))
         {
             addHaxelib("linc_luajit");
         }
 
-        if (hasHaxeDefine("HSCRIPT_ALLOWED"))
+        if (HSCRIPT_ALLOWED.isEnabled(this))
         {
             addHaxelib("hscript-iris");
         }
 
-        if (hasHaxeDefine("DISCORD_ALLOWED"))
+        if (DISCORD_ALLOWED.isEnabled(this))
         {
             addHaxelib("hxdiscord_rpc");
         }
 
-        if (hasHaxeDefine("VIDEOS_ALLOWED") && (isDesktop() || isMobile()) && isCPP())
+        if (canHxvlcCompile)
         {
             addHaxelib("hxvlc");
         }
@@ -784,4 +766,65 @@ class Project extends HXProject
         Sys.stderr().write(Bytes.ofString('[ERROR] $message\n'));
         Sys.exit(1);
     }
+}
+
+/**
+ * An object representing a feature flag, which can be enabled or disabled.
+ *
+ * More info about features flags in here: https://haxe.org/manual/lf-condition-compilation.html
+ */
+abstract FeatureFlag(String) from String to String
+{
+	public function new(input:String)
+	{
+		this = input;
+	}
+
+	/**
+	 * Applies this feature flag to the specified project.
+	 *
+	 * @param project       The lime project.
+	 * @param mustEnable    A set of conditions to meet. Defaults to `false`.
+	 */
+	public function apply(project:Project, mustEnable:Bool = false)
+	{
+		if (!isEnabled(project))
+		{
+			if (mustEnable)
+			{
+				enable(project);
+			}
+			else
+			{
+				disable(project);
+			}
+		}
+	}
+
+	/**
+	 * Enables this feature flag to the project.
+	 * @param project The lime project.
+	 */
+	public function enable(project:Project)
+	{
+		project.setHaxeDefine(this);
+	}
+
+	/**
+	 * Disables this feature flag from the project.
+	 * @param project The lime project.
+	 */
+	public function disable(project:Project)
+	{
+		project.removeHaxeDefine(this);
+	}
+
+	/**
+	 * Checks whether this feature flag is enabled in the project
+	 * @param project The lime project.
+	 */
+	public function isEnabled(project:Project):Bool
+	{
+		return project.hasHaxeDefine(this) || project.defines.exists(this);
+	}
 }
