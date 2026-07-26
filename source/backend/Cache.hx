@@ -198,12 +198,7 @@ class Cache
 
 	function performGarbageCollection()
 	{
-		#if java
-		// this one will probably never run lol, but just in case
-		java.vm.Gc.run(true);
-		#else
 		// openfl garbage collection runs for Hashlink, Neko and C++
 		openfl.system.System.gc();
-		#end
 	}
 }

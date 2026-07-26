@@ -183,10 +183,6 @@ class Project extends HXProject
 			languageTargetStr = 'Neko';
 		else if (isCPP())
 			languageTargetStr = 'C++';
-		else if (isCSharp())
-			languageTargetStr = 'C#';
-		else if (isJava())
-			languageTargetStr = 'Java';
 		else if (isNodeJS())
 			languageTargetStr = 'JavaScript (NodeJS)';
 		else
@@ -719,16 +715,6 @@ class Project extends HXProject
     public function isCPP():Bool
     {
         return defines.exists("cpp");
-    }
-
-    public function isCSharp():Bool
-    {
-        return targetFlags.exists("cs");
-    }
-
-    public function isJava():Bool
-    {
-        return targetFlags.exists("java");
     }
 
     public function isNodeJS():Bool
