@@ -7,6 +7,7 @@ on:
     paths:
       - .github/workflows/main.yml
       - assets/**
+      - setup/CheckHXCPP.hx
       - setup/setup-windows.bat
       - setup/setup.sh
       - source/**
