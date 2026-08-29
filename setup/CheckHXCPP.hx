@@ -31,7 +31,7 @@ class CheckHXCPP
 		var toolsPath:String = Path.join([path, 'tools/hxcpp']);
 		Sys.setCwd(toolsPath);
 
-		var process:Procress = new Process('haxe', ['compile.hxml']);
+		var process:Process = new Process('haxe', ['compile.hxml']);
 
 		if (process.exitCode() != 0)
 		{
