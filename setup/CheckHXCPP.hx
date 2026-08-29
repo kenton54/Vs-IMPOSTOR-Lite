@@ -13,7 +13,7 @@ class CheckHXCPP
   {
 		var oldWD:String = Sys.getCwd();
     Sys.setCwd('../');
-    var path:String = './haxelib/hxcpp/git/';
+    var path:String = './.haxelib/hxcpp/git/';
 
 		if (!FileSystem.exists(path))
 		{
