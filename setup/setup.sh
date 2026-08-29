@@ -13,7 +13,7 @@ haxelib install hxvlc --skip-dependencies --quiet
 haxelib git linc_luajit https://github.com/superpowers04/linc_luajit master
 haxelib install extension-androidtools --skip-dependencies --quiet
 haxelib install hxgamemode --skip-dependencies --quiet
-haxelib git hxcpp https://github.com/FunkinCrew/hxcpp/ c79483a7bf1c0afa77d35a8c564cecac83d5c890
+haxelib git hxcpp https://github.com/FunkinCrew/hxcpp/ 82b5bb7913e2eb8d9e8141da0dd8cd3bdc3f16c5
 haxelib install hxp --quiet
 haxelib install format --quiet
 echo Finished!
