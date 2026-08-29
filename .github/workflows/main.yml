@@ -43,6 +43,7 @@ jobs:
           sudo apt-get install libvlccore-dev
           chmod +x ./setup/setup.sh
           sh ./setup/setup.sh
+          haxe -cp setup -D analyzer-optimize --run CheckHXCPP
 
       - name: Build Game
         run: |
@@ -99,6 +100,7 @@ jobs:
       - name: Install Libraries
         run: |
           .\"setup/setup-windows.bat"
+          haxe -cp setup -D analyzer-optimize --run CheckHXCPP
         shell: cmd
 
       - name: Build Game
@@ -156,6 +158,7 @@ jobs:
         run: |
           chmod +x ./setup/setup.sh
           sh ./setup/setup.sh
+          haxe -cp setup -D analyzer-optimize --run CheckHXCPP
 
       - name: Build Game
         run: arch -x86_64 haxelib run lime build mac
@@ -227,6 +230,7 @@ jobs:
         run: |
           chmod +x ./setup/setup.sh
           sh ./setup/setup.sh
+          haxe -cp setup -D analyzer-optimize --run CheckHXCPP
 
       - name: Set up Android
         run: |
