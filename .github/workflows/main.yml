@@ -41,15 +41,8 @@ jobs:
         run: |
           sudo apt-get install libvlc-dev
           sudo apt-get install libvlccore-dev
-          haxelib setup ~/haxelib
           chmod +x ./setup/setup.sh
           sh ./setup/setup.sh
-
-      - name: Set up HXCPP
-        run: |
-          cd ~/haxelib/hxcpp/git/tools/hxcpp/
-          haxe compile.hxml
-          cd ~/
 
       - name: Build Game
         run: |
@@ -61,18 +54,18 @@ jobs:
           name: Impostor Lite (Linux)
           path: export/release/linux/bin
 
-      - name: Clear old Cache
+      - name: Clear Old Cache
         uses: actions/github-script@v8
         if: ${{ steps.cache-restore.outputs.cache-hit == 'true' }}
         with:
           script: |
-            const caches = github.rest.actions.deleteActionsCacheByKey({
+            await github.rest.actions.deleteActionsCacheByKey({
               owner: context.repo.owner,
               repo: context.repo.repo,
               key: "cache_linux"
             });
 
-      - name: Save new Cache
+      - name: Save New Cache
         uses: actions/cache/save@v5
         with:
           key: cache_linux
@@ -105,15 +98,8 @@ jobs:
 
       - name: Install Libraries
         run: |
-          haxelib setup C:/haxelib
           .\"setup/setup-windows.bat"
         shell: cmd
-        
-      - name: Set up HXCPP
-        run: |
-          cd C:/haxelib/hxcpp/git/tools/hxcpp/
-          haxe compile.hxml
-          cd C:/
 
       - name: Build Game
         run: haxelib run lime build windows
@@ -124,18 +110,18 @@ jobs:
           name: Impostor Lite (Windows)
           path: export/release/windows/bin
 
-      - name: Clear old Cache
+      - name: Clear Old Cache
         uses: actions/github-script@v8
         if: ${{ steps.cache-restore.outputs.cache-hit == 'true' }}
         with:
           script: |
-            const caches = github.rest.actions.deleteActionsCacheByKey({
+            await github.rest.actions.deleteActionsCacheByKey({
               owner: context.repo.owner,
               repo: context.repo.repo,
               key: "cache_windows"
             });
 
-      - name: Save new Cache
+      - name: Save New Cache
         uses: actions/cache/save@v5
         with:
           key: cache_windows
@@ -168,15 +154,8 @@ jobs:
 
       - name: Install Libraries
         run: |
-          haxelib setup ~/haxelib
           chmod +x ./setup/setup.sh
           sh ./setup/setup.sh
-
-      - name: Set up HXCPP
-        run: |
-          cd ~/haxelib/hxcpp/git/tools/hxcpp/
-          haxe compile.hxml
-          cd ~/
 
       - name: Build Game
         run: arch -x86_64 haxelib run lime build mac
@@ -187,18 +166,18 @@ jobs:
           name: Impostor Lite (MacOS)
           path: export/release/macos/bin
 
-      - name: Clear old Cache
+      - name: Clear Old Cache
         uses: actions/github-script@v8
         if: ${{ steps.cache-restore.outputs.cache-hit == 'true' }}
         with:
           script: |
-            const caches = github.rest.actions.deleteActionsCacheByKey({
+            await github.rest.actions.deleteActionsCacheByKey({
               owner: context.repo.owner,
               repo: context.repo.repo,
               key: "cache_mac"
             });
 
-      - name: Save new Cache
+      - name: Save New Cache
         uses: actions/cache/save@v5
         with:
           key: cache_mac
@@ -246,15 +225,8 @@ jobs:
 
       - name: Install Libraries
         run: |
-          haxelib setup ~/haxelib
           chmod +x ./setup/setup.sh
           sh ./setup/setup.sh
-
-      - name: Set up HXCPP
-        run: |
-          cd ~/haxelib/hxcpp/git/tools/hxcpp/
-          haxe compile.hxml
-          cd ~/
 
       - name: Set up Android
         run: |
@@ -286,7 +258,7 @@ jobs:
         if: ${{ steps.cache-restore.outputs.cache-hit == 'true' }}
         with:
           script: |
-            const caches = github.rest.actions.deleteActionsCacheByKey({
+            await github.rest.actions.deleteActionsCacheByKey({
               owner: context.repo.owner,
               repo: context.repo.repo,
               key: "cache_android"

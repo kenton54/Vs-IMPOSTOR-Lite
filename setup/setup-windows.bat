@@ -15,5 +15,7 @@ haxelib install hxgamemode
 haxelib git hxcpp https://github.com/FunkinCrew/hxcpp c79483a7bf1c0afa77d35a8c564cecac83d5c890
 haxelib install hxp
 haxelib install format
+cd ../haxelib/hxcpp/git/tools/hxcpp/
+haxe compile.hxml
 echo Finished!
 pause
