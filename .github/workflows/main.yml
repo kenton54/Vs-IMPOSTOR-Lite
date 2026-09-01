@@ -204,7 +204,7 @@ jobs:
           distribution: temurin
 
       - name: Install Android SDK
-        uses: android-actions/setup-android@v3.2.2
+        uses: android-actions/setup-android@v4
 
       - name: Install Android NDK
         id: ndk-install
